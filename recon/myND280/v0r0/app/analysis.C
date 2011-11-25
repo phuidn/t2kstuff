@@ -34,7 +34,6 @@ int main(int argc, char** argv)
 	SetupROOT();
 
 	// Get list of files to run over. 
-//	TString fileName("/home/physics/phuidn/epp/exercise/recon/myND280/v0r0/amd64_linux26/basket_2010b.list");
 	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
@@ -60,7 +59,7 @@ int main(int argc, char** argv)
 
 	std::cout << "Got input file(s)." << std::endl;
 
-	//Setup access to the TruthDir Tree
+	//Setup access to the Recon tree
 	int NPIDs(0);  // This variable counts the number of particles per event
 	int NVtx(0);
         // Declare a TClonesArray to hold objects of type TGlobalPID
@@ -75,16 +74,52 @@ int main(int argc, char** argv)
 	if(gRecon->GetEntries() != gGenVtx->GetEntries()) 
 		cout<<"not equal entries, probably wrong"<<endl;
 	// Loop over the entries in the TChain.
+
+	//========================================================
+	//			Declare Graphs n stuff here
+	//========================================================
+
+	//adding tclones arrays for use with detectors
+	Int_t NTPCs;
+	TClonesArray *TPC;
+
+	Int_t NFDGs;
+	TClonesArray *FDG;
+
+	Int_t NECALs;
+	TClonesArray *ECAL;
+
+	Int_t NPODs;
+	TClonesArray *POD;
+
+	Int_t NSMRDs;
+	TClonesArray *SMRD;
+
+	//========================================================
+	//	end		Declare Graphs n stuff here
+	//========================================================
+
+	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
 	for(unsigned int i = 0; i < gRecon->GetEntries()/1000; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
+		//display status every 10,000 th entry
 
-	// Get an entry for the TruthDir/GRooTrackVtx tree
+	// Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		gGenVtx->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 		for (int j=0; j<NPIDs; j++) {
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
+
+			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
+			ND::TGlobalReconModule::TTPCObject *tpcTrack = NULL;
+			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
+				tpcTrack = (ND::TGlobalReconModule::TTPCObject*) TPCObjects->At(k);
+				//now we can access TPC variables through tpcTrack->PullEle for example
+			}
+
+
 		}
 
 	} // End loop over events
