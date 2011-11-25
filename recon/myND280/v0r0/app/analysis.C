@@ -19,6 +19,7 @@
 #include <TH1D.h>
 #include <TCanvas.h>
 #include <TGlobalReconModule.hxx>
+#include <TGRooTrackerVtx.hxx>
 using namespace std;
 void SetupROOT();
 //---------------------------------------------------------------------------//
@@ -38,7 +39,7 @@ int main(int argc, char** argv)
 
 	// Declare a TChain for the TGlobalPID module
 	TChain *gRecon = new TChain("ReconDir/Global");
-
+	TChain *gGenVtx = new TChain("TruthDir/GRooTrackerVtx");
 	// Check if the file exists.
 	if (!inputFile.is_open()){
 	std::cout << "ERROR: File prod4 files not found!" << std::endl;
@@ -52,6 +53,7 @@ int main(int argc, char** argv)
 		while(getline(inputFile,curFileName)){
 			cout << curFileName.c_str() << endl;
 			gRecon->Add(curFileName.c_str());
+			gGenVtx->Add(curFileName.c_str());
 		}
 	}
 
@@ -59,19 +61,27 @@ int main(int argc, char** argv)
 
 	//Setup access to the Recon tree
 	int NPIDs(0);  // This variable counts the number of particles per event
+	int NVtx(0);
         // Declare a TClonesArray to hold objects of type TGlobalPID
  	TClonesArray *globalPIDs = new TClonesArray("ND::TGlobalReconModule::TGlobalPID",50);
-        // Associate the right branch in the TTree to the right local variable
+	TClonesArray *VtxArray = new TClonesArray("ND::GRooTrackerVtx",50);    
+    // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
+	gGenVtx->SetBranchAddress("Vtx", &VtxArray);
+	gGenVtx->SetBranchAddress("NVtx", &NVtx);
+	//check that truthdir and recon have the same number of entries
+	if(gRecon->GetEntries() != gGenVtx->GetEntries()) 
+		cout<<"not equal entries, probably wrong"<<endl;
+	// Loop over the entries in the TChain.
 
 	//========================================================
 	//			Declare Graphs n stuff here
 	//========================================================
 
 	//adding tclones arrays for use with detectors
-	Int_t NTPCs;
-	TClonesArray *TPC;
+	Int_t Ns;
+	TClonesArray *;
 
 	Int_t NFDGs;
 	TClonesArray *FDG;
@@ -96,17 +106,17 @@ int main(int argc, char** argv)
 
 	// Get an entry for the Recon tree
 		gRecon->GetEntry(i);
+		gGenVtx->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
-	// std::cout << "NPIDs = " << NPIDs << std::endl;
 		for (int j=0; j<NPIDs; j++) {
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 
-			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
-			ND::TGlobalReconModule::TTPCObject *tpcTrack = NULL;
-			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
-				tpcTrack = (ND::TGlobalReconModule::TTPCObject*) TPCObjects->At(k);
-				//now we can access TPC variables through tpcTrack->PullEle for example
+			TClonesArray *Objects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
+			ND::TGlobalReconModule::TObject *tpcTrack = NULL;
+			for ( int k = 0 ; k < gTrack->Ns; k++) {
+				tpcTrack = (ND::TGlobalReconModule::TObject*) TPCObjects->At(k);
+				//now we can access  variables through tpcTrack->PullEle for example
 			}
 
 

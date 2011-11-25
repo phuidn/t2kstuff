@@ -85,8 +85,13 @@ CMT_PATH_remove_regexp=/[^/]*/
 CMT_PATH_remove_share_regexp=/share/
 NEWCMTCONFIG=x86_64-suse113-gcc450
 myND280_tag=$(tag)
+<<<<<<< HEAD
 MYND280ROOT=/home/physics/phuidv/Documents/git/t2kstuff/recon/myND280/v0r0
 myND280_root=/home/physics/phuidv/Documents/git/t2kstuff/recon/myND280/v0r0
+=======
+MYND280ROOT=/home/physics/phuidn/epp/t2kstuff/recon/myND280/v0r0
+myND280_root=/home/physics/phuidn/epp/t2kstuff/recon/myND280/v0r0
+>>>>>>> 94b3524734d29e1b8c547726ab0b62e77bd32ba3
 MYND280VERSION=v0r0
 oaEvent_tag=$(tag)
 OAEVENTROOT=/storage/epp2/t2k/software/ND280/v9r7p9/oaEvent/v8r5p1
@@ -464,7 +469,11 @@ version=v0r0
 PACKAGE_ROOT=$(MYND280ROOT)
 srcdir=../src
 bin=../$(myND280_tag)/
+<<<<<<< HEAD
 BIN=/home/physics/phuidv/Documents/git/t2kstuff/recon/myND280/v0r0/$(myND280_tag)/
+=======
+BIN=/home/physics/phuidn/epp/t2kstuff/recon/myND280/v0r0/$(myND280_tag)/
+>>>>>>> 94b3524734d29e1b8c547726ab0b62e77bd32ba3
 javabin=../classes/
 mgrdir=cmt
 cmt_installarea_paths= $(cmt_installarea_prefix)/$(CMTCONFIG)/bin
