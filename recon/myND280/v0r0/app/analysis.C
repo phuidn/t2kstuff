@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
 	// Declare a TChain for the TGlobalPID module
 	TChain *gRecon = new TChain("ReconDir/Global");
-	TChain *gGenVtx = new TChain("TruthDir/GRooTrackerVtx");
+	TChain *gGenVtx = new TChain("TruthDir/Vertices");
 	// Check if the file exists.
 	if (!inputFile.is_open()){
 	std::cout << "ERROR: File prod4 files not found!" << std::endl;
@@ -61,15 +61,18 @@ int main(int argc, char** argv)
 
 	//Setup access to the Recon tree
 	int NPIDs(0);  // This variable counts the number of particles per event
-	int NVtx(0);
+	int NVtxFGD1(0), NVtxFGD2(0);
         // Declare a TClonesArray to hold objects of type TGlobalPID
  	TClonesArray *globalPIDs = new TClonesArray("ND::TGlobalReconModule::TGlobalPID",50);
-	TClonesArray *VtxArray = new TClonesArray("ND::GRooTrackerVtx",50);    
+	TClonesArray *VtxFGD1 = new TClonesArray("ND::TTruthVerticesModule::TTruthVertex",50);    
+	TClonesArray *VtxFGD2 = new TClonesArray("ND::TTruthVerticesModule::TTruthVertex",50);    
     // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
-	gGenVtx->SetBranchAddress("Vtx", &VtxArray);
-	gGenVtx->SetBranchAddress("NVtx", &NVtx);
+	gGenVtx->SetBranchAddress("VtxFGD1", &VtxFGD1);
+	gGenVtx->SetBranchAddress("NVtxFGD1", &NVtxFGD1);
+	gGenVtx->SetBranchAddress("VtxFGD2", &VtxFGD2);
+	gGenVtx->SetBranchAddress("NVtxFGD2", &NVtxFGD2);
 	//check that truthdir and recon have the same number of entries
 	if(gRecon->GetEntries() != gGenVtx->GetEntries()) 
 		cout<<"not equal entries, probably wrong"<<endl;
