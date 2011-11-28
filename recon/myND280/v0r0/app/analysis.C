@@ -20,6 +20,7 @@
 #include <TCanvas.h>
 #include <TGlobalReconModule.hxx>
 #include <TGRooTrackerVtx.hxx>
+#include <TTruthVerticesModule.hxx>
 using namespace std;
 void SetupROOT();
 //---------------------------------------------------------------------------//
@@ -51,7 +52,6 @@ int main(int argc, char** argv)
 
 		// Add the input files to the TChains.
 		while(getline(inputFile,curFileName)){
-			cout << curFileName.c_str() << endl;
 			gRecon->Add(curFileName.c_str());
 			gGenVtx->Add(curFileName.c_str());
 		}
@@ -83,8 +83,8 @@ int main(int argc, char** argv)
 	//========================================================
 
 	//adding tclones arrays for use with detectors
-	Int_t Ns;
-	TClonesArray *;
+	Int_t NTPCs;
+	TClonesArray *TPC;
 
 	Int_t NFDGs;
 	TClonesArray *FDG;
@@ -115,14 +115,23 @@ int main(int argc, char** argv)
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 
-			TClonesArray *Objects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
+			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
 			ND::TGlobalReconModule::TObject *tpcTrack = NULL;
-			for ( int k = 0 ; k < gTrack->Ns; k++) {
+			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
 				tpcTrack = (ND::TGlobalReconModule::TObject*) TPCObjects->At(k);
 				//now we can access  variables through tpcTrack->PullEle for example
 			}
-
-
+		}
+		//added new loop for truth vertex, may want above the recon?
+		gGenVtx->GetEntry(i);
+		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
+		for( int j = 0; j < NVtxFGD1; j++) { 
+				//get vertex
+				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
+				//get vertex local position vector
+				TLorentzVector vec = vtx->Vertex;
+				//get x position
+				float vtxX=vec.X();
 		}
 
 	} // End loop over events
