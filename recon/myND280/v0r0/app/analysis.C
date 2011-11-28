@@ -51,6 +51,7 @@ int main(int argc, char** argv)
 		std::string curFileName;
 
 		// Add the input files to the TChains.
+		//only doing 10 of the basket files, revert to while to do whole run
 	//	while(getline(inputFile,curFileName)){
 		for(l: int = 0; l<10; l++){
 			if(getline(inputFile,curFileName)){
