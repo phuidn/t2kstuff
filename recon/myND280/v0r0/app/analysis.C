@@ -102,6 +102,9 @@ int main(int argc, char** argv)
 	Int_t NSMRDs;
 	TClonesArray *SMRD;
 
+	//adding a 2d graph general purpose, change titles each time!
+	TH2D *graph1 = new TH2D("graph1","XY positions of NC QES in FGDs", 100, -850.0 , 850.0, 100, -780.0, 890.0);
+
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
@@ -146,6 +149,13 @@ int main(int argc, char** argv)
 		}
 
 	} // End loop over events
+
+//plotting bits at the end :D
+    myplot->GetXaxis()->SetTitle("X");
+    myplot->GetYaxis()->SetTitle("Y");
+    myplot->Draw();
+
+
 	return 0;
 }
 
