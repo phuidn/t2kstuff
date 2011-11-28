@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
 	//	while(getline(inputFile,curFileName)){
-		for(l: int = 0; l<10; l++){
+		for(int l = 0; l<10; l++){
 			if(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
 				gGenVtx->Add(curFileName.c_str());
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries()/1000; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
@@ -115,7 +115,6 @@ int main(int argc, char** argv)
 		gRecon->GetEntry(i);
 		gGenVtx->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
-
 
 		//added new loop for truth vertex
 		gGenVtx->GetEntry(i);
@@ -126,8 +125,9 @@ int main(int argc, char** argv)
 				//get vertex local position vector
 				TLorentzVector vec = vtx->Vertex;
 				//testing string, will need to use later to filter results
-				cout << vtx->ReactionCode << endl;
-				cout << "Hello!" << endl;
+				if(vtx->ReactionCode.find("QES",0)!=-1){
+					cout << vtx->ReactionCode << endl;
+				}
 				//if ( vtx->ReactionCode->String().Contains("QES") )
 				//get x position
 				float vtxX=vec.X();
