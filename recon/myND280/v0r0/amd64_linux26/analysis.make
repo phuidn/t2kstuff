@@ -3,7 +3,7 @@
 #====================================
 #  Application analysis
 #
-#   Generated Mon Nov 28 14:42:42 2011  by phuidn
+#   Generated Mon Nov 28 14:51:32 2011  by phuidv
 #
 #====================================
 
@@ -118,9 +118,9 @@ analysis :: dirs  $(bin)analysis${application_suffix}
 #-- end of application_header
 #-- start of application
 
-$(bin)analysis${application_suffix} :: $(bin)analysis.o $(use_stamps) $(analysisstamps) requirements $(use_requirements)
+$(bin)analysis${application_suffix} :: $(bin)exercise1-1.o $(use_stamps) $(analysisstamps) requirements $(use_requirements)
 	$(link_echo) "application $@"
-	$(link_silent) $(cpplink) -o $(@).new $(bin)analysis.o $(cmt_installarea_linkopts) $(analysis_use_linkopts) $(analysislinkopts) && mv -f $(@).new $(@)
+	$(link_silent) $(cpplink) -o $(@).new $(bin)exercise1-1.o $(cmt_installarea_linkopts) $(analysis_use_linkopts) $(analysislinkopts) && mv -f $(@).new $(@)
 
 #-----------------------------------------------------------------
 #
@@ -171,9 +171,9 @@ ifneq ($(MAKECMDGOALS),analysisclean)
 #$(bin)analysis_dependencies.make :: dirs
 
 ifndef QUICK
-$(bin)analysis_dependencies.make : ../app/analysis.C $(use_requirements) $(cmt_final_setup_analysis)
+$(bin)analysis_dependencies.make : ../app/exercise1-1.C $(use_requirements) $(cmt_final_setup_analysis)
 	$(echo) "(analysis.make) Rebuilding $@"; \
-	  $(build_dependencies) analysis -all_sources -out=$@ ../app/analysis.C
+	  $(build_dependencies) analysis -all_sources -out=$@ ../app/exercise1-1.C
 endif
 
 #$(analysis_dependencies)
@@ -184,11 +184,11 @@ endif
 #-- end of dependency -------------------
 #-- start of cpp ------
 
-$(bin)analysis_dependencies.make : $(analysis_C_dependencies)
+$(bin)analysis_dependencies.make : $(exercise1-1_C_dependencies)
 
-$(bin)$(binobj)analysis.o : $(analysis_C_dependencies)
-	$(cpp_echo) ../app/analysis.C
-	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(analysis_pp_cppflags) $(app_analysis_pp_cppflags) $(analysis_pp_cppflags) $(use_cppflags) $(analysis_cppflags) $(app_analysis_cppflags) $(analysis_cppflags) $(analysis_C_cppflags) -I../app ../app/analysis.C
+$(bin)$(binobj)exercise1-1.o : $(exercise1-1_C_dependencies)
+	$(cpp_echo) ../app/exercise1-1.C
+	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(analysis_pp_cppflags) $(app_analysis_pp_cppflags) $(exercise1-1_pp_cppflags) $(use_cppflags) $(analysis_cppflags) $(app_analysis_cppflags) $(exercise1-1_cppflags) $(exercise1-1_C_cppflags) -I../app ../app/exercise1-1.C
 
 #-- end of cpp ------
 #-- start of cleanup_header --------------
@@ -228,6 +228,6 @@ analysisclean ::
 #-- end of cleanup_application ------
 #-- start of cleanup_objects ------
 	$(cleanup_echo) objects
-	-$(cleanup_silent) /bin/rm -f $(bin)analysis.o
+	-$(cleanup_silent) /bin/rm -f $(bin)exercise1-1.o
 	-$(cleanup_silent) cd $(bin); /bin/rm -rf analysis_deps analysis_dependencies.make
 #-- end of cleanup_objects ------
