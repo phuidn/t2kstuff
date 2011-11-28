@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 				//testing string, filter for neutral current quasi-elastic
 				if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
 					if(ABS(x)<832.2 && ABS(y-55)<832.2 && ((z>123.45&&z<446.95)||(z>1481.45&&z<1807.95))){	//is it in one of the FGDs?
-						
+						graph1->Fill(x,y);
 					}	
 				}
 				//if ( vtx->ReactionCode->String().Contains("QES") )
