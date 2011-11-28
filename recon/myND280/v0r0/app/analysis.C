@@ -18,6 +18,7 @@
 #include <TH2D.h>
 #include <TH1D.h>
 #include <TCanvas.h>
+#include <TLorentzVector.h>
 #include <TGlobalReconModule.hxx>
 #include <TGRooTrackerVtx.hxx>
 #include <TTruthVerticesModule.hxx>
@@ -113,7 +114,7 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
@@ -132,8 +133,8 @@ int main(int argc, char** argv)
 				TLorentzVector vec = vtx->Vertex;
 				//testing string, filter for neutral current quasi-elastic
 				if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
-					if(ABS(x)<832.2 && ABS(y-55)<832.2 && ((z>123.45&&z<446.95)||(z>1481.45&&z<1807.95))){	//is it in one of the FGDs?
-						graph1->Fill(x,y);
+					if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+						graph1->Fill(vec.X(),vec.Y());
 					}	
 				}
 				//if ( vtx->ReactionCode->String().Contains("QES") )
@@ -156,10 +157,10 @@ int main(int argc, char** argv)
 	} // End loop over events
 
 //plotting bits at the end :D
-    myplot->GetXaxis()->SetTitle("X");
-    myplot->GetYaxis()->SetTitle("Y");
-    myplot->Draw();
-
+    graph1->GetXaxis()->SetTitle("X");
+    graph1->GetYaxis()->SetTitle("Y");
+    graph1->Draw();
+	App->Run();
 
 	return 0;
 }
