@@ -21,6 +21,9 @@
 #include <TGlobalReconModule.hxx>
 #include <TGRooTrackerVtx.hxx>
 #include <TTruthVerticesModule.hxx>
+
+#define ABS(x) (x>0?x:-x)
+
 using namespace std;
 void SetupROOT();
 //---------------------------------------------------------------------------//
@@ -124,9 +127,11 @@ int main(int argc, char** argv)
 				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
 				//get vertex local position vector
 				TLorentzVector vec = vtx->Vertex;
-				//testing string, will need to use later to filter results
-				if(vtx->ReactionCode.find("QES",0)!=-1){
-					cout << vtx->ReactionCode << endl;
+				//testing string, filter for neutral current quasi-elastic
+				if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
+					if(ABS(x)<832.2 && ABS(y-55)<832.2 && ((z>123.45&&z<446.95)||(z>1481.45&&z<1807.95))){	//is it in one of the FGDs?
+						
+					}	
 				}
 				//if ( vtx->ReactionCode->String().Contains("QES") )
 				//get x position
