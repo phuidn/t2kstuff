@@ -51,9 +51,12 @@ int main(int argc, char** argv)
 		std::string curFileName;
 
 		// Add the input files to the TChains.
-		while(getline(inputFile,curFileName)){
-			gRecon->Add(curFileName.c_str());
-			gGenVtx->Add(curFileName.c_str());
+	//	while(getline(inputFile,curFileName)){
+		for(l: int = 0; l<10; l++){
+			if(getline(inputFile,curFileName)){
+				gRecon->Add(curFileName.c_str());
+				gGenVtx->Add(curFileName.c_str());
+			}
 		}
 	}
 
