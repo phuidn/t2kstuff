@@ -111,6 +111,24 @@ int main(int argc, char** argv)
 		gRecon->GetEntry(i);
 		gGenVtx->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
+
+
+		//added new loop for truth vertex
+		gGenVtx->GetEntry(i);
+		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
+		for( int j = 0; j < NVtxFGD1; j++) { 
+				//get vertex
+				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
+				//get vertex local position vector
+				TLorentzVector vec = vtx->Vertex;
+				//testing string, will need to use later to filter results
+				cout << vtx->ReactionCode << endl;
+				cout << "Hello!" << endl;
+				//if ( vtx->ReactionCode->String().Contains("QES") )
+				//get x position
+				float vtxX=vec.X();
+		}
+
 		for (int j=0; j<NPIDs; j++) {
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -121,17 +139,6 @@ int main(int argc, char** argv)
 				tpcTrack = (ND::TGlobalReconModule::TObject*) TPCObjects->At(k);
 				//now we can access  variables through tpcTrack->PullEle for example
 			}
-		}
-		//added new loop for truth vertex, may want above the recon?
-		gGenVtx->GetEntry(i);
-		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
-		for( int j = 0; j < NVtxFGD1; j++) { 
-				//get vertex
-				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
-				//get vertex local position vector
-				TLorentzVector vec = vtx->Vertex;
-				//get x position
-				float vtxX=vec.X();
 		}
 
 	} // End loop over events
