@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 		for (int j=0; j<NPIDs; j++) {
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-
+			cout << gTrack->TrueParticle.Vertex.ReactionCode.c_str() << endl;
 			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
 			ND::TGlobalReconModule::TObject *tpcTrack = NULL;
 			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
