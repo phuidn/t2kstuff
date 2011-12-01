@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 		gGenVtx->GetEntry(i);
 		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
 		for( int j = 0; j < NVtxFGD1; j++) { 
-				//get vertex
+				//get vertex (replace this with True vertex of reconmodule, not truth!
 				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
 				//get vertex local position vector
 				TLorentzVector vec = vtx->Vertex;
