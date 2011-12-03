@@ -26,6 +26,7 @@
 #include <TGlobalReconModule.hxx>
 #include <TGRooTrackerVtx.hxx>
 #include <TTruthVerticesModule.hxx>
+#include <TTrueVertex.hxx>
 
 #define ABS(x) (x>0?x:-x)
 
@@ -129,27 +130,40 @@ int main(int argc, char** argv)
 
 		//added new loop for truth vertex
 		gGenVtx->GetEntry(i);
-		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
-		for( int j = 0; j < NVtxFGD1; j++) { 
-			//get vertex
-			vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
-			//get vertex local position vector
-			TLorentzVector vec = vtx->Vertex;
-			//testing string, filter for neutral current quasi-elastic
-			if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
-				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-					graph1->Fill(vec.X(),vec.Y());
-				}	
-			}
-			//if ( vtx->ReactionCode->String().Contains("QES") )
-			//get x position
-			float vtxX=vec.X();
-		}
+		
+		//i got rid of this line was causing trouble :P
+		//ND::TTrueVertex* vtx = NULL;
+
+		//UNESSACERY LOOP !!!! I DON'T HAVE TO GUTS TO PROPERLY REMOVE IT!
+//		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
+//		for( int j = 0; j < NVtxFGD1; j++) { 
+//				//get vertex (replace this with True vertex of reconmodule, not truth!
+//				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
+//			//get vertex local position vector
+//			TLorentzVector vec = vtx->Vertex;
+//			//testing string, filter for neutral current quasi-elastic
+//			if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
+//				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+//					graph1->Fill(vec.X(),vec.Y());
+//				}	
+//			}
+//			//if ( vtx->ReactionCode->String().Contains("QES") )
+//			//get x position
+//			float vtxX=vec.X();
+//	}
 
 		for (int j=0; j<NPIDs; j++) {
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			cout << gTrack->TrueParticle.Vertex.ReactionCode.c_str() << endl;
+			//get truevertex (in example, also gets trueparticle, can add in later)
+			ND::TTrueVertex vtx = gTrack->TrueParticle.Vertex;
+			//get position lorrentz vector
+			TLorentzVector vec = vtx.Position;
+			if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
+				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+					graph1->Fill(vec.X(),vec.Y());
+				}	
+			}
 			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
 			ND::TGlobalReconModule::TObject *tpcTrack = NULL;
 			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
