@@ -131,19 +131,19 @@ int main(int argc, char** argv)
 		gGenVtx->GetEntry(i);
 		ND::TTruthVerticesModule::TTruthVertex* vtx = NULL;
 		for( int j = 0; j < NVtxFGD1; j++) { 
-				//get vertex
-				vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
-				//get vertex local position vector
-				TLorentzVector vec = vtx->Vertex;
-				//testing string, filter for neutral current quasi-elastic
-				if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
-					if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-						graph1->Fill(vec.X(),vec.Y());
-					}	
-				}
-				//if ( vtx->ReactionCode->String().Contains("QES") )
-				//get x position
-				float vtxX=vec.X();
+			//get vertex
+			vtx = (ND::TTruthVerticesModule::TTruthVertex*)VtxFGD1->At(j);
+			//get vertex local position vector
+			TLorentzVector vec = vtx->Vertex;
+			//testing string, filter for neutral current quasi-elastic
+			if(vtx->ReactionCode.find("Weak[NC],QES;",0)!=-1){
+				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+					graph1->Fill(vec.X(),vec.Y());
+				}	
+			}
+			//if ( vtx->ReactionCode->String().Contains("QES") )
+			//get x position
+			float vtxX=vec.X();
 		}
 
 		for (int j=0; j<NPIDs; j++) {
