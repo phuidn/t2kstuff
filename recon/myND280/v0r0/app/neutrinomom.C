@@ -113,7 +113,6 @@ int main(int argc, char** argv)
 
 	//adding a 2d graph general purpose, change titles each time!
 	TH1D *graph1 = new TH1D("graph1","Histogram of Neutrino momentum in FGD", 100, -1.5 , 1.5);
-	TVector3 vecz(0,0,1);
 
 	//========================================================
 	//	end		Declare Graphs n stuff here
@@ -143,7 +142,7 @@ int main(int argc, char** argv)
 			if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
 				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
 					//graph1->Fill(vec.X(),vec.Y());
-					graph1->Fill(momvec.Angle(vecz));
+					graph1->Fill(momvec.Mag());
 				}	
 			}
 			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
