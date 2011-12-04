@@ -119,7 +119,7 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
