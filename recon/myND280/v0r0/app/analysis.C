@@ -112,14 +112,14 @@ int main(int argc, char** argv)
 	TClonesArray *SMRD;
 
 	//adding a 2d graph general purpose, change titles each time!
-	TH2D *graph1 = new TH2D("graph1","XY positions of NC QES in FGDs", 100, -850.0 , 850.0, 100, -780.0, 890.0);
+	TH1D *graph1 = new TH1D("graph1","Histogram of Neutrino momentum in FGD", 100, 0 , 100);
 
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries()*0.1; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
@@ -138,9 +138,11 @@ int main(int argc, char** argv)
 			ND::TTrueVertex vtx = gTrack->TrueParticle.Vertex;
 			//get position lorrentz vector
 			TLorentzVector vec = vtx.Position;
+			TLorentzVector momvec = vtx.Momentum;
 			if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
 				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-					graph1->Fill(vec.X(),vec.Y());
+					//graph1->Fill(vec.X(),vec.Y());
+					graph1->Fill(momvec.Mag());
 				}	
 			}
 			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
@@ -152,10 +154,11 @@ int main(int argc, char** argv)
 		}
 
 	} // End loop over events
+	cout << "done loop!" << endl;
 
 //plotting bits at the end :D
-    graph1->GetXaxis()->SetTitle("X");
-    graph1->GetYaxis()->SetTitle("Y");
+    graph1->GetXaxis()->SetTitle("Momentum");
+    graph1->GetYaxis()->SetTitle("Number");
     graph1->Draw();
 	App->Run();
 
