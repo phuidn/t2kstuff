@@ -112,15 +112,14 @@ int main(int argc, char** argv)
 	TClonesArray *SMRD;
 
 	//adding a 2d graph general purpose, change titles each time!
-	TH1D *graph1 = new TH1D("graph1","Histogram of Neutrino momentum in FGD", 100, -1.5 , 1.5);
-	TVector3 vecz(0,0,1);
-
+	TH1D *graph1 = new TH1D("graph1","Momenta of TPC PIDs from FDGs", 100, -50.0 , 50.0);
+	Int_t detnum(0), pronum(0);
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries()*0.1; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
@@ -139,11 +138,21 @@ int main(int argc, char** argv)
 			ND::TTrueVertex vtx = gTrack->TrueParticle.Vertex;
 			//get position lorrentz vector
 			TLorentzVector vec = vtx.Position;
-			TLorentzVector momvec = vtx.Momentum;
-			if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
-				if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-					//graph1->Fill(vec.X(),vec.Y());
-					graph1->Fill(momvec.Angle(vecz));
+			if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+				if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
+					unsigned long det;
+					det = gTrack->Detectors;
+					string detstr;
+					stringstream stream;
+					stream << det;
+					detstr = stream.str();
+					//if it went through a TPC
+					if(detstr.find("1",0)||detstr.find("2",0)||detstr.find("3",0)){
+							detnum++;
+							graph1->Fill((Double_t)gTrack->FrontMomentum);
+						if(gTrack->TrueParticle.PDG = 2212)
+							pronum++;
+					} 	
 				}	
 			}
 			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
@@ -155,14 +164,11 @@ int main(int argc, char** argv)
 		}
 
 	} // End loop over events
-	cout << "done loop!" << endl;
 
 //plotting bits at the end :D
-    graph1->GetXaxis()->SetTitle("Momentum");
-    graph1->GetYaxis()->SetTitle("Number");
-    graph1->Draw();
+	cout<<"ratio of actual protons = " << (double)pronum/(double)detnum << endl;
+	graph1->Draw();
 	App->Run();
-
 	return 0;
 }
 
