@@ -84,16 +84,17 @@ int main(int argc, char** argv)
 
 	//adding tclones arrays for use with detectors
 
-	TFile treefile("newtree.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
 	ULong_t Detectors;
 	ULong_t Status;
-	Double_t Quality; //Double_t??
-	Int_t NHits; //Int_t??
+	Double_t Quality;
+	Int_t NHits;
 	Bool_t IsForward;
 	TLorentzVector FrontPosition, BackPosition, FrontDirection, BackDirection, FrontMomentum, BackMomentum;
+	TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	Int_t NTPCs;
 	TClonesArray *TPC;
 
@@ -108,9 +109,21 @@ int main(int argc, char** argv)
 
 	Int_t NSMRDs;
 	TClonesArray *SMRD;
-
+	
+	// add them  to the tree
+	tree->Branch("Detectors","ULong_t", &Detectors);
+	tree->Branch("Status","ULong_t", &Status);
+	tree->Branch("Quality","Double_t", &Quality);
+	tree->Branch("NHits","Int_t", &NHits);
+	tree->Branch("IsForward","Bool_t", &IsForward);
+	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
+	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
+	tree->Branch("FrontDirection","TLorentzVector", &FrontDirection);
+	tree->Branch("BackDirection","TLorentzVector", &BackDirection);
+	tree->Branch("FrontMomentum","TLorentzVector", &FrontMomentum);
+	tree->Branch("BackMomentum","TLorentzVector", &BackMomentum);
 	//adding a 2d graph general purpose, change titles each time!
-	Int_t detnum(0), pronum(0);
+	Int_t total(0), accepted(0);
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
@@ -125,46 +138,36 @@ int main(int argc, char** argv)
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 
 		//added new loop for truth vertex
-//		gGenVtx->GetEntry(i);
 		
 		for (int j=0; j<NPIDs; j++) {
+			total++; //one more total event
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			//get truevertex (in example, also gets trueparticle, can add in later)
-			ND::TTrueVertex vtx = gTrack->TrueParticle.Vertex;
-			//get position lorrentz vector
-			TLorentzVector vec = vtx.Position;
+			//get position lorentz vector
+			TLorentzVector vec = gTrack->FrontPosition;
 			if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-				if(vtx.ReactionCode.find("Weak[NC],QES;",0)!=-1){
-					unsigned long det;
-					det = gTrack->Detectors;
-					string detstr;
-					stringstream stream;
-					stream << det;
-					detstr = stream.str();
-					//if it went through a TPC
-					if(detstr.find("1",0)||detstr.find("2",0)||detstr.find("3",0)){
-							detnum++;
-//							graph1->Fill((Double_t)gTrack->FrontMomentum);
-						if(gTrack->TrueParticle.PDG == 2212)
-							pronum++;
-					} 	
-				}	
-			}
-			TClonesArray *TPCObjects = new TClonesArray("ND::TGlobalReconModule::TTPCObject",gTrack->NTPCs);
-			ND::TGlobalReconModule::TObject *tpcTrack = NULL;
-			for ( int k = 0 ; k < gTrack->NTPCs; k++) {
-				tpcTrack = (ND::TGlobalReconModule::TObject*) TPCObjects->At(k);
-				//now we can access  variables through tpcTrack->PullEle for example
+				unsigned long det;
+				accepted++; //one more accepted event
+				Detectors = gTrack->Detectors;
+				Quality = gTrack->Quality;
+				NHits = gTrack->NHits;
+				Charge = gTrack->Charge;
+				Status = gTrack->Status;
+				FrontPosition = gTrack->FrontPosition;
+				BackPosition = gTrack->BackPosition;
+				FrontDirection = gTrack->FrontDirection;
+				BackDirection = gTrack->BackDirection;
+				FrontMomentum = gTrack->FrontMomentum;
+				BackMomentum = gTrack->BackMomentum;
+				tree->Fill();
 			}
 		}
-
 	} // End loop over events
 
-//plotting bits at the end :D
-	cout<<"ratio of actual protons = " << (double)pronum/(double)detnum << endl;
-//	graph1->Draw();
-//	App->Run();
+	cout<<"ratio of accepted events = " << (double)accepted/(double)total << endl;
+	tree->Print();
+	treefile->Write();
+	treefile->Close();
 	return 0;
 }
 
