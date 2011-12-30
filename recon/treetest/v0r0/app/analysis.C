@@ -24,6 +24,7 @@
 #include <TCanvas.h>
 #include <TLorentzVector.h>
 #include <TGlobalReconModule.hxx>
+#include <TGlobalBaseObjects.hxx>
 #include <TGRooTrackerVtx.hxx>
 #include <TTruthVerticesModule.hxx>
 #include <TTrueVertex.hxx>
@@ -93,8 +94,9 @@ int main(int argc, char** argv)
 	Double_t Quality;
 	Int_t NHits;
 	Bool_t IsForward;
-	TLorentzVector FrontPosition, BackPosition, FrontDirection, BackDirection, FrontMomentum, BackMomentum;
-	TTrueParticle TrueParticle; //from here on aren't added to the tree yet
+	TLorentzVector FrontPosition, BackPosition, FrontMomentum, BackMomentum;
+	TVector3 FrontDirection, BackDirection;
+	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	Int_t NTPCs;
 	TClonesArray *TPC;
 
@@ -111,17 +113,17 @@ int main(int argc, char** argv)
 	TClonesArray *SMRD;
 	
 	// add them  to the tree
-	tree->Branch("Detectors","ULong_t", &Detectors);
-	tree->Branch("Status","ULong_t", &Status);
-	tree->Branch("Quality","Double_t", &Quality);
-	tree->Branch("NHits","Int_t", &NHits);
-	tree->Branch("IsForward","Bool_t", &IsForward);
+	tree->Branch("Detectors", &Detectors);
+	tree->Branch("Status", &Status);
+	tree->Branch("Quality", &Quality);
+	tree->Branch("NHits", &NHits);
+	tree->Branch("IsForward", &IsForward);
 	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
-	tree->Branch("FrontDirection","TLorentzVector", &FrontDirection);
-	tree->Branch("BackDirection","TLorentzVector", &BackDirection);
 	tree->Branch("FrontMomentum","TLorentzVector", &FrontMomentum);
 	tree->Branch("BackMomentum","TLorentzVector", &BackMomentum);
+	tree->Branch("FrontDirection","TVector3", &FrontDirection);
+	tree->Branch("BackDirection","TVector3", &BackDirection);
 	//adding a 2d graph general purpose, change titles each time!
 	Int_t total(0), accepted(0);
 	//========================================================
@@ -129,7 +131,7 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
-	for(unsigned int i = 0; i < gRecon->GetEntries()/100; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 
@@ -151,7 +153,6 @@ int main(int argc, char** argv)
 				Detectors = gTrack->Detectors;
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
-				Charge = gTrack->Charge;
 				Status = gTrack->Status;
 				FrontPosition = gTrack->FrontPosition;
 				BackPosition = gTrack->BackPosition;
@@ -166,8 +167,9 @@ int main(int argc, char** argv)
 
 	cout<<"ratio of accepted events = " << (double)accepted/(double)total << endl;
 	tree->Print();
-	treefile->Write();
-	treefile->Close();
+	tree->Write();
+	treefile.Write();
+	treefile.Close();
 	return 0;
 }
 
