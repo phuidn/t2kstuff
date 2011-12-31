@@ -85,12 +85,12 @@ int main(int argc, char** argv)
 
 	//adding tclones arrays for use with detectors
 
-	TFile treefile("newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
+	TFile treefile("../newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
-	ULong_t Detectors;
-	ULong_t Status;
+	UInt_t Detectors;
+	UInt_t Status;
 	Double_t Quality;
 	Int_t NHits;
 	Bool_t IsForward;
@@ -98,19 +98,19 @@ int main(int argc, char** argv)
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	Int_t NTPCs;
-	TClonesArray *TPC;
+	TClonesArray TPC;
 
-	Int_t NFDGs;
-	TClonesArray *FDG;
+	Int_t NFGDs;
+	TClonesArray FGD;
 
 	Int_t NECALs;
-	TClonesArray *ECAL;
+	TClonesArray ECAL;
 
-	Int_t NPODs;
-	TClonesArray *POD;
+	Int_t NP0Ds;
+	TClonesArray P0D;
 
 	Int_t NSMRDs;
-	TClonesArray *SMRD;
+	TClonesArray SMRD;
 	
 	// add them  to the tree
 	tree->Branch("Detectors", &Detectors);
@@ -124,6 +124,17 @@ int main(int argc, char** argv)
 	tree->Branch("BackMomentum","TLorentzVector", &BackMomentum);
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 	tree->Branch("BackDirection","TVector3", &BackDirection);
+	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
+/*	tree->Branch("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of them that
+	tree->Branch("NFGDs", &NFGDs);	//we want rather than the whole things.
+	tree->Branch("NECALs", &NECALs);
+	tree->Branch("NP0Ds", &NP0Ds);
+	tree->Branch("NSMRDs", &NSMRDs);
+	tree->Branch("TPC", &TPC);
+	tree->Branch("FGD", &FGD);
+	tree->Branch("ECAL", &ECAL);
+	tree->Branch("P0D", &P0D);
+	tree->Branch("SMRD", &SMRD);*/
 	//adding a 2d graph general purpose, change titles each time!
 	Int_t total(0), accepted(0);
 	//========================================================
@@ -160,6 +171,17 @@ int main(int argc, char** argv)
 				BackDirection = gTrack->BackDirection;
 				FrontMomentum = gTrack->FrontMomentum;
 				BackMomentum = gTrack->BackMomentum;
+				TrueParticle = gTrack->TrueParticle;
+/*				NTPCs = gTrack->NTPCs;
+				NFGDs = gTrack->NFGDs;
+				NECALs = gTrack->NECALs;
+				NP0Ds = gTrack->NP0Ds;
+				NSMRDs = gTrack->NSMRDs;
+				TPC = *gTrack->TPC;
+				FGD = *gTrack->FGD;
+				ECAL = *gTrack->ECAL;
+				P0D = *gTrack->P0D;
+				SMRD = *gTrack->SMRD; */
 				tree->Fill();
 			}
 		}
