@@ -29,18 +29,12 @@
 #include <TTruthVerticesModule.hxx>
 #include <TTrueVertex.hxx>
 #include <TTree.h>
+#include "cuts.h"
 #define ABS(x) (x>0?x:-x)
 
 using namespace std;
 void SetupROOT();
 
-//cut functions
-int inFGD1( ND::TGlobalReconModule::TGlobalPID *gTrack );
-int inFGD2( ND::TGlobalReconModule::TGlobalPID *gTrack );
-int noPODactivity(ND::TGlobalReconModule::TGlobalPID *gTrack );
-int noTPC1(ND::TGlobalReconModule::TGlobalPID *gTrack );
-int inTPC2(ND::TGlobalReconModule::TGlobalPID *gTrack );
-int inTPC3(ND::TGlobalReconModule::TGlobalPID *gTrack );
 //---------------------------------------------------------------------------//
 //Main Method
 //---------------------------------------------------------------------------//
@@ -164,14 +158,9 @@ int main(int argc, char** argv)
 			total++; //one more total event
 			// Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			//get position lorentz vector <- This is done in each function that requires it!
-			//TLorentzVector vec = gTrack->FrontPosition;
-			//if most require it we can always just define it here and pass it in!
+			TLorentzVector vec = gTrack->FrontPosition;
 			//if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
-			//replacing this with new cut functions(that do exactly the same thing hopefully :D ) (might be slower?)
-			//if( (inFGD1(gTrack) || inFGD2(gTrack)) && noPODactivity(gTrack) ) {
-			//check this line! does most cuts mentioned, not charge or pull yet
-			if(noTPC1(gTrack)&&noPODactivity(gTrack)&&((inFGD1(gTrack)&&inTPC2(gTrack))||(inFGD2(gTrack)&&inTPC3(gTrack)&&!inTPC2(gTrack)))) {
+			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ 
 				unsigned long det;
 				accepted++; //one more accepted event
 				Detectors = gTrack->Detectors;
@@ -234,134 +223,5 @@ void SetupROOT(){
 	gSystem->Load("liboaAnalysis.so");
 }
 
-//Functions to cut data
-//(here until we work out how to put in separate file!)
-//
-//All should return 0 if data should be cut, and 1 to keep data
-//all should be passed the gTrack
-//
-// Couldn't we filter simply by looking at gTrack->Detectors?
 
-int inFGD1( ND::TGlobalReconModule::TGlobalPID *gTrack )
-{
-	TLorentzVector vec = gTrack->FrontPosition;
 
-	if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && (vec.Z()>123.45&&vec.Z()<446.95))
-			return 1;
-	else
-			return 0;
-}
-
-int inFGD2( ND::TGlobalReconModule::TGlobalPID *gTrack )
-{
-	TLorentzVector vec = gTrack->FrontPosition;
-
-	if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && (vec.Z()>1481.45&&vec.Z()<1807.95) )
-			return 1;
-	else
-			return 0;
-}
-
-int noPODactivity(ND::TGlobalReconModule::TGlobalPID *gTrack )
-{ //returns 1 if NO POD activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
-	int i;
-	char buffer[10];
-	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
-
-	for(i=0;i<strlen(buffer);i++)
-	{
-		if( buffer[i] == '6')
-		{
-			//std::cout<<"\tPOD noooo! reject!"<<std::endl;
-			return 0;
-		}
-	}
-	//std::cout << std::endl;
-	return 1;
-	//i think this works but please check!
-	//detectors has the number 6 in it if goes through POD
-	// (see table 1 on "USing the Recon Tree")
-}
-
-int noTPC1(ND::TGlobalReconModule::TGlobalPID *gTrack )
-{ //returns 1 if NO tpc activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
-	int i;
-	char buffer[10];
-	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
-
-	for(i=0;i<strlen(buffer);i++)
-	{
-		if( buffer[i] == '1')
-		{
-			//std::cout<<"\tTPC1 noooo! reject!"<<std::endl;
-			return 0;
-		}
-	}
-	//std::cout << std::endl;
-	return 1;
-	//i think this works but please check!
-	//detectors has the number 1 in it if goes through tpc1
-	// (see table 1 on "USing the Recon Tree")
-}
-
-int inTPC2(ND::TGlobalReconModule::TGlobalPID *gTrack )
-{ //returns 1 if TPC2 activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
-	int i;
-	char buffer[10];
-	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
-
-	for(i=0;i<strlen(buffer);i++)
-	{
-		if( buffer[i] == '2')
-		{
-			//std::cout<<"\tWent through tpc2, keep!"<<std::endl;
-			return 0;
-		}
-	}
-	//std::cout << std::endl;
-	return 1;
-	//i think this works but please check!
-	//detectors has the number 2 in it if goes through tpc2
-	// (see table 1 on "USing the Recon Tree")
-}
-
-int inTPC3(ND::TGlobalReconModule::TGlobalPID *gTrack )
-{ //returns 1 if TPC3 activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
-	int i;
-	char buffer[10];
-	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;//just checking if converted
-	//std::cout << "\tbuffer= " << buffer;	// from UInt_t to char string proper
-
-	for(i=0;i<strlen(buffer);i++)
-	{
-		if( buffer[i] == '3')
-		{
-			//std::cout<<"\tWent through tpc3, keep!"<<std::endl;
-			return 0;
-		}
-	}
-	//std::cout << std::endl;
-	return 1;
-	//i think this works but please check!
-	//detectors has the number 3 in it if goes through tpc3
-	// (see table 1 on "USing the Recon Tree")
-}
