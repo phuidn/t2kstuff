@@ -174,7 +174,7 @@ int main(int argc, char** argv)
 				FrontMomentum = gTrack->FrontMomentum;
 				BackMomentum = gTrack->BackMomentum;
 				TrueParticle = gTrack->TrueParticle;
-/*				NTPCs = gTrack->NTPCs;
+				NTPCs = gTrack->NTPCs;
 				NFGDs = gTrack->NFGDs;
 				NECALs = gTrack->NECALs;
 				NP0Ds = gTrack->NP0Ds;
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 				FGD = *gTrack->FGD;
 				ECAL = *gTrack->ECAL;
 				P0D = *gTrack->P0D;
-				SMRD = *gTrack->SMRD; */
+				SMRD = *gTrack->SMRD; 
 				tree->Fill();
 			}
 		}
