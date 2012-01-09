@@ -3,7 +3,7 @@
 #====================================
 #  Application analysis
 #
-#   Generated Tue Jan  3 11:23:07 2012  by phuidv
+#   Generated Wed Jan  4 18:23:07 2012  by phuidn
 #
 #====================================
 
@@ -118,9 +118,9 @@ analysis :: dirs  $(bin)analysis${application_suffix}
 #-- end of application_header
 #-- start of application
 
-$(bin)analysis${application_suffix} :: $(bin)analysis.o $(use_stamps) $(analysisstamps) requirements $(use_requirements)
+$(bin)analysis${application_suffix} :: $(bin)analysis.o $(bin)cuts.o $(use_stamps) $(analysisstamps) requirements $(use_requirements)
 	$(link_echo) "application $@"
-	$(link_silent) $(cpplink) -o $(@).new $(bin)analysis.o $(cmt_installarea_linkopts) $(analysis_use_linkopts) $(analysislinkopts) && mv -f $(@).new $(@)
+	$(link_silent) $(cpplink) -o $(@).new $(bin)analysis.o $(bin)cuts.o $(cmt_installarea_linkopts) $(analysis_use_linkopts) $(analysislinkopts) && mv -f $(@).new $(@)
 
 #-----------------------------------------------------------------
 #
@@ -171,9 +171,9 @@ ifneq ($(MAKECMDGOALS),analysisclean)
 #$(bin)analysis_dependencies.make :: dirs
 
 ifndef QUICK
-$(bin)analysis_dependencies.make : ../app/analysis.C $(use_requirements) $(cmt_final_setup_analysis)
+$(bin)analysis_dependencies.make : ../app/analysis.C ../app/cuts.C $(use_requirements) $(cmt_final_setup_analysis)
 	$(echo) "(analysis.make) Rebuilding $@"; \
-	  $(build_dependencies) analysis -all_sources -out=$@ ../app/analysis.C
+	  $(build_dependencies) analysis -all_sources -out=$@ ../app/analysis.C ../app/cuts.C
 endif
 
 #$(analysis_dependencies)
@@ -189,6 +189,15 @@ $(bin)analysis_dependencies.make : $(analysis_C_dependencies)
 $(bin)$(binobj)analysis.o : $(analysis_C_dependencies)
 	$(cpp_echo) ../app/analysis.C
 	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(analysis_pp_cppflags) $(app_analysis_pp_cppflags) $(analysis_pp_cppflags) $(use_cppflags) $(analysis_cppflags) $(app_analysis_cppflags) $(analysis_cppflags) $(analysis_C_cppflags) -I../app ../app/analysis.C
+
+#-- end of cpp ------
+#-- start of cpp ------
+
+$(bin)analysis_dependencies.make : $(cuts_C_dependencies)
+
+$(bin)$(binobj)cuts.o : $(cuts_C_dependencies)
+	$(cpp_echo) ../app/cuts.C
+	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(analysis_pp_cppflags) $(app_analysis_pp_cppflags) $(cuts_pp_cppflags) $(use_cppflags) $(analysis_cppflags) $(app_analysis_cppflags) $(cuts_cppflags) $(cuts_C_cppflags) -I../app ../app/cuts.C
 
 #-- end of cpp ------
 #-- start of cleanup_header --------------
@@ -228,6 +237,6 @@ analysisclean ::
 #-- end of cleanup_application ------
 #-- start of cleanup_objects ------
 	$(cleanup_echo) objects
-	-$(cleanup_silent) /bin/rm -f $(bin)analysis.o
+	-$(cleanup_silent) /bin/rm -f $(bin)analysis.o $(bin)cuts.o
 	-$(cleanup_silent) cd $(bin); /bin/rm -rf analysis_deps analysis_dependencies.make
 #-- end of cleanup_objects ------

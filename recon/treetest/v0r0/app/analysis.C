@@ -191,7 +191,7 @@ int main(int argc, char** argv)
 
 	cout<<"ratio of accepted events = " << (double)accepted/(double)total << endl;
 	//tree->Print();
-	tree->Write();
+	//tree->Write();
 	treefile.Write();
 	treefile.Close();
 	return 0;

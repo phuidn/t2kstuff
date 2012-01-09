@@ -141,7 +141,7 @@ int inTPC3(ND::TGlobalReconModule::TGlobalPID *gTrack )
 
 
 int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
-
+//returns 1 if the particle corresponded with the beam, 0 if it didn't
         int nBunches = 8;
         bool isInBeamTime(0);
 		double vertexTime = FrontPosition->T();
@@ -156,3 +156,18 @@ int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
         return isInBeamTime;
 }
 
+int inTimeBunch(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
+//returns which time bunch the particle was detected in (0-7) or -1 if it wasn't in any of them
+        int nBunches = 8;
+        int timeBunch(-1);
+		double vertexTime = FrontPosition->T();
+		const double beamTimeArray[8] = {2752.,3333.,3915.,4498.,5080.,5661.,6244.,6826.};
+        for (int i = 0; i < nBunches; ++i) {
+
+                if((vertexTime > beamTimeArray[i] - beamTimeCut) && (vertexTime < beamTimeArray[i] + beamTimeCut)) {
+                        timeBunch = i;
+                        break;
+                }
+        }
+        return timeBunch;
+}

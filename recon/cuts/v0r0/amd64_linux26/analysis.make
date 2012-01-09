@@ -3,7 +3,7 @@
 #====================================
 #  Application analysis
 #
-#   Generated Wed Jan  4 18:21:29 2012  by phuidn
+#   Generated Thu Jan  5 15:11:39 2012  by phuidn
 #
 #====================================
 
@@ -23,26 +23,26 @@ ifdef cmt_analysis_has_target_tag
 
 tags      = $(tag),$(CMTEXTRATAGS),target_analysis
 
-treetest_tag = $(tag)
+cuts_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile_analysis = /tmp/CMT_$(treetest_tag)_analysis.make$(cmt_lock_pid)
+cmt_local_tagfile_analysis = /tmp/CMT_$(cuts_tag)_analysis.make$(cmt_lock_pid)
 else
-#cmt_local_tagfile_analysis = $(treetest_tag)_analysis.make
-cmt_local_tagfile_analysis = $(bin)$(treetest_tag)_analysis.make
+#cmt_local_tagfile_analysis = $(cuts_tag)_analysis.make
+cmt_local_tagfile_analysis = $(bin)$(cuts_tag)_analysis.make
 endif
 
 else
 
 tags      = $(tag),$(CMTEXTRATAGS)
 
-treetest_tag = $(tag)
+cuts_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile_analysis = /tmp/CMT_$(treetest_tag).make$(cmt_lock_pid)
+cmt_local_tagfile_analysis = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
 else
-#cmt_local_tagfile_analysis = $(treetest_tag).make
-cmt_local_tagfile_analysis = $(bin)$(treetest_tag).make
+#cmt_local_tagfile_analysis = $(cuts_tag).make
+cmt_local_tagfile_analysis = $(bin)$(cuts_tag).make
 endif
 
 endif
@@ -52,29 +52,29 @@ endif
 ifdef cmt_analysis_has_target_tag
 
 ifdef READONLY
-cmt_final_setup_analysis = /tmp/CMT_treetest_analysissetup.make
+cmt_final_setup_analysis = /tmp/CMT_cuts_analysissetup.make
 cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-cmt_final_setup_analysis = $(bin)treetest_analysissetup.make
+cmt_final_setup_analysis = $(bin)cuts_analysissetup.make
 cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
 else
 
 ifdef READONLY
-cmt_final_setup_analysis = /tmp/CMT_treetestsetup.make
+cmt_final_setup_analysis = /tmp/CMT_cutssetup.make
 cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-cmt_final_setup_analysis = $(bin)treetestsetup.make
+cmt_final_setup_analysis = $(bin)cutssetup.make
 cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
 endif
 
 ifdef READONLY
-cmt_final_setup = /tmp/CMT_treetestsetup.make
+cmt_final_setup = /tmp/CMT_cutssetup.make
 else
-cmt_final_setup = $(bin)treetestsetup.make
+cmt_final_setup = $(bin)cutssetup.make
 endif
 
 analysis ::

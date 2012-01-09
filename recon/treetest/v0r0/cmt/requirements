@@ -9,4 +9,4 @@ path_prepend LD_LIBRARY_PATH "$(package)/$(tag)"
 path_remove PATH "$(package)/$(tag)"
 path_prepend PATH "$(package)/$(tag)"
 
-application analysis ../app/analysis.C
+application analysis ../app/analysis.C ../app/cuts.C

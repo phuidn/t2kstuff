@@ -107,12 +107,10 @@ int main(int argc, char** argv)
 	for(unsigned int i = 0; i < tree->GetEntries(); ++i) {
 		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 1,000 th entry
-		cout<<"getting entry"<<endl;	
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		cout<<"got entry"<<endl;		
 		int keep(1); //is the particle going to be kept
-
+		cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
 
 		if(keep){
