@@ -35,106 +35,66 @@ int inFGD2( TLorentzVector *FrontPosition )
 			return 0;
 }
 
-int noPODactivity(ND::TGlobalReconModule::TGlobalPID *gTrack )
+int noPODactivity(UInt_t Detectors )
 { //returns 1 if NO POD activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
 	int i;
 	char buffer[10];
 	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
 
 	for(i=0;i<strlen(buffer);i++)
 	{
 		if( buffer[i] == '6')
-		{
-			//std::cout<<"\tPOD noooo! reject!"<<std::endl;
 			return 0;
-		}
 	}
-	//std::cout << std::endl;
 	return 1;
-	//i think this works but please check!
 	//detectors has the number 6 in it if goes through POD
 	// (see table 1 on "USing the Recon Tree")
 }
 
-int noTPC1(ND::TGlobalReconModule::TGlobalPID *gTrack )
+int noTPC1(UInt_t Detectors)
 { //returns 1 if NO tpc activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
 	int i;
 	char buffer[10];
 	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
 
 	for(i=0;i<strlen(buffer);i++)
 	{
 		if( buffer[i] == '1')
-		{
-			//std::cout<<"\tTPC1 noooo! reject!"<<std::endl;
 			return 0;
-		}
 	}
-	//std::cout << std::endl;
 	return 1;
-	//i think this works but please check!
 	//detectors has the number 1 in it if goes through tpc1
 	// (see table 1 on "USing the Recon Tree")
 }
 
-int inTPC2(ND::TGlobalReconModule::TGlobalPID *gTrack )
+int inTPC2(UInt_t Detectors )
 { //returns 1 if TPC2 activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
 	int i;
 	char buffer[10];
 	sprintf(buffer,"%d",Detectors);
-
-	//std::cout << "detectors= " << Detectors;
-	//std::cout << "\tbuffer= " << buffer;
 
 	for(i=0;i<strlen(buffer);i++)
 	{
 		if( buffer[i] == '2')
-		{
-			//std::cout<<"\tWent through tpc2, keep!"<<std::endl;
 			return 0;
-		}
 	}
-	//std::cout << std::endl;
 	return 1;
-	//i think this works but please check!
 	//detectors has the number 2 in it if goes through tpc2
 	// (see table 1 on "USing the Recon Tree")
 }
 
-int inTPC3(ND::TGlobalReconModule::TGlobalPID *gTrack )
+int inTPC3(UInt_t Detectors)
 { //returns 1 if TPC3 activity!
-	//trying to filter using Detector numbers!
-	UInt_t Detectors = gTrack->Detectors;
 	int i;
 	char buffer[10];
 	sprintf(buffer,"%d",Detectors);
 
-	//std::cout << "detectors= " << Detectors;//just checking if converted
-	//std::cout << "\tbuffer= " << buffer;	// from UInt_t to char string proper
-
 	for(i=0;i<strlen(buffer);i++)
 	{
 		if( buffer[i] == '3')
-		{
-			//std::cout<<"\tWent through tpc3, keep!"<<std::endl;
 			return 0;
-		}
 	}
-	//std::cout << std::endl;
 	return 1;
-	//i think this works but please check!
 	//detectors has the number 3 in it if goes through tpc3
 	// (see table 1 on "USing the Recon Tree")
 }
