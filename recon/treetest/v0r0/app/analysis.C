@@ -100,19 +100,19 @@ int main(int argc, char** argv)
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	Int_t NTPCs;
-	TClonesArray TPC;
+	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
 	Int_t NFGDs;
-	TClonesArray FGD;
+	TClonesArray FGD("ND::TGlobalReconModule::TFGDObject", 2);
 
 	Int_t NECALs;
-	TClonesArray ECAL;
+	TClonesArray ECAL("ND::TGlobalReconModule::TECALObject", 3);
 
 	Int_t NP0Ds;
-	TClonesArray P0D;
+	TClonesArray P0D("ND::TGlobalReconModule::TP0DObject", 2);
 
 	Int_t NSMRDs;
-	TClonesArray SMRD;
+	TClonesArray SMRD("ND::TGlobalReconModule::TSMRDObject", 3);
 	
 	// add them  to the tree
 	tree->Branch("Detectors", &Detectors);
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 	tree->Branch("BackDirection","TVector3", &BackDirection);
 	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
-/*	tree->Branch("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of them that
+	tree->Branch("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of them that
 	tree->Branch("NFGDs", &NFGDs);	//we want rather than the whole things.
 	tree->Branch("NECALs", &NECALs);
 	tree->Branch("NP0Ds", &NP0Ds);
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 	tree->Branch("FGD", &FGD);
 	tree->Branch("ECAL", &ECAL);
 	tree->Branch("P0D", &P0D);
-	tree->Branch("SMRD", &SMRD);*/
+	tree->Branch("SMRD", &SMRD);
 	//adding a 2d graph general purpose, change titles each time!
 	Int_t total(0), accepted(0);
 	//========================================================
