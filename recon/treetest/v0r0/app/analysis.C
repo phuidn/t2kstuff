@@ -29,6 +29,7 @@
 #include <TTruthVerticesModule.hxx>
 #include <TTrueVertex.hxx>
 #include <TTree.h>
+#include <TBranch.h>
 #include "cuts.h"
 #define ABS(x) (x>0?x:-x)
 
@@ -87,7 +88,8 @@ int main(int argc, char** argv)
 
 	//adding tclones arrays for use with detectors
 
-	TFile treefile("../newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
+	cout<<"got inputs"<<endl;
+	TFile treefile("../../../tree/newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -99,6 +101,8 @@ int main(int argc, char** argv)
 	TLorentzVector FrontPosition, BackPosition, FrontMomentum, BackMomentum;
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
+	Int_t NQES;
+	Int_t NTOT;
 	Int_t NTPCs;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
@@ -114,6 +118,7 @@ int main(int argc, char** argv)
 	Int_t NSMRDs;
 	TClonesArray SMRD("ND::TGlobalReconModule::TSMRDObject", 3);
 	
+	cout<<"declared things"<<endl;
 	// add them  to the tree
 	tree->Branch("Detectors", &Detectors);
 	tree->Branch("Status", &Status);
@@ -137,13 +142,12 @@ int main(int argc, char** argv)
 	tree->Branch("ECAL", &ECAL);
 	tree->Branch("P0D", &P0D);
 	tree->Branch("SMRD", &SMRD);
-	//adding a 2d graph general purpose, change titles each time!
-	Int_t total(0), accepted(0);
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
+	cout<<"branched tree"<<endl;
 	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
@@ -155,14 +159,14 @@ int main(int argc, char** argv)
 		//added new loop for truth vertex
 		
 		for (int j=0; j<NPIDs; j++) {
-			total++; //one more total event
 			// Get a specific track from the TClonesArray
+			NTOT++;
+			if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+				NQES++;
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			TLorentzVector vec = gTrack->FrontPosition;
 			//if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ 
-				unsigned long det;
-				accepted++; //one more accepted event
 				Detectors = gTrack->Detectors;
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
@@ -188,10 +192,12 @@ int main(int argc, char** argv)
 			}
 		}
 	} // End loop over events
-
-	cout<<"ratio of accepted events = " << (double)accepted/(double)total << endl;
-	//tree->Print();
-	//tree->Write();
+	cout<<"filled tree"<<endl;
+	TBranch* qesbranch = tree->Branch("NQES", &NQES);
+	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
+	qesbranch->Fill();
+	totbranch->Fill();	
+	cout<<"ratio of qes events = " << (double)NQES/(double)NTOT << endl;
 	treefile.Write();
 	treefile.Close();
 	return 0;
