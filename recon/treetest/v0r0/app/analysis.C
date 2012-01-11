@@ -101,8 +101,8 @@ int main(int argc, char** argv)
 	TLorentzVector FrontPosition, BackPosition, FrontMomentum, BackMomentum;
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
-	Int_t NQES;
-	Int_t NTOT;
+	Int_t NQES(0);
+	Int_t NTOT(0);
 	Int_t NTPCs;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
@@ -148,24 +148,32 @@ int main(int argc, char** argv)
 
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
 	cout<<"branched tree"<<endl;
+	int buckets[8] = {0,0,0,0,0,0,0,0};
 	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
-
-	// Get an entry for the Recon tree
+		buckets = {0,0,0,0,0,0,0,0};
+		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
-
+		for (int j=0; j<NPIDs; j++){
+			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
+			int bucket = inTimeBunch(&gTrack->FrontPosition);
+			if(bucket != -1)
+				buckets[bucket]++;
+		}
 		//added new loop for truth vertex
 		
 		for (int j=0; j<NPIDs; j++) {
-			// Get a specific track from the TClonesArray
+			//Get a specific track from the TClonesArray
+			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			NTOT++;
 			if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 				NQES++;
-			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			TLorentzVector vec = gTrack->FrontPosition;
-			//if(ABS(vec.X())<832.2 && ABS(vec.Y()-55)<832.2 && ((vec.Z()>123.45&&vec.Z()<446.95)||(vec.Z()>1481.45&&vec.Z()<1807.95))){	//is it in one of the FGDs?
+			int bucket = inTimeBunch(&vec);
+			if(bucket==-1 || buckets[bucket]>1)
+				continue;
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ 
 				Detectors = gTrack->Detectors;
 				Quality = gTrack->Quality;
