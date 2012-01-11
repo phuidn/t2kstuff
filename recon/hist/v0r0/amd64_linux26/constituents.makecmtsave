@@ -11,25 +11,25 @@ endif
 
 tags      = $(tag),$(CMTEXTRATAGS)
 
-treetest_tag = $(tag)
+hist_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile = /tmp/CMT_$(treetest_tag).make$(cmt_lock_pid)
+cmt_local_tagfile = /tmp/CMT_$(hist_tag).make$(cmt_lock_pid)
 else
-#cmt_local_tagfile = $(treetest_tag).make
-cmt_local_tagfile = $(bin)$(treetest_tag).make
+#cmt_local_tagfile = $(hist_tag).make
+cmt_local_tagfile = $(bin)$(hist_tag).make
 endif
 
 #-include $(cmt_local_tagfile)
 include $(cmt_local_tagfile)
 
 ifdef READONLY
-cmt_local_setup = /tmp/CMT_treetestsetup$(cmt_lock_pid).make
-cmt_final_setup = /tmp/CMT_treetestsetup.make
+cmt_local_setup = /tmp/CMT_histsetup$(cmt_lock_pid).make
+cmt_final_setup = /tmp/CMT_histsetup.make
 else
-#cmt_local_setup = $(bin)treetestsetup$(cmt_lock_pid).make
+#cmt_local_setup = $(bin)histsetup$(cmt_lock_pid).make
 cmt_local_setup = $(bin)$(package)setup$$$$.make
-#cmt_final_setup = $(bin)treetestsetup.make
+#cmt_final_setup = $(bin)histsetup.make
 cmt_final_setup = $(bin)$(package)setup.make
 endif
 
@@ -160,13 +160,13 @@ cmt_analysis_has_no_target_tag = 1
 ifdef cmt_analysis_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_analysis = /tmp/CMT_$(treetest_tag)_analysis.make$(cmt_lock_pid)
-cmt_final_setup_analysis = /tmp/CMT_treetest_analysissetup.make
+cmt_local_tagfile_analysis = /tmp/CMT_$(hist_tag)_analysis.make$(cmt_lock_pid)
+cmt_final_setup_analysis = /tmp/CMT_hist_analysissetup.make
 cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_analysis = $(treetest_tag)_analysis.make
-cmt_local_tagfile_analysis = $(bin)$(treetest_tag)_analysis.make
-cmt_final_setup_analysis = $(bin)treetest_analysissetup.make
+#cmt_local_tagfile_analysis = $(hist_tag)_analysis.make
+cmt_local_tagfile_analysis = $(bin)$(hist_tag)_analysis.make
+cmt_final_setup_analysis = $(bin)hist_analysissetup.make
 cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
@@ -188,13 +188,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_analysis = /tmp/CMT_$(treetest_tag).make$(cmt_lock_pid)
-cmt_final_setup_analysis = /tmp/CMT_treetestsetup.make
+cmt_local_tagfile_analysis = /tmp/CMT_$(hist_tag).make$(cmt_lock_pid)
+cmt_final_setup_analysis = /tmp/CMT_histsetup.make
 cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_analysis = $(treetest_tag).make
-cmt_local_tagfile_analysis = $(bin)$(treetest_tag).make
-cmt_final_setup_analysis = $(bin)treetestsetup.make
+#cmt_local_tagfile_analysis = $(hist_tag).make
+cmt_local_tagfile_analysis = $(bin)$(hist_tag).make
+cmt_final_setup_analysis = $(bin)histsetup.make
 cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
@@ -255,13 +255,13 @@ cmt_make_has_target_tag = 1
 ifdef cmt_make_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(treetest_tag)_make.make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_treetest_makesetup.make
+cmt_local_tagfile_make = /tmp/CMT_$(hist_tag)_make.make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_hist_makesetup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(treetest_tag)_make.make
-cmt_local_tagfile_make = $(bin)$(treetest_tag)_make.make
-cmt_final_setup_make = $(bin)treetest_makesetup.make
+#cmt_local_tagfile_make = $(hist_tag)_make.make
+cmt_local_tagfile_make = $(bin)$(hist_tag)_make.make
+cmt_final_setup_make = $(bin)hist_makesetup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -283,13 +283,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(treetest_tag).make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_treetestsetup.make
+cmt_local_tagfile_make = /tmp/CMT_$(hist_tag).make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_histsetup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(treetest_tag).make
-cmt_local_tagfile_make = $(bin)$(treetest_tag).make
-cmt_final_setup_make = $(bin)treetestsetup.make
+#cmt_local_tagfile_make = $(hist_tag).make
+cmt_local_tagfile_make = $(bin)$(hist_tag).make
+cmt_final_setup_make = $(bin)histsetup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -354,13 +354,13 @@ cmt_warnCALIBRECON_has_target_tag = 1
 ifdef cmt_warnCALIBRECON_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(treetest_tag)_warnCALIBRECON.make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_treetest_warnCALIBRECONsetup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(hist_tag)_warnCALIBRECON.make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_hist_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(treetest_tag)_warnCALIBRECON.make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(treetest_tag)_warnCALIBRECON.make
-cmt_final_setup_warnCALIBRECON = $(bin)treetest_warnCALIBRECONsetup.make
+#cmt_local_tagfile_warnCALIBRECON = $(hist_tag)_warnCALIBRECON.make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(hist_tag)_warnCALIBRECON.make
+cmt_final_setup_warnCALIBRECON = $(bin)hist_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 
@@ -382,13 +382,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(treetest_tag).make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_treetestsetup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(hist_tag).make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_histsetup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(treetest_tag).make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(treetest_tag).make
-cmt_final_setup_warnCALIBRECON = $(bin)treetestsetup.make
+#cmt_local_tagfile_warnCALIBRECON = $(hist_tag).make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(hist_tag).make
+cmt_final_setup_warnCALIBRECON = $(bin)histsetup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 
