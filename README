@@ -1,1 +1,8 @@
-caslnkdslnkndnlo
+in recon/ directory:
+treetest/ contains code to apply some cuts and write a new tree to recon/tree/
+cuts/ contains code to apply cuts to the new tree
+hist/ contains code to plot histograms from data in the new tree
+
+All main files in these are called analysis.C, as they were all copy and pasted from the same initial cmt thing. 
+
+cut functions which have been made so far are in a separate cuts.C with a cuts.h, these files are in the cuts/ tree and linked to from treetest/ 

@@ -78,8 +78,6 @@ int main(int argc, char** argv)
     // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
-	//check that truthdir and recon have the same number of entries
-	// Loop over the entries in the TChain.
 
 	//========================================================
 	//			Declare Graphs n stuff here
@@ -88,7 +86,7 @@ int main(int argc, char** argv)
 	//adding tclones arrays for use with detectors
 
 	cout<<"got inputs"<<endl;
-	TFile treefile("../../../tree/newtree.root", "RECREATE", "A test tree"); //create file for new tree (maybe)
+	TFile treefile("../../../tree/newtree.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -100,8 +98,8 @@ int main(int argc, char** argv)
 	TLorentzVector FrontPosition, BackPosition, FrontMomentum, BackMomentum;
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
-	Int_t NQES(0);
-	Int_t NTOT(0);
+	UInt_t NQES(0);
+	UInt_t NTOT(0);
 	Int_t NTPCs;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
@@ -131,8 +129,8 @@ int main(int argc, char** argv)
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 	tree->Branch("BackDirection","TVector3", &BackDirection);
 	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
-	tree->Branch("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of them that
-	tree->Branch("NFGDs", &NFGDs);	//we want rather than the whole things.
+	tree->Branch("NTPCs", &NTPCs);	
+	tree->Branch("NFGDs", &NFGDs);	
 	tree->Branch("NECALs", &NECALs);
 	tree->Branch("NP0Ds", &NP0Ds);
 	tree->Branch("NSMRDs", &NSMRDs);
@@ -145,36 +143,35 @@ int main(int argc, char** argv)
 	//	end		Declare Graphs n stuff here
 	//========================================================
 
-	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
+	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
-	int buckets[8] = {0,0,0,0,0,0,0,0};
+	int bunches[8] = {0,0,0,0,0,0,0,0};  //array to check number of hits per time bunch
 	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
-		memset(buckets, 0, 8*sizeof(int));
+		memset(bunches, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
-		for (int j=0; j<NPIDs; j++){
+		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			int bucket = inTimeBunch(&gTrack->FrontPosition);
-			if(bucket != -1)
-				buckets[bucket]++;
+			int bunch = inTimeBunch(&gTrack->FrontPosition);
+			if(bunch != -1)
+				bunches[bunch]++;
 		}
-		//added new loop for truth vertex
 		
-		for (int j=0; j<NPIDs; j++) {
+		for (int j=0; j<NPIDs; j++) {	//loop again to perform cuts
 			//Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			NTOT++;
+			NTOT++;		//one more total event
 			if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-				NQES++;
+				NQES++;		//one more qes event
 			TLorentzVector vec = gTrack->FrontPosition;
-			int bucket = inTimeBunch(&vec);
-			if(bucket==-1 || buckets[bucket]>1)
+			int bunch = inTimeBunch(&vec);
+			if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
 				continue;
-			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ 
-				Detectors = gTrack->Detectors;
+			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ //cut only lets through particles which start in an FGD
+				Detectors = gTrack->Detectors;		
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
 				Status = gTrack->Status;
@@ -200,12 +197,13 @@ int main(int argc, char** argv)
 		}
 	} // End loop over events
 	cout<<"filled tree"<<endl;
+	//add two more branches for total QES and all particles and fill them once
 	TBranch* qesbranch = tree->Branch("NQES", &NQES);
 	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
 	qesbranch->Fill();
-	totbranch->Fill();	
+	totbranch->Fill();
 	cout<<"ratio of qes events = " << (double)NQES/(double)NTOT << endl;
-	treefile.Write();
+	treefile.Write();	//write tree
 	treefile.Close();
 	return 0;
 }
