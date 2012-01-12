@@ -194,8 +194,8 @@ ND280_cleanup (from PROJECT) excludes [ND280_no_cleanup]
 ND280_prototypes (from PROJECT) excludes [ND280_no_prototypes]
 ND280_without_installarea (from PROJECT) excludes [ND280_with_installarea]
 ND280_with_version_directory (from PROJECT) excludes [ND280_without_version_directory]
-suse113 (from package CMT)
-gcc450 (from package CMT)
+suse11 (from package CMT)
+gcc434 (from package CMT)
 Unix (from package CMT) excludes [WIN32 Win32]
 ----------> CMTPATH
 # Add path /storage/epp2/t2k/software/ND280/v9r7p9 from initialization
