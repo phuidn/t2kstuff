@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
-		buckets = {0,0,0,0,0,0,0,0};
+		memset(buckets, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
