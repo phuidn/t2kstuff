@@ -61,12 +61,11 @@ int main(int argc, char** argv)
 
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
-	//	while(getline(inputFile,curFileName)){
-		for(int l = 0; l<10; l++){
-			if(getline(inputFile,curFileName)){
+		while(getline(inputFile,curFileName)){
+//		for(int l = 0; l<10; l++){
+//			if(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
-//				gGenVtx->Add(curFileName.c_str());
-			}
+//			}
 		}
 	}
 
@@ -149,7 +148,7 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TChain. (only 1/1000 of whole entries atm)
 	cout<<"branched tree"<<endl;
 	int buckets[8] = {0,0,0,0,0,0,0,0};
-	for(unsigned int i = 0; i < gRecon->GetEntries()/10; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 		memset(buckets, 0, 8*sizeof(int));
