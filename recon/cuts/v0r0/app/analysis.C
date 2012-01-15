@@ -110,7 +110,6 @@ int main(int argc, char** argv)
 		// Get an entry for the tree
 		tree->GetEntry(i);
 		int keep(1); //is the particle going to be kept
-		cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
 
 		if(keep){
