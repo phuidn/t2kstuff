@@ -57,24 +57,25 @@ int main(int argc, char** argv)
 	TLorentzVector *FrontPosition(0), *BackPosition(0), *FrontMomentum(0), *BackMomentum(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
+	Int_t NQES;
+	Int_t NTOT;
+
+	//we dont need these at the moment
 	/*Int_t *NTPCs;
 	TClonesArray *TPC;
-
 	Int_t *NFGDs;
 	TClonesArray *FGD;
-
 	Int_t *NECALs;
 	TClonesArray *ECAL;
-
 	Int_t *NP0Ds;
 	TClonesArray *P0D;
-
 	Int_t *NSMRDs;
 	TClonesArray *SMRD;*/
 	
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
-	tree->SetBranchAddress("Detectors", &Detectors);
+	//cout to debug - Tree->Detectors is fine: returns 0
+	cout << "Tree->Detectors " << tree->SetBranchAddress("Detectors", &Detectors) << endl;
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
@@ -86,6 +87,8 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FrontDirection", &FrontDirection);
 	tree->SetBranchAddress("BackDirection", &BackDirection);
 	tree->SetBranchAddress("TrueParticle", &TrueParticle);
+	//cout to debug - Tree->NQES doesnt work properly: return value is NOT 0 !
+	cout << "NQES = " <<	tree->SetBranchAddress("NQES", &NQES) << endl;
 /*	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
 	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
 	tree->SetBranchAddress("NECALs", &NECALs);
@@ -96,11 +99,8 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);*/
-	//adding a 2d graph general purpose, change titles each time!
+
 	Int_t accepted(0), acceptedNCES(0), acceptedNoise(0);
-	//========================================================
-	//	end		Declare Graphs n stuff here
-	//========================================================
 
 	// Loop over the entries in the TTree
 	cout<<"looping over " <<tree->GetEntries()<<" events"<<endl;
@@ -111,6 +111,15 @@ int main(int argc, char** argv)
 		tree->GetEntry(i);
 		int keep(1); //is the particle going to be kept
 		//apply cuts here
+		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
+
+		//APPLY CUTS HERE!!!
+		//This program cuts from our tree, not original data.
+		//Currently doesn't output anything, or cut anything
+		// but cuts are defined in cuts.C
+
+
+		//after cuts applied, keep will be = 1 if it is to be kept
 
 		if(keep){
 			accepted++;
@@ -121,7 +130,14 @@ int main(int argc, char** argv)
 		}	
 	} // End loop over events
 
+	//debugging statemnt: NQES is just whatever it was initialised to when it was initially defined
+	//NQES is not set by SetBranchAddress :(
+	cout<<"NQES = " << NQES << endl;
 	cout<<"signal to noise (needs changing to something better) = " << (double)acceptedNCES/(double)acceptedNoise << endl;
+
+	cout<<"Efficiency = acceptedNCES/NQES = " << (double)acceptedNCES/(double)NQES << endl;
+	cout<<"Purity = acceptedNCES/(acceptedNCES+acceptedNoise) = " << (double)acceptedNCES/(double)(acceptedNCES+acceptedNoise) << endl;
+
 	treefile->Close();
 	return 0;
 }

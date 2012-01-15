@@ -42,7 +42,7 @@ void SetupROOT();
 int main(int argc, char** argv)
 {	
 
-	//Making canvas and application
+	//Making canvas and application - needed for standalone programs
 	TApplication *App = new TApplication("Application",(Int_t*)&argc, argv);
 	TCanvas *canvas = new TCanvas("canvas", "canvas", 640, 640);
 	// Set up ROOT as we require.
@@ -50,7 +50,8 @@ int main(int argc, char** argv)
 
 
 	cout<<"opening tree"<<endl;
-	// Open the TTree we made
+	// Open the TTree we made 
+	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
 	TFile *treefile = new TFile("../../../tree/newtree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
@@ -64,21 +65,18 @@ int main(int argc, char** argv)
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 
+	//We dont need these at the moment
 	/*Int_t *NTPCs;
 	TClonesArray *TPC;
-
 	Int_t *NFGDs;
 	TClonesArray *FGD;
-
 	Int_t *NECALs;
 	TClonesArray *ECAL;
-
 	Int_t *NP0Ds;
 	TClonesArray *P0D;
-
 	Int_t *NSMRDs;
 	TClonesArray *SMRD;*/
-	
+
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
 	tree->SetBranchAddress("Detectors", &Detectors);
@@ -103,21 +101,22 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);*/
-	//adding a 2d graph general purpose, change titles each time!
+
+	//Counters
 	Int_t accepted(0), acceptedNCES(0), acceptedNoise(0);
 
 	//ADding graphhs
 	// change title for specific stuff
 	THStack hs("hs","Testing a TStack");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Momentum of QES reactions",200,-1500,0);
+	TH1D *hist1 = new TH1D("hist1","Momentum of NCQES reactions",200,-1500,0);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Momentum of non-QES reactions",200,-1500,0);
+	TH1D *hist2 = new TH1D("hist2","Momentum of RES reactions",200,-1500,0);
 	hist2->SetFillColor(kBlue);
 
-	TH1D *hist3 = new TH1D("hist3","Momentum of QES reactions",200,-1500,0);
+	TH1D *hist3 = new TH1D("hist3","Momentum of DIS reactions",200,-1500,0);
 	hist3->SetFillColor(kGreen);
-	TH1D *hist4 = new TH1D("hist4","Momentum of QES reactions",200,-1500,0);
+	TH1D *hist4 = new TH1D("hist4","Momentum of other reactions",200,-1500,0);
 	hist4->SetFillColor(kYellow);
 
 
@@ -145,17 +144,17 @@ int main(int argc, char** argv)
 				hist1->Fill( FrontMomentum->Mag() );
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
-			{
+			{	//RES is noise
 				acceptedNoise++;
 				hist2->Fill( FrontMomentum->Mag() );
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
-			{
+			{	//DIS is noise
 				acceptedNoise++;
 				hist3->Fill( FrontMomentum->Mag() );
 			}
 			else
-			{
+			{	//other stuff is noise
 				acceptedNoise++;
 				hist4->Fill( FrontMomentum->Mag() );
 			}
@@ -174,9 +173,7 @@ int main(int argc, char** argv)
 	hs.Draw();
 
 	//display the canvas!
-	cout<<"Running app"<<endl;
 	App->Run();
-	cout<<"Ran app"<<endl;
 
 	treefile->Close();
 	return 0;
