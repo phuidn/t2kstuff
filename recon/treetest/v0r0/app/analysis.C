@@ -95,7 +95,8 @@ int main(int argc, char** argv)
 	Double_t Quality;
 	Int_t NHits;
 	Bool_t IsForward;
-	TLorentzVector FrontPosition, BackPosition, FrontMomentum, BackMomentum;
+	Double_t FrontMomentum, BackMomentum;
+	TLorentzVector FrontPosition, BackPosition;
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	UInt_t NQES(0);
@@ -125,8 +126,8 @@ int main(int argc, char** argv)
 	tree->Branch("IsForward", &IsForward);
 	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
-	tree->Branch("FrontMomentum","TLorentzVector", &FrontMomentum);
-	tree->Branch("BackMomentum","TLorentzVector", &BackMomentum);
+	tree->Branch("FrontMomentum", &FrontMomentum);
+	tree->Branch("BackMomentum", &BackMomentum);
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 	tree->Branch("BackDirection","TVector3", &BackDirection);
 	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
@@ -202,10 +203,10 @@ int main(int argc, char** argv)
 	//add two more branches for total QES and all particles and fill them once
 	TBranch* qesbranch = tree->Branch("NQES", &NQES);
 	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
-	TBranch* treebranch = tree->Branch("NTree", &NTree);
+//	TBranch* treebranch = tree->Branch("NTree", &NTree);
 	qesbranch->Fill();
 	totbranch->Fill();
-	treebranch->Fill();
+//	treebranch->Fill();
 	cout<<"ratio of qes events = " << (double)NQES/(double)NTOT << endl;
 	treefile.Write();	//write tree
 	treefile.Close();
