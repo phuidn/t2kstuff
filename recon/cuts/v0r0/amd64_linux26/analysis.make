@@ -3,11 +3,7 @@
 #====================================
 #  Application analysis
 #
-<<<<<<< HEAD:recon/cuts/v0r0/amd64_linux26/analysis.make
-#   Generated Sun Jan 15 13:05:28 2012  by phuidn
-=======
-#   Generated Thu Jan 12 14:57:44 2012  by phuidv
->>>>>>> aee843b8ba4f7b960aaeddbf6e99b3b222a82a0d:recon/cuts/v0r0/amd64_linux26/analysis.make
+#   Generated Sun Jan 15 13:08:52 2012  by phuidn
 #
 #====================================
 

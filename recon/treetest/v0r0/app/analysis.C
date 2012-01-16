@@ -100,6 +100,7 @@ int main(int argc, char** argv)
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	UInt_t NQES(0);
 	UInt_t NTOT(0);
+	UInt_t NTree(0);
 	Int_t NTPCs;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
@@ -192,6 +193,7 @@ int main(int argc, char** argv)
 				ECAL = *gTrack->ECAL;
 				P0D = *gTrack->P0D;
 				SMRD = *gTrack->SMRD; 
+				NTree++; //one more in the tree (for diagnostic purposes to see what root is doing with the trees)
 				tree->Fill();
 			}
 		}
@@ -200,8 +202,10 @@ int main(int argc, char** argv)
 	//add two more branches for total QES and all particles and fill them once
 	TBranch* qesbranch = tree->Branch("NQES", &NQES);
 	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
+	TBranch* treebranch = tree->Branch("NTree", &NTree);
 	qesbranch->Fill();
 	totbranch->Fill();
+	treebranch->Fill();
 	cout<<"ratio of qes events = " << (double)NQES/(double)NTOT << endl;
 	treefile.Write();	//write tree
 	treefile.Close();
