@@ -57,20 +57,20 @@ int main(int argc, char** argv)
 	TLorentzVector *FrontPosition(0), *BackPosition(0), *FrontMomentum(0), *BackMomentum(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
-	Int_t NQES;
-	Int_t NTOT;
+	UInt_t NQES;
+	UInt_t NTOT;
 
 	//we dont need these at the moment
-	/*Int_t *NTPCs;
-	TClonesArray *TPC;
-	Int_t *NFGDs;
-	TClonesArray *FGD;
-	Int_t *NECALs;
-	TClonesArray *ECAL;
-	Int_t *NP0Ds;
-	TClonesArray *P0D;
-	Int_t *NSMRDs;
-	TClonesArray *SMRD;*/
+	Int_t NTPCs;
+	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
+	Int_t NFGDs;
+	TClonesArray *FGD = new TClonesArray("ND::TGlobalReconModule::TFGDObject",2);
+	Int_t NECALs;
+	TClonesArray *ECAL = new TClonesArray("ND::TGlobalReconModule::TECALObject",3);
+	Int_t NP0Ds;
+	TClonesArray *P0D = new TClonesArray("ND::TGlobalReconModule::TP0DObject",2);
+	Int_t NSMRDs;
+	TClonesArray *SMRD = new TClonesArray("ND::TGlobalReconModule::TSMRDObject",3);
 	
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("TrueParticle", &TrueParticle);
 	//cout to debug - Tree->NQES doesnt work properly: return value is NOT 0 !
 	cout << "NQES = " <<	tree->SetBranchAddress("NQES", &NQES) << endl;
-/*	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
+	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
 	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
 	tree->SetBranchAddress("NECALs", &NECALs);
 	tree->SetBranchAddress("NP0Ds", &NP0Ds);
@@ -98,9 +98,9 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FGD", &FGD);
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
-	tree->SetBranchAddress("SMRD", &SMRD);*/
+	tree->SetBranchAddress("SMRD", &SMRD);
 
-	Int_t accepted(0), acceptedNCES(0), acceptedNoise(0);
+	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0);
 
 	// Loop over the entries in the TTree
 	cout<<"looping over " <<tree->GetEntries()<<" events"<<endl;
@@ -117,8 +117,9 @@ int main(int argc, char** argv)
 		//This program cuts from our tree, not original data.
 		//Currently doesn't output anything, or cut anything
 		// but cuts are defined in cuts.C
-
-
+		keep = keep? noTPC1(Detectors): 0;
+		keep = keep? noP0Dactivity(Detectors): 0;
+		keep = keep? posCharge(NTPCs, TPC): 0;	
 		//after cuts applied, keep will be = 1 if it is to be kept
 
 		if(keep){

@@ -35,7 +35,7 @@ int inFGD2( TLorentzVector *FrontPosition )
 			return 0;
 }
 
-int noPODactivity(UInt_t Detectors )
+int noP0Dactivity(UInt_t Detectors )
 { //returns 1 if NO POD activity!
 	int i;
 	char buffer[10];
@@ -66,6 +66,19 @@ int noTPC1(UInt_t Detectors)
 	//detectors has the number 1 in it if goes through tpc1
 	// (see table 1 on "USing the Recon Tree")
 }
+
+int posCharge(Int_t NTPCs, TClonesArray* TPC)
+{
+	//return 1 if all tpcs agree an charge 1 (and if it has any tpc tracks at all)
+	if (!NTPCs)
+		return 0;
+	else{
+		Int_t charge(1);
+		for (int i=0; i<NTPCs; i++)
+			charge = charge && (((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->Charge == 1);
+		return charge==1;
+	}
+}	
 
 int inTPC2(UInt_t Detectors )
 { //returns 1 if TPC2 activity!
