@@ -1,0 +1,5 @@
+Same color scheme as for pro pull
+
+There are few protons around the muon peak
+So we can cut by muon peak and remove a lot of background
+	whereas if we cut via pro pull we would be cutting protons too.
