@@ -80,6 +80,33 @@ int posCharge(Int_t NTPCs, TClonesArray* TPC)
 	}
 }	
 
+int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -3., double maxPull = 15.)
+{
+//returns true if the average proton pull is between the threshold values, change these values to better ones once we have histograms
+	double pull = 0.;
+	if (!NTPCs)
+		return 0;
+	else{
+		for (int i=0; i<NTPCs; i++)
+			pull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(i))->PullProton/(double)NTPCs;
+		pull = (double) pull;
+	}
+	return  ((pull > minPull) && (pull < maxPull));
+}
+
+int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -10., double maxPull = 5.)
+{
+	double pull = 0.;	
+	if(!NTPCs)
+		return 0;
+	else{ 
+	for (int i=0; i<NTPCs; i++)
+			pull += ((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->PullMuon;
+		pull/=NTPCs;
+	}
+	return ((pull < minPull) || (pull > maxPull));
+}
+
 int inTPC2(UInt_t Detectors )
 { //returns 1 if TPC2 activity!
 	int i;
@@ -112,6 +139,20 @@ int inTPC3(UInt_t Detectors)
 	// (see table 1 on "USing the Recon Tree")
 }
 
+int consecutiveDetectors(UInt_t Detectors)
+{
+//returns 1 if a particle travels through an FGD and the proceeding TPC (or no FGDs but another cut will take care of this)
+	int i, FGD1(0), FGD2(0), TPC2(0), TPC3(0);
+	char buffer[10];
+	sprintf(buffer, "%d", Detectors);
+	for(i=0; i<strlen(buffer); i++){
+		FGD1 += (buffer[i] == '4');
+		FGD2 += (buffer[i] == '5');
+		TPC2 += (buffer[i] == '2');
+		TPC3 += (buffer[i] == '3');
+	}
+	return ((FGD1 && TPC2) || !FGD1) && ((FGD2 && TPC3) || !FGD2);
+}
 
 int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
 //returns 1 if the particle corresponded with the beam, 0 if it didn't

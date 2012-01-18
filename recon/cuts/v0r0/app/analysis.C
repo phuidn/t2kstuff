@@ -119,7 +119,10 @@ int main(int argc, char** argv)
 		// but cuts are defined in cuts.C
 		keep = keep? noTPC1(Detectors): 0;
 		keep = keep? noP0Dactivity(Detectors): 0;
-		keep = keep? posCharge(NTPCs, TPC): 0;	
+		keep = keep? posCharge(NTPCs, TPC): 0;
+		keep = keep? consecutiveDetectors(Detectors):0;
+		keep = keep? protonPull(NTPCs, TPC):0;
+	//	keep = keep? muonPull(NTPCs, TPC):0;	
 		//after cuts applied, keep will be = 1 if it is to be kept
 
 		if(keep){
@@ -133,7 +136,6 @@ int main(int argc, char** argv)
 
 	//debugging statemnt: NQES is just whatever it was initialised to when it was initially defined
 	//NQES is not set by SetBranchAddress :(
-	cout<<"NQES = " << NQES << endl;
 	cout<<"signal to noise (needs changing to something better) = " << (double)acceptedNCES/(double)acceptedNoise << endl;
 
 	cout<<"Efficiency = acceptedNCES/NQES = " << (double)acceptedNCES/(double)NQES << endl;
