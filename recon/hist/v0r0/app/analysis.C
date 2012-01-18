@@ -49,6 +49,10 @@ int main(int argc, char** argv)
 	SetupROOT();
 
 
+	Int_t j;
+	double avProPull;
+
+
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
@@ -61,21 +65,21 @@ int main(int argc, char** argv)
 	Double_t Quality;
 	Int_t NHits;
 	Bool_t IsForward;
-	TLorentzVector *FrontPosition(0), *BackPosition(0), *FrontMomentum(0), *BackMomentum(0);
+	TLorentzVector *FrontPosition(0), *BackPosition(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
+	Double_t FrontMomentum,BackMomentum;
 
-	//We dont need these at the moment
-	/*Int_t *NTPCs;
-	TClonesArray *TPC;
-	Int_t *NFGDs;
-	TClonesArray *FGD;
-	Int_t *NECALs;
-	TClonesArray *ECAL;
-	Int_t *NP0Ds;
-	TClonesArray *P0D;
-	Int_t *NSMRDs;
-	TClonesArray *SMRD;*/
+	Int_t NTPCs;
+	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
+	Int_t NFGDs;
+	TClonesArray *FGD = new TClonesArray("ND::TGlobalReconModule::TFGDObject",2);
+	Int_t NECALs;
+	TClonesArray *ECAL = new TClonesArray("ND::TGlobalReconModule::TECALObject",3);
+	Int_t NP0Ds;
+	TClonesArray *P0D = new TClonesArray("ND::TGlobalReconModule::TP0DObject",2);
+	Int_t NSMRDs;
+	TClonesArray *SMRD = new TClonesArray("ND::TGlobalReconModule::TSMRDObject",3);
 
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
@@ -91,33 +95,40 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FrontDirection", &FrontDirection);
 	tree->SetBranchAddress("BackDirection", &BackDirection);
 	tree->SetBranchAddress("TrueParticle", &TrueParticle);
-/*	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
-	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
-	tree->SetBranchAddress("NECALs", &NECALs);
-	tree->SetBranchAddress("NP0Ds", &NP0Ds);
-	tree->SetBranchAddress("NSMRDs", &NSMRDs);
+	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
+//	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
+//	tree->SetBranchAddress("NECALs", &NECALs);
+//	tree->SetBranchAddress("NP0Ds", &NP0Ds);
+//	tree->SetBranchAddress("NSMRDs", &NSMRDs);
 	tree->SetBranchAddress("TPC", &TPC);
-	tree->SetBranchAddress("FGD", &FGD);
-	tree->SetBranchAddress("ECAL", &ECAL);
-	tree->SetBranchAddress("P0D", &P0D);
-	tree->SetBranchAddress("SMRD", &SMRD);*/
+//	tree->SetBranchAddress("FGD", &FGD);
+//	tree->SetBranchAddress("ECAL", &ECAL);
+//	tree->SetBranchAddress("P0D", &P0D);
+//	tree->SetBranchAddress("SMRD", &SMRD);
 
 	//Counters
 	Int_t accepted(0), acceptedNCES(0), acceptedNoise(0);
 
 	//ADding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Testing a TStack");
+	THStack hs("hs","Proton Pull of many species");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Momentum of NCQES reactions",200,-1500,0);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-5,30);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Momentum of RES reactions",200,-1500,0);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-5,30);
 	hist2->SetFillColor(kBlue);
-
-	TH1D *hist3 = new TH1D("hist3","Momentum of DIS reactions",200,-1500,0);
-	hist3->SetFillColor(kGreen);
-	TH1D *hist4 = new TH1D("hist4","Momentum of other reactions",200,-1500,0);
-	hist4->SetFillColor(kYellow);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-5,30);
+	hist3->SetFillColor(kMagenta);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-5,30);
+	hist4->SetFillColor(kCyan);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-5,30);
+	hist5->SetFillColor(kGreen);
+	TH1D *hist6 = new TH1D("hist6","Generic Title",200,-5,30);
+	hist6->SetFillColor(kBlack);
+	TH1D *hist7 = new TH1D("hist7","Generic Title",200,-5,30);
+	hist7->SetFillColor(kYellow);
+	TH1D *hist8 = new TH1D("hist8","Generic Title",200,-5,30);
+	hist8->SetFillColor(kGreen);
 
 
 	//========================================================
@@ -135,30 +146,73 @@ int main(int argc, char** argv)
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
 
-		if(keep){
-			accepted++;
-			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-			{
-				acceptedNCES++;
-				//add to QES graph
-				hist1->Fill( FrontMomentum->Mag() );
+		//looping over the number of TPCs particle passed through
+		//to get average proton pull
+		for(j=0,avProPull=0;j<NTPCs;j++)
+		{
+			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->PullMuon/(double)NTPCs;
+		}
+		if(avProPull > (double)0.3)
+			cout << "WTF!!!" <<endl;
+		//this is for filtering by particle type
+		if(avProPull!=0)
+		{
+			if(TrueParticle->PDG == 2212)
+			{//then its a proton - yay!
+				hist1->Fill((Double_t)avProPull);
 			}
-			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
-			{	//RES is noise
-				acceptedNoise++;
-				hist2->Fill( FrontMomentum->Mag() );
+			else if(TrueParticle->PDG == 211)
+			{// pi+
+				hist2->Fill((Double_t)avProPull);
 			}
-			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
-			{	//DIS is noise
-				acceptedNoise++;
-				hist3->Fill( FrontMomentum->Mag() );
+			else if(TrueParticle->PDG == -211)
+			{// pi-
+				hist3->Fill((Double_t)avProPull);
+			}
+			else if(TrueParticle->PDG == -11)
+			{//e+
+				hist4->Fill((Double_t)avProPull);
+			}
+			else if(TrueParticle->PDG == 11)
+			{//e-
+				hist5->Fill((Double_t)avProPull);
+			}
+			else if(TrueParticle->PDG == 13)
+			{//mu-
+				hist6->Fill((Double_t)avProPull);
+			}
+			else if(TrueParticle->PDG == -13)
+			{//mu+
+				hist7->Fill((Double_t)avProPull);
 			}
 			else
-			{	//other stuff is noise
-				acceptedNoise++;
-				hist4->Fill( FrontMomentum->Mag() );
-			}
-		}	
+				hist8->Fill((Double_t)avProPull);
+		}
+
+//this is for reaction type, commented out as I want particle type
+	//	if(keep){
+	//		accepted++;
+	//		if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+	//		{	//add to QES graph
+	//			acceptedNCES++;
+	//			hist1->Fill( FrontDirection->Theta() );
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
+	//		{	//RES is noise
+	//			acceptedNoise++;
+	//			hist2->Fill( FrontDirection->Theta() );
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
+	//		{	//DIS is noise
+	//			acceptedNoise++;
+	//			hist3->Fill( FrontDirection->Theta() );
+	//		}
+	//		else
+	//		{	//other stuff is noise
+	//			acceptedNoise++;
+	//			hist4->Fill( FrontDirection->Theta() );
+	//		}
+	//	}	
 	} // End loop over events
 
 	cout<<"signal to noise (needs changing to something better) = " << (double)acceptedNCES/(double)acceptedNoise << endl;
@@ -168,6 +222,10 @@ int main(int argc, char** argv)
 	hs.Add(hist2);
 	hs.Add(hist3);
 	hs.Add(hist4);
+	hs.Add(hist5);
+	hs.Add(hist6);
+	hs.Add(hist7);
+	hs.Add(hist8);
 	//draw stacked hist
 	cout<<"Drawing hist"<<endl;
 	hs.Draw();
