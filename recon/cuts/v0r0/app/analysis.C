@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 	TLorentzVector *FrontPosition(0), *BackPosition(0), *FrontMomentum(0), *BackMomentum(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
-	UInt_t NQES;
+	UInt_t NNCES;
 	UInt_t NTOT;
 
 	//we dont need these at the moment
@@ -87,8 +87,8 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FrontDirection", &FrontDirection);
 	tree->SetBranchAddress("BackDirection", &BackDirection);
 	tree->SetBranchAddress("TrueParticle", &TrueParticle);
-	//cout to debug - Tree->NQES doesnt work properly: return value is NOT 0 !
-	cout << "NQES = " <<	tree->SetBranchAddress("NQES", &NQES) << endl;
+	//cout to debug - Tree->NNCES doesnt work properly: return value is NOT 0 !
+	cout << "NNCES = " <<	tree->SetBranchAddress("NNCES", &NNCES) << endl;
 	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
 	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
 	tree->SetBranchAddress("NECALs", &NECALs);
@@ -119,10 +119,11 @@ int main(int argc, char** argv)
 		// but cuts are defined in cuts.C
 		keep = keep? noTPC1(Detectors): 0;
 		keep = keep? noP0Dactivity(Detectors): 0;
-		keep = keep? posCharge(NTPCs, TPC): 0;
-		keep = keep? consecutiveDetectors(Detectors):0;
-		keep = keep? protonPull(NTPCs, TPC):0;
-	//	keep = keep? muonPull(NTPCs, TPC):0;	
+	//	keep = keep? posCharge(NTPCs, TPC): 0;
+	//	keep = keep? consecutiveDetectors(Detectors):0;
+	//	keep = keep? protonPull(NTPCs, TPC):0;
+	//	keep = keep? muonPull(NTPCs, TPC):0;
+	//	keep = keep? cutNHits(NHits):0;
 		//after cuts applied, keep will be = 1 if it is to be kept
 
 		if(keep){
@@ -134,11 +135,9 @@ int main(int argc, char** argv)
 		}	
 	} // End loop over events
 
-	//debugging statemnt: NQES is just whatever it was initialised to when it was initially defined
-	//NQES is not set by SetBranchAddress :(
-	cout<<"signal to noise (needs changing to something better) = " << (double)acceptedNCES/(double)acceptedNoise << endl;
-
-	cout<<"Efficiency = acceptedNCES/NQES = " << (double)acceptedNCES/(double)NQES << endl;
+	//debugging statemnt: NNCES is just whatever it was initialised to when it was initially defined
+	//NNCES is not set by SetBranchAddress :(
+	cout<<"Efficiency = acceptedNCES/NNCES = " << (double)acceptedNCES/(double)NNCES << endl;
 	cout<<"Purity = acceptedNCES/(acceptedNCES+acceptedNoise) = " << (double)acceptedNCES/(double)(acceptedNCES+acceptedNoise) << endl;
 
 	treefile->Close();

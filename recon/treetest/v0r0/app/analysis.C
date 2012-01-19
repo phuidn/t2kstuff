@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 	TLorentzVector FrontPosition, BackPosition;
 	TVector3 FrontDirection, BackDirection;
 	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
-	UInt_t NQES(0);
+	UInt_t NNCES(0);
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
 	Int_t NTPCs;
@@ -166,13 +166,13 @@ int main(int argc, char** argv)
 			//Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			NTOT++;		//one more total event
-			if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-				NQES++;		//one more qes event
 			TLorentzVector vec = gTrack->FrontPosition;
 			int bunch = inTimeBunch(&vec);
-			if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
-				continue;
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ //cut only lets through particles which start in an FGD
+				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+					NNCES++;		//one more qes event
+				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
+					continue;
 				Detectors = gTrack->Detectors;		
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
@@ -201,13 +201,13 @@ int main(int argc, char** argv)
 	} // End loop over events
 	cout<<"filled tree"<<endl;
 	//add two more branches for total QES and all particles and fill them once
-	TBranch* qesbranch = tree->Branch("NQES", &NQES);
+	TBranch* qesbranch = tree->Branch("NNCES", &NNCES);
 	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
 //	TBranch* treebranch = tree->Branch("NTree", &NTree);
 	qesbranch->Fill();
 	totbranch->Fill();
 //	treebranch->Fill();
-	cout<<"ratio of qes events = " << (double)NQES/(double)NTOT << endl;
+	cout<<"ratio of nces events in fgds = " << (double)NNCES/(double)NTOT << endl;
 	treefile.Write();	//write tree
 	treefile.Close();
 	return 0;

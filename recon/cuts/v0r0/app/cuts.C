@@ -91,12 +91,13 @@ int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -3., double maxP
 			pull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(i))->PullProton/(double)NTPCs;
 		pull = (double) pull;
 	}
-	return  ((pull > minPull) && (pull < maxPull));
+	// pull seems to have a default value of 0 (presumably if there isn't enough data) so these are being cut
+	return  ((pull > minPull) && (pull < maxPull) && (pull != 0));
 }
 
 int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -10., double maxPull = 5.)
 {
-	double pull = 0.;	
+	double pull = 0.;
 	if(!NTPCs)
 		return 0;
 	else{ 
@@ -105,6 +106,12 @@ int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -10., double maxPu
 		pull/=NTPCs;
 	}
 	return ((pull < minPull) || (pull > maxPull));
+}
+
+int cutNHits(Int_t NHits, Int_t threshold = 105)
+{
+	//cuts anything above NHits threshold, this is where other interactions peak but NCQES doesn't
+	return (NHits < threshold);
 }
 
 int inTPC2(UInt_t Detectors )

@@ -7,6 +7,7 @@ int inTPC2(UInt_t Detectors );
 int inTPC3(UInt_t Detectors );
 int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -0.5, double maxPull = 0.5);
 int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -0.5, double maxPull = 0.5);
+int cutNHits(Int_t NHits, Int_t threshold = 105);
 int posCharge(Int_t NTPCs, TClonesArray* TPC);
 int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.);
 int inTimeBunch(TLorentzVector *FrontPosition, double beamTimeCut = 100.);
