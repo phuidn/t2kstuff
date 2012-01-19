@@ -111,15 +111,15 @@ int main(int argc, char** argv)
 
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Proton Pull of many species");
+	THStack hs("hs","NHits for interaction type");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-1,1.1);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,250);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-1,1.1);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,250);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-1,1.1);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,250);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-1,1.1);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,250);
 	hist4->SetFillColor(kCyan);
 //	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-5,30);
 //	hist5->SetFillColor(kGreen);
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		Double_t fillval = FrontDirection->Z();
+		Double_t fillval = NHits;
 		
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
