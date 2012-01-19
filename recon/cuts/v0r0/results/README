@@ -1,0 +1,21 @@
+This is a folder just for efficiency purity graphs.
+run ./view in this folder to view all graphs in this folder and view this readme
+
+effpur1.png:
+	Cuts are:
+		0	-	(after initial cuts) Start in FGD && one in time bunch
+		1	-	no TPC1 && no POD activity (grouped as one because makes little change)
+		2	-	Positive Charge
+		3	-	Consecutive Detectors (if FGD1 then require TPC2 || if FGD2 then require TPC3)
+		4	-	Muon Pull (removed mupull between -10 and 5)
+		5	-	NHits must be below the threshold of 105	
+
+effpur2.png:
+	Cuts are:
+		0	-	(after initial cuts) Start in FGD && one in time bunch
+		1	-	no TPC1 && no POD activity (grouped as one because makes little change)
+		2	-	Positive Charge
+		3	-	Consecutive Detectors (if FGD1 then require TPC2 || if FGD2 then require TPC3)
+		4	-	Muon Pull (removed mupull between -10 and 5)
+		5	-	Proton Pull (remove?)
+		6	-	NHits must be below the threshold of 105	

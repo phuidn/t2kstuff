@@ -111,24 +111,24 @@ int main(int argc, char** argv)
 
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","NHits for interaction type");
+	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,250);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,1500);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,250);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,1500);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,250);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,1500);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,250);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,1500);
 	hist4->SetFillColor(kCyan);
-//	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-5,30);
-//	hist5->SetFillColor(kGreen);
-//	TH1D *hist6 = new TH1D("hist6","Generic Title",200,-5,30);
-//	hist6->SetFillColor(kBlack);
-//	TH1D *hist7 = new TH1D("hist7","Generic Title",200,-5,30);
-//	hist7->SetFillColor(kYellow);
-//	TH1D *hist8 = new TH1D("hist8","Generic Title",200,-5,30);
-//	hist8->SetFillColor(kGreen);
+	//TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,1500);
+	//hist5->SetFillColor(kGreen);
+	//TH1D *hist6 = new TH1D("hist6","Generic Title",200,0,1500);
+	//hist6->SetFillColor(kBlack);
+	//TH1D *hist7 = new TH1D("hist7","Generic Title",200,0,1500);
+	//hist7->SetFillColor(kYellow);
+	//TH1D *hist8 = new TH1D("hist8","Generic Title",200,0,1500);
+	//hist8->SetFillColor(kPink);
 
 
 	//========================================================
@@ -142,16 +142,52 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		Double_t fillval = NHits;
-		
+		Double_t fillval = (Double_t)FrontMomentum;
+		int keep=1;
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
+	//	keep = keep? noTPC1(Detectors): 0;
+	//	keep = keep? noP0Dactivity(Detectors): 0;
+	//	keep = keep? posCharge(NTPCs, TPC): 0;
+	//	keep = keep? consecutiveDetectors(Detectors):0;
+	//	keep = keep? muonPull(NTPCs, TPC):0;
+		if(fillval == 500.0) keep=0;
 		
 		//looping over the number of TPCs particle passed through
 		//to get average proton pull
+		//looping over the number of TPCs particle passed through
+				//to get average proton pull
+	//	for(j=0,avProPull=0;j<NTPCs;j++)
+	//	{
+	//		avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->PullProton/(double)NTPCs;
+	//	}
+	//
+	//	if(avProPull != 0 && keep)
+	//	{
+	//		if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+	//		{	//add to QES graph
+	//			acceptedNCES++;
+	//			hist1->Fill((Double_t)avProPull);
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
+	//		{	//RES is noise
+	//			acceptedNoise++;
+	//			hist2->Fill((Double_t)avProPull);
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
+	//		{	//DIS is noise
+	//			acceptedNoise++;
+	//			hist3->Fill((Double_t)avProPull);
+	//		}
+	//		else
+	//		{	//other stuff is noise
+	//			acceptedNoise++;
+	//			hist4->Fill((Double_t)avProPull);
+	//		}
+	//	}
 		
 		//this is for filtering by particle type
-	//	if(avProPull!=0)
+	//	if(avProPull!=0 && keep)
 	//	{
 	//		if(TrueParticle->PDG == 2212)
 	//		{//then its a proton - yay!
@@ -186,26 +222,29 @@ int main(int argc, char** argv)
 	//	}
 
 //this is for reaction type, commented out as I want particle type
-		accepted++;
-		if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-		{	//add to QES graph
-			acceptedNCES++;
-			hist1->Fill( fillval );
-		}
-		else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
-		{	//RES is noise
-			acceptedNoise++;
-			hist2->Fill( fillval );
-		}
-		else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
-		{	//DIS is noise
-			acceptedNoise++;
-			hist3->Fill( fillval );
-		}
-		else
-		{	//other stuff is noise
-			acceptedNoise++;
-			hist4->Fill( fillval );
+		if(keep)
+		{
+			accepted++;
+			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+			{	//add to QES graph
+				acceptedNCES++;
+				hist1->Fill( fillval );
+			}
+			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
+			{	//RES is noise
+				acceptedNoise++;
+				hist2->Fill( fillval );
+			}
+			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
+			{	//DIS is noise
+				acceptedNoise++;
+				hist3->Fill( fillval );
+			}
+			else
+			{	//other stuff is noise
+				acceptedNoise++;
+				hist4->Fill( fillval );
+			}
 		}
 	} // End loop over events
 
@@ -216,10 +255,10 @@ int main(int argc, char** argv)
 	hs.Add(hist2);
 	hs.Add(hist3);
 	hs.Add(hist4);
-//	hs.Add(hist5);
-//	hs.Add(hist6);
-//	hs.Add(hist7);
-//	hs.Add(hist8);
+	//hs.Add(hist5);
+	//hs.Add(hist6);
+	//hs.Add(hist7);
+	//hs.Add(hist8);
 	//draw stacked hist
 	cout<<"Drawing hist"<<endl;
 	hs.Draw();
