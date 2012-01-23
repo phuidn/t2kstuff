@@ -73,12 +73,13 @@ int main(int argc, char** argv)
 
 	//Setup access to the Recon tree
 	int NPIDs(0);  // This variable counts the number of particles per event
+	Int_t EventID(0);
 	// Declare a TClonesArray to hold objects of type TGlobalPID
  	TClonesArray *globalPIDs = new TClonesArray("ND::TGlobalReconModule::TGlobalPID",50);
     // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
-
+	gRecon->SetBranchAddress("EventID", &EventID);
 	//========================================================
 	//			Declare Graphs n stuff here
 	//========================================================
@@ -86,7 +87,7 @@ int main(int argc, char** argv)
 	//adding tclones arrays for use with detectors
 
 	cout<<"got inputs"<<endl;
-	TFile treefile("../../../tree/newtree.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -103,6 +104,7 @@ int main(int argc, char** argv)
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
 	Int_t NTPCs;
+	TString FName;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
 	Int_t NFGDs;
@@ -119,6 +121,8 @@ int main(int argc, char** argv)
 	
 	cout<<"declared things"<<endl;
 	// add them  to the tree
+	tree->Branch("FName","TString", &FName);
+	tree->Branch("EventID", &EventID);
 	tree->Branch("Detectors", &Detectors);
 	tree->Branch("Status", &Status);
 	tree->Branch("Quality", &Quality);
@@ -148,12 +152,13 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
 	int bunches[8] = {0,0,0,0,0,0,0,0};  //array to check number of hits per time bunch
-	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries()/1000; ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 		memset(bunches, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
+		cout << "got entry" << endl;
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -173,7 +178,9 @@ int main(int argc, char** argv)
 					NNCES++;		//one more qes event
 				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
 					continue;
-				Detectors = gTrack->Detectors;		
+				cout << "writing stuff to the tree" << endl;
+				FName = TString(*gRecon->GetFile()->GetName());
+				Detectors = gTrack->Detectors;	
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
 				Status = gTrack->Status;
