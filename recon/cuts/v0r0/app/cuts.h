@@ -9,6 +9,9 @@ int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -10., double maxPu
 int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -3., double maxPull = 15.);
 int cutNHits(Int_t NHits, Int_t threshold = 105);
 int posCharge(Int_t NTPCs, TClonesArray* TPC);
+int cutMomentum(Double_t momentum, Double_t minVal = 75.);
+int cutNECAL(int NECALs);
+int cutNSMRD(int NSMRDs);
 int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.);
 int inTimeBunch(TLorentzVector *FrontPosition, double beamTimeCut = 100.);
 int consecutiveDetectors(UInt_t Detectors);

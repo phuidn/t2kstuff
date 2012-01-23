@@ -161,6 +161,18 @@ int consecutiveDetectors(UInt_t Detectors)
 	return ((FGD1 && TPC2) || !FGD1) && ((FGD2 && TPC3) || !FGD2);
 }
 
+int cutMomentum(Double_t momentum, Double_t minVal = 75.){
+	return momentum > minVal;
+}
+
+int cutNECAL(int NECALs){
+	return NECALs < 2;
+}
+
+int cutNSMRD(int NSMRDs){
+	return NSMRDs < 1;
+}
+
 int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
 //returns 1 if the particle corresponded with the beam, 0 if it didn't
         int nBunches = 8;

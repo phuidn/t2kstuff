@@ -95,16 +95,16 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FrontDirection", &FrontDirection);
 	tree->SetBranchAddress("BackDirection", &BackDirection);
 	tree->SetBranchAddress("TrueParticle", &TrueParticle);
-	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
-//	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
-//	tree->SetBranchAddress("NECALs", &NECALs);
-//	tree->SetBranchAddress("NP0Ds", &NP0Ds);
-//	tree->SetBranchAddress("NSMRDs", &NSMRDs);
-	tree->SetBranchAddress("TPC", &TPC);
-//	tree->SetBranchAddress("FGD", &FGD);
-//	tree->SetBranchAddress("ECAL", &ECAL);
-//	tree->SetBranchAddress("P0D", &P0D);
-//	tree->SetBranchAddress("SMRD", &SMRD);
+	tree->SetBranchAddress("NTPCs", &NTPCs);
+	tree->SetBranchAddress("NFGDs", &NFGDs);
+	tree->SetBranchAddress("NECALs", &NECALs);
+	tree->SetBranchAddress("NP0Ds", &NP0Ds);
+	tree->SetBranchAddress("NSMRDs", &NSMRDs);
+  	tree->SetBranchAddress("TPC", &TPC);
+	tree->SetBranchAddress("FGD", &FGD);
+	tree->SetBranchAddress("ECAL", &ECAL);
+	tree->SetBranchAddress("P0D", &P0D);
+	tree->SetBranchAddress("SMRD", &SMRD);
 
 	//Counters
 	Int_t accepted(0), acceptedNCES(0), acceptedNoise(0);
@@ -113,13 +113,13 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,1500);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-1,1);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,1500);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-1,1);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,1500);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-1,1);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,1500);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-1,1);
 	hist4->SetFillColor(kCyan);
 	//TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,1500);
 	//hist5->SetFillColor(kGreen);
@@ -142,17 +142,15 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		Double_t fillval = (Double_t)FrontMomentum;
+		Double_t fillval = (Double_t)FrontDirection->X();
 		int keep=1;
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
-	//	keep = keep? noTPC1(Detectors): 0;
-	//	keep = keep? noP0Dactivity(Detectors): 0;
-	//	keep = keep? posCharge(NTPCs, TPC): 0;
-	//	keep = keep? consecutiveDetectors(Detectors):0;
-	//	keep = keep? muonPull(NTPCs, TPC):0;
-		if(fillval == 500.0) keep=0;
-		
+		keep = keep? noTPC1(Detectors): 0;
+		keep = keep? noP0Dactivity(Detectors): 0;
+		keep = keep? posCharge(NTPCs, TPC): 0;
+		keep = keep? consecutiveDetectors(Detectors):0;
+		keep = keep? muonPull(NTPCs, TPC):0;
 		//looping over the number of TPCs particle passed through
 		//to get average proton pull
 		//looping over the number of TPCs particle passed through
@@ -162,29 +160,6 @@ int main(int argc, char** argv)
 	//		avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->PullProton/(double)NTPCs;
 	//	}
 	//
-	//	if(avProPull != 0 && keep)
-	//	{
-	//		if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-	//		{	//add to QES graph
-	//			acceptedNCES++;
-	//			hist1->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
-	//		{	//RES is noise
-	//			acceptedNoise++;
-	//			hist2->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
-	//		{	//DIS is noise
-	//			acceptedNoise++;
-	//			hist3->Fill((Double_t)avProPull);
-	//		}
-	//		else
-	//		{	//other stuff is noise
-	//			acceptedNoise++;
-	//			hist4->Fill((Double_t)avProPull);
-	//		}
-	//	}
 		
 		//this is for filtering by particle type
 	//	if(avProPull!=0 && keep)
@@ -248,7 +223,6 @@ int main(int argc, char** argv)
 		}
 	} // End loop over events
 
-	cout<<"signal to noise (needs changing to something better) = " << (double)acceptedNCES/(double)acceptedNoise << endl;
 
 	//add QES and Non-QES to TStack
 	hs.Add(hist1);
