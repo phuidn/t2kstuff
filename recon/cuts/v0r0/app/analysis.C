@@ -119,11 +119,11 @@ int main(int argc, char** argv)
 		// but cuts are defined in cuts.C
 		keep = keep? noTPC1(Detectors): 0;
 		keep = keep? noP0Dactivity(Detectors): 0;
-	//	keep = keep? posCharge(NTPCs, TPC): 0;
-	//	keep = keep? consecutiveDetectors(Detectors):0;
-	//	keep = keep? protonPull(NTPCs, TPC):0;
-	//	keep = keep? muonPull(NTPCs, TPC):0;
-	//	keep = keep? cutNHits(NHits):0;
+		keep = keep? posCharge(NTPCs, TPC): 0;
+		keep = keep? consecutiveDetectors(Detectors):0;
+		keep = keep? protonPull(NTPCs, TPC):0;
+		keep = keep? muonPull(NTPCs, TPC):0;
+		keep = keep? cutNHits(NHits):0;
 		//after cuts applied, keep will be = 1 if it is to be kept
 
 		if(keep){
