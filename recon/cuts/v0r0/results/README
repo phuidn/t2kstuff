@@ -17,5 +17,16 @@ effpur2.png:
 		2	-	Positive Charge
 		3	-	Consecutive Detectors (if FGD1 then require TPC2 || if FGD2 then require TPC3)
 		4	-	Muon Pull (removed mupull between -10 and 5)
-		5	-	Proton Pull (remove?)
+		5	-	Proton Pull (removed -0.5 to 0.5 WRONG REMOVE)
+		6	-	NHits must be below the threshold of 105	
+
+effpur3.png:
+	Green line is 4*eff*pur (4 just to make it easier to see the maximum)
+	Cuts are:
+		0	-	(after initial cuts) Start in FGD && one in time bunch
+		1	-	no TPC1 && no POD activity (grouped as one because makes little change)
+		2	-	Positive Charge
+		3	-	Consecutive Detectors (if FGD1 then require TPC2 || if FGD2 then require TPC3)
+		4	-	Muon Pull (removed mupull between -10 and 5)
+		5	-	Proton Pull (removed -3 to 15 )
 		6	-	NHits must be below the threshold of 105	
