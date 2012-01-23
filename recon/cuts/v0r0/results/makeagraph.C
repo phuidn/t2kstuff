@@ -10,7 +10,6 @@
    */
 
 #define XyPlot_cxx
-//#include "XyPlot.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -29,8 +28,11 @@ void makemygraph()
 	for(i=0;i<size;i++) cutnumber[i] = i;
 	//cutnumber=0 should be uncut data(or initial cut data)
 
-	Double_t efficiency[size]={0.849,0.849,0.4450,0.348,0.345,0.0551,0.045};
-	Double_t purity[size]={0.101,0.101,0.248,0.229,0.271,0.321,0.350};
+	Double_t efficiency[size]={0.849,0.849,0.4450,0.348,0.317,0.276,0.246};
+	Double_t purity[size]={0.101,0.101,0.248,0.229,0.395,0.421,0.430};
+	Double_t effpur[size];
+	
+	for(i=0;i<size;i++) effpur[i] = 4*efficiency[i]*purity[i];
 
 
 	TMultiGraph *mg = new TMultiGraph();
@@ -42,8 +44,12 @@ void makemygraph()
 	TGraph *purgr = new TGraph(size,cutnumber,purity);
 	purgr->SetLineColor(kBlue);
 
+	TGraph *epgr = new TGraph(size,cutnumber,effpur);
+	epgr->SetLineColor(kGreen);
+
 	mg->Add(effgr);
 	mg->Add(purgr);
+	mg->Add(epgr);
 
 	mg->Draw("ALP");
 	mg->GetXaxis()->SetTitle("Cuts");
