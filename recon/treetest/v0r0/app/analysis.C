@@ -122,9 +122,7 @@ int main(int argc, char** argv)
 	
 	cout<<"declared things"<<endl;
 	// add them  to the tree
-//	tree->Branch("FName","TString", &FName);
 	tree->Branch("FOName",&FOName);
-//	tree->Branch("FName", &FName); //Doesnt work in tree -> need TObjString See above
 	tree->Branch("EventID", &EventID);
 	tree->Branch("Detectors", &Detectors);
 	tree->Branch("Status", &Status);
@@ -182,8 +180,6 @@ int main(int argc, char** argv)
 					continue;
 				FName = TString(gRecon->GetFile()->GetName());
 				FOName.SetString(FName);
-				//cout << "FNAME = " << FName << endl;
-				//cout << "FOName = " << FOName.GetString() << endl; //need to use TObjString.GetString() to return a TString
 				Detectors = gTrack->Detectors;	
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;

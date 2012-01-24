@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/newtree.root");
+	TFile *treefile = new TFile("../../../tree/evetree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -59,6 +59,8 @@ int main(int argc, char** argv)
 	ND::TTrueParticle *TrueParticle(0);
 	UInt_t NNCES;
 	UInt_t NTOT;
+	TObjString FOName;
+	Int_t EventID(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -75,7 +77,9 @@ int main(int argc, char** argv)
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
 	//cout to debug - Tree->Detectors is fine: returns 0
-	cout << "Tree->Detectors " << tree->SetBranchAddress("Detectors", &Detectors) << endl;
+	tree->SetBranchAddress("Detectors", &Detectors);
+	tree->SetBranchAddress("FOName",&FOName);
+	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
@@ -153,6 +157,8 @@ int main(int argc, char** argv)
 		keep = keep? cutNSMRD(NSMRDs):0;
 		correctCut[10] += keep && isNCES;
 		wrongCut[10] += keep && !isNCES;
+
+
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
