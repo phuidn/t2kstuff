@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/newtree.root");
+	TFile *treefile = new TFile("../../../tree/evetree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -59,6 +59,7 @@ int main(int argc, char** argv)
 	ND::TTrueParticle *TrueParticle(0);
 	UInt_t NNCES;
 	UInt_t NTOT;
+	TString *FName(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -99,7 +100,7 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);
-
+	tree->SetBranchAddress("FName", &FName);
 	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0), initialNCES(0);
 	int NCuts = 11,
 		correctCut[11] = {0,0,0,0,0,0,0},
@@ -114,6 +115,7 @@ int main(int argc, char** argv)
 		tree->GetEntry(i);
 		int keep(1), isNCES = TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1; //is the particle going to be kept, is it NCES
 		initialNCES += isNCES;
+		cout << FName << endl;
 		//apply cuts here
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//APPLY CUTS HERE!!!

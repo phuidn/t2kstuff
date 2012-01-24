@@ -104,7 +104,7 @@ int main(int argc, char** argv)
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
 	Int_t NTPCs;
-	TString FName;
+	TString *FName;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
 	Int_t NFGDs;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 	
 	cout<<"declared things"<<endl;
 	// add them  to the tree
-	tree->Branch("FName","TString", &FName);
+	tree->Branch("FName","TString", FName);
 	tree->Branch("EventID", &EventID);
 	tree->Branch("Detectors", &Detectors);
 	tree->Branch("Status", &Status);
@@ -158,7 +158,6 @@ int main(int argc, char** argv)
 		memset(bunches, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
-		cout << "got entry" << endl;
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -178,8 +177,8 @@ int main(int argc, char** argv)
 					NNCES++;		//one more qes event
 				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
 					continue;
-				cout << "writing stuff to the tree" << endl;
-				FName = TString(*gRecon->GetFile()->GetName());
+				FName = new TString(gRecon->GetFile()->GetName());
+				cout << *FName << endl;
 				Detectors = gTrack->Detectors;	
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
