@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 	double avProPull;
 
 
-	cout<<"opening tree"<<endl;
+	cout<<"#opening tree"<<endl;
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
 	TFile *treefile = new TFile("../../../tree/evetree.root");
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
 	Int_t EventID(0);
-	TObjString *FOName;
+	TObjString *FOName(0);
 
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 	TClonesArray *SMRD = new TClonesArray("ND::TGlobalReconModule::TSMRDObject",3);
 
 	// add them  to the tree
-	cout<<"setting tree branch addresses to variables"<<endl;
+	cout<<"#setting tree branch addresses to variables"<<endl;
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("FOName",&FOName);
@@ -117,16 +117,16 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-1,1);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,1500);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-1,1);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,1500);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-1,1);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,1500);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-1,1);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,1500);
 	hist4->SetFillColor(kCyan);
-	//TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,1500);
-	//hist5->SetFillColor(kGreen);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,1500);
+	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",200,0,1500);
 	//hist6->SetFillColor(kBlack);
 	//TH1D *hist7 = new TH1D("hist7","Generic Title",200,0,1500);
@@ -140,13 +140,13 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TTree
-	cout<<"looping over " <<tree->GetEntries()<<" events"<<endl;
+	cout<<"#looping over " <<tree->GetEntries()<<" events"<<endl;
 	for(unsigned int i = 0; i < tree->GetEntries(); ++i) {
-		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
+		if((i+1)%1000 == 0) std::cout << "#Processing event: " << (i+1) << std::endl;
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		Double_t fillval = (Double_t)FrontDirection->X();
+		Double_t fillval = (Double_t)FrontMomentum;
 		int keep=1;
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
@@ -208,22 +208,31 @@ int main(int argc, char** argv)
 			{	//add to QES graph
 				acceptedNCES++;
 				hist1->Fill( fillval );
+				cout << "NCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
 			{	//RES is noise
 				acceptedNoise++;
 				hist2->Fill( fillval );
-				cout << "RES Event FName=\"" << FOName->GetString() << "  \" Event Number: " << EventID << endl;
+				cout << "RES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
 			{	//DIS is noise
 				acceptedNoise++;
 				hist3->Fill( fillval );
+				cout << "DIS," << FOName->GetString() << "," << EventID << endl;
+			}
+			else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
+			{	//CCQES is noise
+				acceptedNoise++;
+				hist4->Fill( fillval );
+				cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else
 			{	//other stuff is noise
 				acceptedNoise++;
-				hist4->Fill( fillval );
+				hist5->Fill( fillval );
+				cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
 			}
 		}
 	} // End loop over events
@@ -234,12 +243,12 @@ int main(int argc, char** argv)
 	hs.Add(hist2);
 	hs.Add(hist3);
 	hs.Add(hist4);
-	//hs.Add(hist5);
+	hs.Add(hist5);
 	//hs.Add(hist6);
 	//hs.Add(hist7);
 	//hs.Add(hist8);
 	//draw stacked hist
-	cout<<"Drawing hist"<<endl;
+	cout<<"#Drawing hist"<<endl;
 	hs.Draw();
 
 	//display the canvas!
@@ -248,7 +257,6 @@ int main(int argc, char** argv)
 	treefile->Close();
 	return 0;
 }
-
 //---------------------------------------------------------------------------//
 //										Method to set up ROOT as required.										 //
 //---------------------------------------------------------------------------//
