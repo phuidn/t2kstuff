@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
-	TFile *treefile = new TFile("../../../tree/newtree.root");
+	TFile *treefile = new TFile("../../../tree/evetree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -69,6 +69,8 @@ int main(int argc, char** argv)
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
+	Int_t EventID(0);
+	TObjString *FOName;
 
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
@@ -85,6 +87,8 @@ int main(int argc, char** argv)
 	cout<<"setting tree branch addresses to variables"<<endl;
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
+	tree->SetBranchAddress("FOName",&FOName);
+	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
 	tree->SetBranchAddress("IsForward", &IsForward);
@@ -209,6 +213,7 @@ int main(int argc, char** argv)
 			{	//RES is noise
 				acceptedNoise++;
 				hist2->Fill( fillval );
+				cout << "RES Event FName=\"" << FOName->GetString() << "  \" Event Number: " << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
 			{	//DIS is noise

@@ -59,7 +59,8 @@ int main(int argc, char** argv)
 	ND::TTrueParticle *TrueParticle(0);
 	UInt_t NNCES;
 	UInt_t NTOT;
-	TString *FName(0);
+	TObjString FOName;
+	Int_t EventID(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -76,7 +77,9 @@ int main(int argc, char** argv)
 	// add them  to the tree
 	cout<<"setting tree branch addresses to variables"<<endl;
 	//cout to debug - Tree->Detectors is fine: returns 0
-	cout << "Tree->Detectors " << tree->SetBranchAddress("Detectors", &Detectors) << endl;
+	tree->SetBranchAddress("Detectors", &Detectors);
+	tree->SetBranchAddress("FOName",&FOName);
+	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
@@ -100,7 +103,6 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);
-	tree->SetBranchAddress("FName", &FName);
 	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0), initialNCES(0);
 	int NCuts = 11,
 		correctCut[11] = {0,0,0,0,0,0,0},
@@ -115,7 +117,6 @@ int main(int argc, char** argv)
 		tree->GetEntry(i);
 		int keep(1), isNCES = TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1; //is the particle going to be kept, is it NCES
 		initialNCES += isNCES;
-		cout << FName << endl;
 		//apply cuts here
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//APPLY CUTS HERE!!!
@@ -155,6 +156,8 @@ int main(int argc, char** argv)
 		keep = keep? cutNSMRD(NSMRDs):0;
 		correctCut[10] += keep && isNCES;
 		wrongCut[10] += keep && !isNCES;
+
+
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);

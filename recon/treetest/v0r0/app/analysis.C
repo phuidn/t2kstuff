@@ -104,7 +104,8 @@ int main(int argc, char** argv)
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
 	Int_t NTPCs;
-	TString *FName;
+	TString FName;
+	TObjString FOName;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 
 	Int_t NFGDs;
@@ -121,7 +122,7 @@ int main(int argc, char** argv)
 	
 	cout<<"declared things"<<endl;
 	// add them  to the tree
-	tree->Branch("FName","TString", FName);
+	tree->Branch("FOName",&FOName);
 	tree->Branch("EventID", &EventID);
 	tree->Branch("Detectors", &Detectors);
 	tree->Branch("Status", &Status);
@@ -152,7 +153,7 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
 	int bunches[8] = {0,0,0,0,0,0,0,0};  //array to check number of hits per time bunch
-	for(unsigned int i = 0; i < gRecon->GetEntries()/1000; ++i) {
+	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
 		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 10,000 th entry
 		memset(bunches, 0, 8*sizeof(int));
@@ -177,8 +178,8 @@ int main(int argc, char** argv)
 					NNCES++;		//one more qes event
 				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
 					continue;
-				FName = new TString(gRecon->GetFile()->GetName());
-				cout << *FName << endl;
+				FName = TString(gRecon->GetFile()->GetName());
+				FOName.SetString(FName);
 				Detectors = gTrack->Detectors;	
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
