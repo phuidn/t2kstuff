@@ -53,7 +53,6 @@ int main(int argc, char** argv)
 	double avProPull;
 
 
-	cout<<"#opening tree"<<endl;
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
 	TFile *treefile = new TFile("../../../tree/evetree.root");
@@ -84,7 +83,6 @@ int main(int argc, char** argv)
 	TClonesArray *SMRD = new TClonesArray("ND::TGlobalReconModule::TSMRDObject",3);
 
 	// add them  to the tree
-	cout<<"#setting tree branch addresses to variables"<<endl;
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("FOName",&FOName);
@@ -140,15 +138,12 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TTree
-	cout<<"#looping over " <<tree->GetEntries()<<" events"<<endl;
 	for(unsigned int i = 0; i < tree->GetEntries(); ++i) {
-		if((i+1)%1000 == 0) std::cout << "#Processing event: " << (i+1) << std::endl;
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
 		Double_t fillval = (Double_t)FrontMomentum;
 		int keep=1;
-		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
 		//apply cuts here
 		keep = keep? noTPC1(Detectors): 0;
 		keep = keep? noP0Dactivity(Detectors): 0;
@@ -248,7 +243,6 @@ int main(int argc, char** argv)
 	//hs.Add(hist7);
 	//hs.Add(hist8);
 	//draw stacked hist
-	cout<<"#Drawing hist"<<endl;
 	hs.Draw();
 
 	//display the canvas!

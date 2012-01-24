@@ -1,7 +1,3 @@
-% *** Initializing ND::TOARuntimeParameters
-#opening tree
-#setting tree branch addresses to variables
-#looping over 36947 events
 NCQES,/storage/epp2/t2k/data/nd280/production004/C/mcp/genie/2010-11-water/basket/beam/anal/oa_gn_beam_91211000-0000_c5j2mmpu7dea_anal_000_prod004basket201011water-bsdv01.root,97
 RES,/storage/epp2/t2k/data/nd280/production004/C/mcp/genie/2010-11-water/basket/beam/anal/oa_gn_beam_91211000-0000_c5j2mmpu7dea_anal_000_prod004basket201011water-bsdv01.root,103
 RES,/storage/epp2/t2k/data/nd280/production004/C/mcp/genie/2010-11-water/basket/beam/anal/oa_gn_beam_91211000-0000_c5j2mmpu7dea_anal_000_prod004basket201011water-bsdv01.root,577
