@@ -103,7 +103,6 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);
-
 	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0), initialNCES(0);
 	int NCuts = 11,
 		correctCut[11] = {0,0,0,0,0,0,0},
