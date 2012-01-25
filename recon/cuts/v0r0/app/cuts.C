@@ -105,6 +105,21 @@ int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -3., double maxP
 	return  ((pull > minPull) && (pull < maxPull) && (pull != 0));
 }
 
+int pionPull(Int_t NTPCs, TClonesArray* TPC, double minPull = 5.)
+{
+//returns true if the average proton pull is between the threshold values, change these values to better ones once we have histograms
+	double pull = 0.;
+	if (!NTPCs)
+		return 0;
+	else{
+		for (int i=0; i<NTPCs; i++)
+			pull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(i))->PullPion/(double)NTPCs;
+		pull = (double) pull;
+	}
+	// pull seems to have a default value of 0 (presumably if there isn't enough data) so these are being cut
+	return  (pull > minPull) ;
+}
+
 int muonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -10., double maxPull = 5.)
 {
 	double pull = 0.;
