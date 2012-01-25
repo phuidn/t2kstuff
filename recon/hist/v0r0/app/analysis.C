@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
-	TFile *treefile = new TFile("../../../tree/evetree.root");
+	TFile *treefile = new TFile("../../../tree/newtree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -68,8 +68,8 @@ int main(int argc, char** argv)
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
-	Int_t EventID(0);
-	TObjString *FOName(0);
+//	Int_t EventID(0);
+//	TObjString *FOName(0);
 
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
@@ -85,8 +85,8 @@ int main(int argc, char** argv)
 	// add them  to the tree
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
-	tree->SetBranchAddress("FOName",&FOName);
-	tree->SetBranchAddress("EventID",&EventID);
+//	tree->SetBranchAddress("FOName",&FOName);
+//	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
 	tree->SetBranchAddress("IsForward", &IsForward);
@@ -115,15 +115,15 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,1500);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,150);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,1500);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,150);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,1500);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,150);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,1500);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,150);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,1500);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,150);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",200,0,1500);
 	//hist6->SetFillColor(kBlack);
@@ -142,23 +142,23 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		Double_t fillval = (Double_t)FrontMomentum;
 		int keep=1;
 		//apply cuts here
-		keep = keep? noTPC1(Detectors): 0;
-		keep = keep? noP0Dactivity(Detectors): 0;
-		keep = keep? posCharge(NTPCs, TPC): 0;
-		keep = keep? consecutiveDetectors(Detectors):0;
-		keep = keep? muonPull(NTPCs, TPC):0;
+//	keep = keep? noTPC1(Detectors): 0;
+//	keep = keep? noP0Dactivity(Detectors): 0;
+//	keep = keep? posCharge(NTPCs, TPC): 0;
+//	keep = keep? consecutiveDetectors(Detectors):0;
+//	keep = keep? muonPull(NTPCs, TPC):0;
 		//looping over the number of TPCs particle passed through
 		//to get average proton pull
 		//looping over the number of TPCs particle passed through
 				//to get average proton pull
-	//	for(j=0,avProPull=0;j<NTPCs;j++)
-	//	{
-	//		avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->PullProton/(double)NTPCs;
-	//	}
-	//
+		for(j=0,avProPull=0;j<NTPCs;j++)
+		{
+			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->NHits;
+		}
+	
+		Double_t fillval = (Double_t)avProPull;
 		
 		//this is for filtering by particle type
 	//	if(avProPull!=0 && keep)
@@ -203,31 +203,31 @@ int main(int argc, char** argv)
 			{	//add to QES graph
 				acceptedNCES++;
 				hist1->Fill( fillval );
-				cout << "NCQES," << FOName->GetString() << "," << EventID << endl;
+			//	cout << "NCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
 			{	//RES is noise
 				acceptedNoise++;
 				hist2->Fill( fillval );
-				cout << "RES," << FOName->GetString() << "," << EventID << endl;
+			//	cout << "RES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
 			{	//DIS is noise
 				acceptedNoise++;
 				hist3->Fill( fillval );
-				cout << "DIS," << FOName->GetString() << "," << EventID << endl;
+			//	cout << "DIS," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
 			{	//CCQES is noise
 				acceptedNoise++;
 				hist4->Fill( fillval );
-				cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
+			//	cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else
 			{	//other stuff is noise
 				acceptedNoise++;
 				hist5->Fill( fillval );
-				cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
+			//	cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
 			}
 		}
 	} // End loop over events
@@ -266,7 +266,7 @@ void SetupROOT(){
 	gSystem->Load("libMinuit");
 	gSystem->Load("libCLHEP.so");
 	gSystem->Load("librecpack.so");
-	gSystem->Load("liboaEvent.so");
+//	gSystem->Load("liboaEvent.so");
 	gSystem->Load("liboaRuntimeParameters.so");
 	gSystem->Load("libMinosDBI.so");
 	gSystem->Load("liboaOfflineDatabase.so");

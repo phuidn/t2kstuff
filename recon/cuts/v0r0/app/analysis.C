@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/evetree.root");
+	TFile *treefile = new TFile("../../../tree/newtree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -59,8 +59,8 @@ int main(int argc, char** argv)
 	ND::TTrueParticle *TrueParticle(0);
 	UInt_t NNCES;
 	UInt_t NTOT;
-	TObjString FOName;
-	Int_t EventID(0);
+//	TObjString FOName;
+//	Int_t EventID(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -78,8 +78,8 @@ int main(int argc, char** argv)
 	cout<<"setting tree branch addresses to variables"<<endl;
 	//cout to debug - Tree->Detectors is fine: returns 0
 	tree->SetBranchAddress("Detectors", &Detectors);
-	tree->SetBranchAddress("FOName",&FOName);
-	tree->SetBranchAddress("EventID",&EventID);
+//	tree->SetBranchAddress("FOName",&FOName);
+//	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Status", &Status);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
@@ -104,9 +104,9 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);
 	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0), initialNCES(0);
-	int NCuts = 11,
-		correctCut[11] = {0,0,0,0,0,0,0},
-		wrongCut[11] = {0,0,0,0,0,0,0};
+	int NCuts = 12,
+		correctCut[12] = {0,0,0,0,0,0,0},
+		wrongCut[12] = {0,0,0,0,0,0,0};
 	NTOT = tree->GetEntries();
 	// Loop over the entries in the TTree
 	cout<<"looping over " <<NTOT<<" events"<<endl;
@@ -155,8 +155,10 @@ int main(int argc, char** argv)
 		wrongCut[9] += keep && !isNCES;
 		keep = keep? cutNSMRD(NSMRDs):0;
 		correctCut[10] += keep && isNCES;
-		wrongCut[10] += keep && !isNCES;
-
+		wrongCut[10] += keep && !isNCES;	
+		keep = keep? TPCHits(NTPCs, TPC):0;
+		correctCut[11] += keep && isNCES;
+		wrongCut[11] += keep && !isNCES;
 
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
