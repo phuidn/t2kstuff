@@ -1,0 +1,18 @@
+package myND280
+
+use oaEvent
+use oaAnalysis
+use ROOT
+
+macro myND280_linkopts " -L$(package)/$(tag) "
+
+path_remove LD_LIBRARY_PATH "$(package)/$(tag)"
+path_prepend LD_LIBRARY_PATH "$(package)/$(tag)"
+
+path_remove PATH "$(package)/$(tag)"
+path_prepend PATH "$(package)/$(tag)"
+
+application EventFilter ../app/EventFilter.cxx
+application PrintEvent ../app/PrintEvent.cxx
+application FirstPass ../app/analysis.cxx
+
