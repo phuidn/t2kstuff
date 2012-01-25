@@ -14,6 +14,7 @@ fi
 
 if [ "$1" = "-f" ] && [ -n "$2" ]; then
 	grep -li $2 /storage/epp2/t2k/software/ND280/v9r7p9/oaAnalysis/v4r37p5/src/* | grep .h
+	grep -li $2 $OAEVENTROOT/src/* | grep .h
 else
 	numberofsearch=`ls /storage/epp2/t2k/software/ND280/v9r7p9/oaAnalysis/v4r37p5/src/ | grep -c $1`
 	if [ $numberofsearch -eq 1 ] ; then
