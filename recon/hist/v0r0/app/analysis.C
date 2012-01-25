@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
-	TFile *treefile = new TFile("../../../tree/newtree.root");
+	TFile *treefile = new TFile("../../../tree/evetree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -68,8 +68,8 @@ int main(int argc, char** argv)
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
-//	Int_t EventID(0);
-//	TObjString *FOName(0);
+	Int_t EventID(0);
+	TObjString *FOName(0);
 
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
@@ -85,8 +85,8 @@ int main(int argc, char** argv)
 	// add them  to the tree
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
-//	tree->SetBranchAddress("FOName",&FOName);
-//	tree->SetBranchAddress("EventID",&EventID);
+	tree->SetBranchAddress("FOName",&FOName);
+	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
 	tree->SetBranchAddress("IsForward", &IsForward);
@@ -115,15 +115,15 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,150);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-60, 100);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,150);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-60, 100);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,150);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-60, 100);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,150);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-60, 100);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,150);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-60, 100);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",200,0,1500);
 	//hist6->SetFillColor(kBlack);
@@ -144,20 +144,20 @@ int main(int argc, char** argv)
 		tree->GetEntry(i);
 		int keep=1;
 		//apply cuts here
-//	keep = keep? noTPC1(Detectors): 0;
-//	keep = keep? noP0Dactivity(Detectors): 0;
-//	keep = keep? posCharge(NTPCs, TPC): 0;
-//	keep = keep? consecutiveDetectors(Detectors):0;
-//	keep = keep? muonPull(NTPCs, TPC):0;
+		keep = keep? noTPC1(Detectors): 0;
+		keep = keep? noP0Dactivity(Detectors): 0;
+		keep = keep? posCharge(NTPCs, TPC): 0;
+		keep = keep? consecutiveDetectors(Detectors):0;
+		keep = keep? muonPull(NTPCs, TPC):0;
 		//looping over the number of TPCs particle passed through
 		//to get average proton pull
 		//looping over the number of TPCs particle passed through
 				//to get average proton pull
-		for(j=0,avProPull=0;j<NTPCs;j++)
+		for(j=0,avProPull=0;j<NP0Ds;j++)
 		{
-			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->NHits;
+			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->dEdxexpProton/(double)NTPCs;
 		}
-	
+		cout << avProPull << endl;	
 		Double_t fillval = (Double_t)avProPull;
 		
 		//this is for filtering by particle type

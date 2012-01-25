@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 
 	// Declare a TChain for the TGlobalPID module
 	TChain *gRecon = new TChain("ReconDir/Global");
+	TChain *P0Dinfo = new TChain("ReconDir/P0D");
 	// Check if the file exists.
 	if (!inputFile.is_open()){
 	std::cout << "ERROR: File prod4 files not found!" << std::endl;
@@ -62,10 +63,8 @@ int main(int argc, char** argv)
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
 		while(getline(inputFile,curFileName)){
-//		for(int l = 0; l<10; l++){
-//			if(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
-//			}
+				P0Dinfo->Add(curFileName.c_str());
 		}
 	}
 
@@ -74,12 +73,14 @@ int main(int argc, char** argv)
 	//Setup access to the Recon tree
 	int NPIDs(0);  // This variable counts the number of particles per event
 	Int_t EventID(0);
+	Int_t NP0DClusters(0);
 	// Declare a TClonesArray to hold objects of type TGlobalPID
  	TClonesArray *globalPIDs = new TClonesArray("ND::TGlobalReconModule::TGlobalPID",50);
     // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
 	gRecon->SetBranchAddress("EventID", &EventID);
+	P0Dinfo->SetBranchAddress("NClusters", &NP0DClusters);
 	//========================================================
 	//			Declare Graphs n stuff here
 	//========================================================
@@ -145,6 +146,7 @@ int main(int argc, char** argv)
 	tree->Branch("FGD", &FGD);
 	tree->Branch("ECAL", &ECAL);
 	tree->Branch("P0D", &P0D);
+	tree->Branch("NP0DClusters", &NP0DClusters);
 	tree->Branch("SMRD", &SMRD);
 	//========================================================
 	//	end		Declare Graphs n stuff here
@@ -152,13 +154,15 @@ int main(int argc, char** argv)
 
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
+	unsigned int tot = gRecon->GetEntries();
 	int bunches[8] = {0,0,0,0,0,0,0,0};  //array to check number of hits per time bunch
-	for(unsigned int i = 0; i < gRecon->GetEntries(); ++i) {
-		if((i+1)%10000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
+	for(unsigned int i = 0; i < tot; ++i) {
+		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
 		//display status every 10,000 th entry
 		memset(bunches, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
+		P0Dinfo->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -210,10 +214,8 @@ int main(int argc, char** argv)
 	//add two more branches for total QES and all particles and fill them once
 	TBranch* qesbranch = tree->Branch("NNCES", &NNCES);
 	TBranch* totbranch = tree->Branch("NTOT", &NTOT);
-//	TBranch* treebranch = tree->Branch("NTree", &NTree);
 	qesbranch->Fill();
 	totbranch->Fill();
-//	treebranch->Fill();
 	cout<<"ratio of nces events in fgds = " << (double)NNCES/(double)NTOT << endl;
 	treefile.Write();	//write tree
 	treefile.Close();
