@@ -3,7 +3,7 @@
 #====================================
 #  Application FirstPass
 #
-#   Generated Thu Nov 17 09:28:03 2011  by phseaj
+#   Generated Wed Jan 25 12:37:03 2012  by phuidv
 #
 #====================================
 
@@ -23,26 +23,26 @@ ifdef cmt_FirstPass_has_target_tag
 
 tags      = $(tag),$(CMTEXTRATAGS),target_FirstPass
 
-myND280_tag = $(tag)
+evestrip_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile_FirstPass = /tmp/CMT_$(myND280_tag)_FirstPass.make$(cmt_lock_pid)
+cmt_local_tagfile_FirstPass = /tmp/CMT_$(evestrip_tag)_FirstPass.make$(cmt_lock_pid)
 else
-#cmt_local_tagfile_FirstPass = $(myND280_tag)_FirstPass.make
-cmt_local_tagfile_FirstPass = $(bin)$(myND280_tag)_FirstPass.make
+#cmt_local_tagfile_FirstPass = $(evestrip_tag)_FirstPass.make
+cmt_local_tagfile_FirstPass = $(bin)$(evestrip_tag)_FirstPass.make
 endif
 
 else
 
 tags      = $(tag),$(CMTEXTRATAGS)
 
-myND280_tag = $(tag)
+evestrip_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile_FirstPass = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
+cmt_local_tagfile_FirstPass = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
 else
-#cmt_local_tagfile_FirstPass = $(myND280_tag).make
-cmt_local_tagfile_FirstPass = $(bin)$(myND280_tag).make
+#cmt_local_tagfile_FirstPass = $(evestrip_tag).make
+cmt_local_tagfile_FirstPass = $(bin)$(evestrip_tag).make
 endif
 
 endif
@@ -52,29 +52,29 @@ endif
 ifdef cmt_FirstPass_has_target_tag
 
 ifdef READONLY
-cmt_final_setup_FirstPass = /tmp/CMT_myND280_FirstPasssetup.make
+cmt_final_setup_FirstPass = /tmp/CMT_evestrip_FirstPasssetup.make
 cmt_local_FirstPass_makefile = /tmp/CMT_FirstPass$(cmt_lock_pid).make
 else
-cmt_final_setup_FirstPass = $(bin)myND280_FirstPasssetup.make
+cmt_final_setup_FirstPass = $(bin)evestrip_FirstPasssetup.make
 cmt_local_FirstPass_makefile = $(bin)FirstPass.make
 endif
 
 else
 
 ifdef READONLY
-cmt_final_setup_FirstPass = /tmp/CMT_myND280setup.make
+cmt_final_setup_FirstPass = /tmp/CMT_evestripsetup.make
 cmt_local_FirstPass_makefile = /tmp/CMT_FirstPass$(cmt_lock_pid).make
 else
-cmt_final_setup_FirstPass = $(bin)myND280setup.make
+cmt_final_setup_FirstPass = $(bin)evestripsetup.make
 cmt_local_FirstPass_makefile = $(bin)FirstPass.make
 endif
 
 endif
 
 ifdef READONLY
-cmt_final_setup = /tmp/CMT_myND280setup.make
+cmt_final_setup = /tmp/CMT_evestripsetup.make
 else
-cmt_final_setup = $(bin)myND280setup.make
+cmt_final_setup = $(bin)evestripsetup.make
 endif
 
 FirstPass ::

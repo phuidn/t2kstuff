@@ -11,25 +11,25 @@ endif
 
 tags      = $(tag),$(CMTEXTRATAGS)
 
-myND280_tag = $(tag)
+evestrip_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
+cmt_local_tagfile = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
 else
-#cmt_local_tagfile = $(myND280_tag).make
-cmt_local_tagfile = $(bin)$(myND280_tag).make
+#cmt_local_tagfile = $(evestrip_tag).make
+cmt_local_tagfile = $(bin)$(evestrip_tag).make
 endif
 
 #-include $(cmt_local_tagfile)
 include $(cmt_local_tagfile)
 
 ifdef READONLY
-cmt_local_setup = /tmp/CMT_myND280setup$(cmt_lock_pid).make
-cmt_final_setup = /tmp/CMT_myND280setup.make
+cmt_local_setup = /tmp/CMT_evestripsetup$(cmt_lock_pid).make
+cmt_final_setup = /tmp/CMT_evestripsetup.make
 else
-#cmt_local_setup = $(bin)myND280setup$(cmt_lock_pid).make
+#cmt_local_setup = $(bin)evestripsetup$(cmt_lock_pid).make
 cmt_local_setup = $(bin)$(package)setup$$$$.make
-#cmt_final_setup = $(bin)myND280setup.make
+#cmt_final_setup = $(bin)evestripsetup.make
 cmt_final_setup = $(bin)$(package)setup.make
 endif
 
@@ -160,13 +160,13 @@ cmt_EventFilter_has_no_target_tag = 1
 ifdef cmt_EventFilter_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_EventFilter = /tmp/CMT_$(myND280_tag)_EventFilter.make$(cmt_lock_pid)
-cmt_final_setup_EventFilter = /tmp/CMT_myND280_EventFiltersetup.make
+cmt_local_tagfile_EventFilter = /tmp/CMT_$(evestrip_tag)_EventFilter.make$(cmt_lock_pid)
+cmt_final_setup_EventFilter = /tmp/CMT_evestrip_EventFiltersetup.make
 cmt_local_EventFilter_makefile = /tmp/CMT_EventFilter$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_EventFilter = $(myND280_tag)_EventFilter.make
-cmt_local_tagfile_EventFilter = $(bin)$(myND280_tag)_EventFilter.make
-cmt_final_setup_EventFilter = $(bin)myND280_EventFiltersetup.make
+#cmt_local_tagfile_EventFilter = $(evestrip_tag)_EventFilter.make
+cmt_local_tagfile_EventFilter = $(bin)$(evestrip_tag)_EventFilter.make
+cmt_final_setup_EventFilter = $(bin)evestrip_EventFiltersetup.make
 cmt_local_EventFilter_makefile = $(bin)EventFilter.make
 endif
 
@@ -188,13 +188,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_EventFilter = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
-cmt_final_setup_EventFilter = /tmp/CMT_myND280setup.make
+cmt_local_tagfile_EventFilter = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
+cmt_final_setup_EventFilter = /tmp/CMT_evestripsetup.make
 cmt_local_EventFilter_makefile = /tmp/CMT_EventFilter$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_EventFilter = $(myND280_tag).make
-cmt_local_tagfile_EventFilter = $(bin)$(myND280_tag).make
-cmt_final_setup_EventFilter = $(bin)myND280setup.make
+#cmt_local_tagfile_EventFilter = $(evestrip_tag).make
+cmt_local_tagfile_EventFilter = $(bin)$(evestrip_tag).make
+cmt_final_setup_EventFilter = $(bin)evestripsetup.make
 cmt_local_EventFilter_makefile = $(bin)EventFilter.make
 endif
 
@@ -255,13 +255,13 @@ cmt_PrintEvent_has_no_target_tag = 1
 ifdef cmt_PrintEvent_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_PrintEvent = /tmp/CMT_$(myND280_tag)_PrintEvent.make$(cmt_lock_pid)
-cmt_final_setup_PrintEvent = /tmp/CMT_myND280_PrintEventsetup.make
+cmt_local_tagfile_PrintEvent = /tmp/CMT_$(evestrip_tag)_PrintEvent.make$(cmt_lock_pid)
+cmt_final_setup_PrintEvent = /tmp/CMT_evestrip_PrintEventsetup.make
 cmt_local_PrintEvent_makefile = /tmp/CMT_PrintEvent$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_PrintEvent = $(myND280_tag)_PrintEvent.make
-cmt_local_tagfile_PrintEvent = $(bin)$(myND280_tag)_PrintEvent.make
-cmt_final_setup_PrintEvent = $(bin)myND280_PrintEventsetup.make
+#cmt_local_tagfile_PrintEvent = $(evestrip_tag)_PrintEvent.make
+cmt_local_tagfile_PrintEvent = $(bin)$(evestrip_tag)_PrintEvent.make
+cmt_final_setup_PrintEvent = $(bin)evestrip_PrintEventsetup.make
 cmt_local_PrintEvent_makefile = $(bin)PrintEvent.make
 endif
 
@@ -283,13 +283,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_PrintEvent = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
-cmt_final_setup_PrintEvent = /tmp/CMT_myND280setup.make
+cmt_local_tagfile_PrintEvent = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
+cmt_final_setup_PrintEvent = /tmp/CMT_evestripsetup.make
 cmt_local_PrintEvent_makefile = /tmp/CMT_PrintEvent$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_PrintEvent = $(myND280_tag).make
-cmt_local_tagfile_PrintEvent = $(bin)$(myND280_tag).make
-cmt_final_setup_PrintEvent = $(bin)myND280setup.make
+#cmt_local_tagfile_PrintEvent = $(evestrip_tag).make
+cmt_local_tagfile_PrintEvent = $(bin)$(evestrip_tag).make
+cmt_final_setup_PrintEvent = $(bin)evestripsetup.make
 cmt_local_PrintEvent_makefile = $(bin)PrintEvent.make
 endif
 
@@ -350,13 +350,13 @@ cmt_FirstPass_has_no_target_tag = 1
 ifdef cmt_FirstPass_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_FirstPass = /tmp/CMT_$(myND280_tag)_FirstPass.make$(cmt_lock_pid)
-cmt_final_setup_FirstPass = /tmp/CMT_myND280_FirstPasssetup.make
+cmt_local_tagfile_FirstPass = /tmp/CMT_$(evestrip_tag)_FirstPass.make$(cmt_lock_pid)
+cmt_final_setup_FirstPass = /tmp/CMT_evestrip_FirstPasssetup.make
 cmt_local_FirstPass_makefile = /tmp/CMT_FirstPass$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_FirstPass = $(myND280_tag)_FirstPass.make
-cmt_local_tagfile_FirstPass = $(bin)$(myND280_tag)_FirstPass.make
-cmt_final_setup_FirstPass = $(bin)myND280_FirstPasssetup.make
+#cmt_local_tagfile_FirstPass = $(evestrip_tag)_FirstPass.make
+cmt_local_tagfile_FirstPass = $(bin)$(evestrip_tag)_FirstPass.make
+cmt_final_setup_FirstPass = $(bin)evestrip_FirstPasssetup.make
 cmt_local_FirstPass_makefile = $(bin)FirstPass.make
 endif
 
@@ -378,13 +378,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_FirstPass = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
-cmt_final_setup_FirstPass = /tmp/CMT_myND280setup.make
+cmt_local_tagfile_FirstPass = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
+cmt_final_setup_FirstPass = /tmp/CMT_evestripsetup.make
 cmt_local_FirstPass_makefile = /tmp/CMT_FirstPass$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_FirstPass = $(myND280_tag).make
-cmt_local_tagfile_FirstPass = $(bin)$(myND280_tag).make
-cmt_final_setup_FirstPass = $(bin)myND280setup.make
+#cmt_local_tagfile_FirstPass = $(evestrip_tag).make
+cmt_local_tagfile_FirstPass = $(bin)$(evestrip_tag).make
+cmt_final_setup_FirstPass = $(bin)evestripsetup.make
 cmt_local_FirstPass_makefile = $(bin)FirstPass.make
 endif
 
@@ -445,13 +445,13 @@ cmt_make_has_target_tag = 1
 ifdef cmt_make_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(myND280_tag)_make.make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_myND280_makesetup.make
+cmt_local_tagfile_make = /tmp/CMT_$(evestrip_tag)_make.make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_evestrip_makesetup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(myND280_tag)_make.make
-cmt_local_tagfile_make = $(bin)$(myND280_tag)_make.make
-cmt_final_setup_make = $(bin)myND280_makesetup.make
+#cmt_local_tagfile_make = $(evestrip_tag)_make.make
+cmt_local_tagfile_make = $(bin)$(evestrip_tag)_make.make
+cmt_final_setup_make = $(bin)evestrip_makesetup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -473,13 +473,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_myND280setup.make
+cmt_local_tagfile_make = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_evestripsetup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(myND280_tag).make
-cmt_local_tagfile_make = $(bin)$(myND280_tag).make
-cmt_final_setup_make = $(bin)myND280setup.make
+#cmt_local_tagfile_make = $(evestrip_tag).make
+cmt_local_tagfile_make = $(bin)$(evestrip_tag).make
+cmt_final_setup_make = $(bin)evestripsetup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -544,13 +544,13 @@ cmt_warnCALIBRECON_has_target_tag = 1
 ifdef cmt_warnCALIBRECON_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(myND280_tag)_warnCALIBRECON.make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_myND280_warnCALIBRECONsetup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(evestrip_tag)_warnCALIBRECON.make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_evestrip_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(myND280_tag)_warnCALIBRECON.make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(myND280_tag)_warnCALIBRECON.make
-cmt_final_setup_warnCALIBRECON = $(bin)myND280_warnCALIBRECONsetup.make
+#cmt_local_tagfile_warnCALIBRECON = $(evestrip_tag)_warnCALIBRECON.make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(evestrip_tag)_warnCALIBRECON.make
+cmt_final_setup_warnCALIBRECON = $(bin)evestrip_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 
@@ -572,13 +572,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_myND280setup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(evestrip_tag).make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_evestripsetup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(myND280_tag).make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(myND280_tag).make
-cmt_final_setup_warnCALIBRECON = $(bin)myND280setup.make
+#cmt_local_tagfile_warnCALIBRECON = $(evestrip_tag).make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(evestrip_tag).make
+cmt_final_setup_warnCALIBRECON = $(bin)evestripsetup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 
