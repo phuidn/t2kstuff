@@ -9,6 +9,4 @@ path_prepend LD_LIBRARY_PATH "$(package)/$(tag)"
 path_remove PATH "$(package)/$(tag)"
 path_prepend PATH "$(package)/$(tag)"
 
-application applycuts ../app/applycuts.C ../app/cuts.C
-application hist ../app/hist.C ../app/cuts.C
-application maketree ../app/maketree.C ../app/cuts.C
+application analysis ../app/analysis.C

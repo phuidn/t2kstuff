@@ -11,25 +11,25 @@ endif
 
 tags      = $(tag),$(CMTEXTRATAGS)
 
-cuts_tag = $(tag)
+myND280_tag = $(tag)
 
 ifdef READONLY
-cmt_local_tagfile = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_local_tagfile = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
 else
-#cmt_local_tagfile = $(cuts_tag).make
-cmt_local_tagfile = $(bin)$(cuts_tag).make
+#cmt_local_tagfile = $(myND280_tag).make
+cmt_local_tagfile = $(bin)$(myND280_tag).make
 endif
 
 #-include $(cmt_local_tagfile)
 include $(cmt_local_tagfile)
 
 ifdef READONLY
-cmt_local_setup = /tmp/CMT_cutssetup$(cmt_lock_pid).make
-cmt_final_setup = /tmp/CMT_cutssetup.make
+cmt_local_setup = /tmp/CMT_myND280setup$(cmt_lock_pid).make
+cmt_final_setup = /tmp/CMT_myND280setup.make
 else
-#cmt_local_setup = $(bin)cutssetup$(cmt_lock_pid).make
+#cmt_local_setup = $(bin)myND280setup$(cmt_lock_pid).make
 cmt_local_setup = $(bin)$(package)setup$$$$.make
-#cmt_final_setup = $(bin)cutssetup.make
+#cmt_final_setup = $(bin)myND280setup.make
 cmt_final_setup = $(bin)$(package)setup.make
 endif
 
@@ -153,190 +153,95 @@ cmt_actionsclean :: makefilesclean
 #-- end of group ------
 #-- start of constituent ------
 
-cmt_applycuts_has_no_target_tag = 1
+cmt_analysis_has_no_target_tag = 1
 
 #--------------------------------------------------------
 
-ifdef cmt_applycuts_has_target_tag
+ifdef cmt_analysis_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_applycuts = /tmp/CMT_$(cuts_tag)_applycuts.make$(cmt_lock_pid)
-cmt_final_setup_applycuts = /tmp/CMT_cuts_applycutssetup.make
-cmt_local_applycuts_makefile = /tmp/CMT_applycuts$(cmt_lock_pid).make
+cmt_local_tagfile_analysis = /tmp/CMT_$(myND280_tag)_analysis.make$(cmt_lock_pid)
+cmt_final_setup_analysis = /tmp/CMT_myND280_analysissetup.make
+cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_applycuts = $(cuts_tag)_applycuts.make
-cmt_local_tagfile_applycuts = $(bin)$(cuts_tag)_applycuts.make
-cmt_final_setup_applycuts = $(bin)cuts_applycutssetup.make
-cmt_local_applycuts_makefile = $(bin)applycuts.make
+#cmt_local_tagfile_analysis = $(myND280_tag)_analysis.make
+cmt_local_tagfile_analysis = $(bin)$(myND280_tag)_analysis.make
+cmt_final_setup_analysis = $(bin)myND280_analysissetup.make
+cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
-applycuts_extratags = -tag_add=target_applycuts
+analysis_extratags = -tag_add=target_analysis
 
-#$(cmt_local_tagfile_applycuts) : $(cmt_lock_setup)
+#$(cmt_local_tagfile_analysis) : $(cmt_lock_setup)
 ifndef QUICK
-$(cmt_local_tagfile_applycuts) ::
+$(cmt_local_tagfile_analysis) ::
 else
-$(cmt_local_tagfile_applycuts) :
+$(cmt_local_tagfile_analysis) :
 endif
-	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_applycuts)"
-	@if test -f $(cmt_local_tagfile_applycuts); then /bin/rm -f $(cmt_local_tagfile_applycuts); fi ; \
-	  $(cmtexe) -tag=$(tags) $(applycuts_extratags) build tag_makefile >>$(cmt_local_tagfile_applycuts); \
-	  if test -f $(cmt_final_setup_applycuts); then /bin/rm -f $(cmt_final_setup_applycuts); fi; \
-	  $(cmtexe) -tag=$(tags) $(applycuts_extratags) show setup >>$(cmt_final_setup_applycuts)
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_analysis)"
+	@if test -f $(cmt_local_tagfile_analysis); then /bin/rm -f $(cmt_local_tagfile_analysis); fi ; \
+	  $(cmtexe) -tag=$(tags) $(analysis_extratags) build tag_makefile >>$(cmt_local_tagfile_analysis); \
+	  if test -f $(cmt_final_setup_analysis); then /bin/rm -f $(cmt_final_setup_analysis); fi; \
+	  $(cmtexe) -tag=$(tags) $(analysis_extratags) show setup >>$(cmt_final_setup_analysis)
 	$(echo) setup.make ok
 
 else
 
 ifdef READONLY
-cmt_local_tagfile_applycuts = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_applycuts = /tmp/CMT_cutssetup.make
-cmt_local_applycuts_makefile = /tmp/CMT_applycuts$(cmt_lock_pid).make
+cmt_local_tagfile_analysis = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
+cmt_final_setup_analysis = /tmp/CMT_myND280setup.make
+cmt_local_analysis_makefile = /tmp/CMT_analysis$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_applycuts = $(cuts_tag).make
-cmt_local_tagfile_applycuts = $(bin)$(cuts_tag).make
-cmt_final_setup_applycuts = $(bin)cutssetup.make
-cmt_local_applycuts_makefile = $(bin)applycuts.make
+#cmt_local_tagfile_analysis = $(myND280_tag).make
+cmt_local_tagfile_analysis = $(bin)$(myND280_tag).make
+cmt_final_setup_analysis = $(bin)myND280setup.make
+cmt_local_analysis_makefile = $(bin)analysis.make
 endif
 
 endif
 
 ifndef QUICK
-$(cmt_local_applycuts_makefile) :: $(applycuts_dependencies) $(cmt_local_tagfile_applycuts) build_library_links dirs
+$(cmt_local_analysis_makefile) :: $(analysis_dependencies) $(cmt_local_tagfile_analysis) build_library_links dirs
 else
-$(cmt_local_applycuts_makefile) :: $(cmt_local_tagfile_applycuts)
+$(cmt_local_analysis_makefile) :: $(cmt_local_tagfile_analysis)
 endif
-	$(echo) "(constituents.make) Building applycuts.make"; \
-	  $(cmtexe) -tag=$(tags) $(applycuts_extratags) build constituent_makefile -out=$(cmt_local_applycuts_makefile) applycuts
+	$(echo) "(constituents.make) Building analysis.make"; \
+	  $(cmtexe) -tag=$(tags) $(analysis_extratags) build constituent_makefile -out=$(cmt_local_analysis_makefile) analysis
 
-applycuts :: $(applycuts_dependencies) $(cmt_local_applycuts_makefile)
-	$(echo) "(constituents.make) Starting applycuts"
-	@$(MAKE) -f $(cmt_local_applycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} applycuts
-	$(echo) "(constituents.make) applycuts done"
+analysis :: $(analysis_dependencies) $(cmt_local_analysis_makefile)
+	$(echo) "(constituents.make) Starting analysis"
+	@$(MAKE) -f $(cmt_local_analysis_makefile) cmt_lock_pid=$${cmt_lock_pid} analysis
+	$(echo) "(constituents.make) analysis done"
 
-clean :: applycutsclean
+clean :: analysisclean
 
-applycutsclean :: $(applycutsclean_dependencies) ##$(cmt_local_applycuts_makefile)
-	$(echo) "(constituents.make) Starting applycutsclean"
-	@-if test -f $(cmt_local_applycuts_makefile); then \
-	  $(MAKE) -f $(cmt_local_applycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} applycutsclean; \
+analysisclean :: $(analysisclean_dependencies) ##$(cmt_local_analysis_makefile)
+	$(echo) "(constituents.make) Starting analysisclean"
+	@-if test -f $(cmt_local_analysis_makefile); then \
+	  $(MAKE) -f $(cmt_local_analysis_makefile) cmt_lock_pid=$${cmt_lock_pid} analysisclean; \
 	fi
 
-##	  /bin/rm -f $(cmt_local_applycuts_makefile) $(bin)applycuts_dependencies.make
+##	  /bin/rm -f $(cmt_local_analysis_makefile) $(bin)analysis_dependencies.make
 
-install :: applycutsinstall
+install :: analysisinstall
 
-applycutsinstall :: $(applycuts_dependencies) $(cmt_local_applycuts_makefile)
-	$(echo) "(constituents.make) Starting install applycuts"
-	@-$(MAKE) -f $(cmt_local_applycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} install
-	$(echo) "(constituents.make) install applycuts done"
+analysisinstall :: $(analysis_dependencies) $(cmt_local_analysis_makefile)
+	$(echo) "(constituents.make) Starting install analysis"
+	@-$(MAKE) -f $(cmt_local_analysis_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install analysis done"
 
-uninstall :: applycutsuninstall
+uninstall :: analysisuninstall
 
-applycutsuninstall :: $(cmt_local_applycuts_makefile)
-	$(echo) "(constituents.make) Starting uninstall applycuts"
-	@-$(MAKE) -f $(cmt_local_applycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
-	$(echo) "(constituents.make) uninstall applycuts done"
+analysisuninstall :: $(cmt_local_analysis_makefile)
+	$(echo) "(constituents.make) Starting uninstall analysis"
+	@-$(MAKE) -f $(cmt_local_analysis_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall analysis done"
 
 ifndef PEDANTIC
 .DEFAULT::
-	$(echo) "(constituents.make) Starting $@ applycuts"
+	$(echo) "(constituents.make) Starting $@ analysis"
 	$(echo) Using default action for $@
-	$(echo) "(constituents.make) $@ applycuts done"
-endif
-
-
-#-- end of constituent ------
-#-- start of constituent ------
-
-cmt_hist_has_no_target_tag = 1
-
-#--------------------------------------------------------
-
-ifdef cmt_hist_has_target_tag
-
-ifdef READONLY
-cmt_local_tagfile_hist = /tmp/CMT_$(cuts_tag)_hist.make$(cmt_lock_pid)
-cmt_final_setup_hist = /tmp/CMT_cuts_histsetup.make
-cmt_local_hist_makefile = /tmp/CMT_hist$(cmt_lock_pid).make
-else
-#cmt_local_tagfile_hist = $(cuts_tag)_hist.make
-cmt_local_tagfile_hist = $(bin)$(cuts_tag)_hist.make
-cmt_final_setup_hist = $(bin)cuts_histsetup.make
-cmt_local_hist_makefile = $(bin)hist.make
-endif
-
-hist_extratags = -tag_add=target_hist
-
-#$(cmt_local_tagfile_hist) : $(cmt_lock_setup)
-ifndef QUICK
-$(cmt_local_tagfile_hist) ::
-else
-$(cmt_local_tagfile_hist) :
-endif
-	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_hist)"
-	@if test -f $(cmt_local_tagfile_hist); then /bin/rm -f $(cmt_local_tagfile_hist); fi ; \
-	  $(cmtexe) -tag=$(tags) $(hist_extratags) build tag_makefile >>$(cmt_local_tagfile_hist); \
-	  if test -f $(cmt_final_setup_hist); then /bin/rm -f $(cmt_final_setup_hist); fi; \
-	  $(cmtexe) -tag=$(tags) $(hist_extratags) show setup >>$(cmt_final_setup_hist)
-	$(echo) setup.make ok
-
-else
-
-ifdef READONLY
-cmt_local_tagfile_hist = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_hist = /tmp/CMT_cutssetup.make
-cmt_local_hist_makefile = /tmp/CMT_hist$(cmt_lock_pid).make
-else
-#cmt_local_tagfile_hist = $(cuts_tag).make
-cmt_local_tagfile_hist = $(bin)$(cuts_tag).make
-cmt_final_setup_hist = $(bin)cutssetup.make
-cmt_local_hist_makefile = $(bin)hist.make
-endif
-
-endif
-
-ifndef QUICK
-$(cmt_local_hist_makefile) :: $(hist_dependencies) $(cmt_local_tagfile_hist) build_library_links dirs
-else
-$(cmt_local_hist_makefile) :: $(cmt_local_tagfile_hist)
-endif
-	$(echo) "(constituents.make) Building hist.make"; \
-	  $(cmtexe) -tag=$(tags) $(hist_extratags) build constituent_makefile -out=$(cmt_local_hist_makefile) hist
-
-hist :: $(hist_dependencies) $(cmt_local_hist_makefile)
-	$(echo) "(constituents.make) Starting hist"
-	@$(MAKE) -f $(cmt_local_hist_makefile) cmt_lock_pid=$${cmt_lock_pid} hist
-	$(echo) "(constituents.make) hist done"
-
-clean :: histclean
-
-histclean :: $(histclean_dependencies) ##$(cmt_local_hist_makefile)
-	$(echo) "(constituents.make) Starting histclean"
-	@-if test -f $(cmt_local_hist_makefile); then \
-	  $(MAKE) -f $(cmt_local_hist_makefile) cmt_lock_pid=$${cmt_lock_pid} histclean; \
-	fi
-
-##	  /bin/rm -f $(cmt_local_hist_makefile) $(bin)hist_dependencies.make
-
-install :: histinstall
-
-histinstall :: $(hist_dependencies) $(cmt_local_hist_makefile)
-	$(echo) "(constituents.make) Starting install hist"
-	@-$(MAKE) -f $(cmt_local_hist_makefile) cmt_lock_pid=$${cmt_lock_pid} install
-	$(echo) "(constituents.make) install hist done"
-
-uninstall :: histuninstall
-
-histuninstall :: $(cmt_local_hist_makefile)
-	$(echo) "(constituents.make) Starting uninstall hist"
-	@-$(MAKE) -f $(cmt_local_hist_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
-	$(echo) "(constituents.make) uninstall hist done"
-
-ifndef PEDANTIC
-.DEFAULT::
-	$(echo) "(constituents.make) Starting $@ hist"
-	$(echo) Using default action for $@
-	$(echo) "(constituents.make) $@ hist done"
+	$(echo) "(constituents.make) $@ analysis done"
 endif
 
 
@@ -350,13 +255,13 @@ cmt_make_has_target_tag = 1
 ifdef cmt_make_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(cuts_tag)_make.make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_cuts_makesetup.make
+cmt_local_tagfile_make = /tmp/CMT_$(myND280_tag)_make.make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_myND280_makesetup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(cuts_tag)_make.make
-cmt_local_tagfile_make = $(bin)$(cuts_tag)_make.make
-cmt_final_setup_make = $(bin)cuts_makesetup.make
+#cmt_local_tagfile_make = $(myND280_tag)_make.make
+cmt_local_tagfile_make = $(bin)$(myND280_tag)_make.make
+cmt_final_setup_make = $(bin)myND280_makesetup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -378,13 +283,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_make = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_make = /tmp/CMT_cutssetup.make
+cmt_local_tagfile_make = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
+cmt_final_setup_make = /tmp/CMT_myND280setup.make
 cmt_local_make_makefile = /tmp/CMT_make$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_make = $(cuts_tag).make
-cmt_local_tagfile_make = $(bin)$(cuts_tag).make
-cmt_final_setup_make = $(bin)cutssetup.make
+#cmt_local_tagfile_make = $(myND280_tag).make
+cmt_local_tagfile_make = $(bin)$(myND280_tag).make
+cmt_final_setup_make = $(bin)myND280setup.make
 cmt_local_make_makefile = $(bin)make.make
 endif
 
@@ -449,13 +354,13 @@ cmt_warnCALIBRECON_has_target_tag = 1
 ifdef cmt_warnCALIBRECON_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(cuts_tag)_warnCALIBRECON.make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_cuts_warnCALIBRECONsetup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(myND280_tag)_warnCALIBRECON.make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_myND280_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(cuts_tag)_warnCALIBRECON.make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(cuts_tag)_warnCALIBRECON.make
-cmt_final_setup_warnCALIBRECON = $(bin)cuts_warnCALIBRECONsetup.make
+#cmt_local_tagfile_warnCALIBRECON = $(myND280_tag)_warnCALIBRECON.make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(myND280_tag)_warnCALIBRECON.make
+cmt_final_setup_warnCALIBRECON = $(bin)myND280_warnCALIBRECONsetup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 
@@ -477,13 +382,13 @@ endif
 else
 
 ifdef READONLY
-cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_warnCALIBRECON = /tmp/CMT_cutssetup.make
+cmt_local_tagfile_warnCALIBRECON = /tmp/CMT_$(myND280_tag).make$(cmt_lock_pid)
+cmt_final_setup_warnCALIBRECON = /tmp/CMT_myND280setup.make
 cmt_local_warnCALIBRECON_makefile = /tmp/CMT_warnCALIBRECON$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_warnCALIBRECON = $(cuts_tag).make
-cmt_local_tagfile_warnCALIBRECON = $(bin)$(cuts_tag).make
-cmt_final_setup_warnCALIBRECON = $(bin)cutssetup.make
+#cmt_local_tagfile_warnCALIBRECON = $(myND280_tag).make
+cmt_local_tagfile_warnCALIBRECON = $(bin)$(myND280_tag).make
+cmt_final_setup_warnCALIBRECON = $(bin)myND280setup.make
 cmt_local_warnCALIBRECON_makefile = $(bin)warnCALIBRECON.make
 endif
 

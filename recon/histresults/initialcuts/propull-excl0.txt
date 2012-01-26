@@ -1,0 +1,15 @@
+Proton pull of 0 is excluded from this graph, 0 may be a default value of pull if it is unknown.
+
+Proton	-	RED	
+pi+		-	Blue
+pi-		-	Magenta
+e+		-	Cyan
+e-		-	Green
+mu-		-	Black
+mu+		-	Yellow
+Other	-	Pink
+
+
+We can see about (<)50% of particle around (just above) zero proton pull are actually protons.
+
+The black is mu-, a lot of the data is muons. Needs to be removed, look at mu pull?
