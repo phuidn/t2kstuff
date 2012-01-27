@@ -436,6 +436,101 @@ endif
 
 
 #-- end of constituent ------
+#-- start of constituent ------
+
+cmt_classapplycuts_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_classapplycuts_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_classapplycuts = /tmp/CMT_$(cuts_tag)_classapplycuts.make$(cmt_lock_pid)
+cmt_final_setup_classapplycuts = /tmp/CMT_cuts_classapplycutssetup.make
+cmt_local_classapplycuts_makefile = /tmp/CMT_classapplycuts$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_classapplycuts = $(cuts_tag)_classapplycuts.make
+cmt_local_tagfile_classapplycuts = $(bin)$(cuts_tag)_classapplycuts.make
+cmt_final_setup_classapplycuts = $(bin)cuts_classapplycutssetup.make
+cmt_local_classapplycuts_makefile = $(bin)classapplycuts.make
+endif
+
+classapplycuts_extratags = -tag_add=target_classapplycuts
+
+#$(cmt_local_tagfile_classapplycuts) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_classapplycuts) ::
+else
+$(cmt_local_tagfile_classapplycuts) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_classapplycuts)"
+	@if test -f $(cmt_local_tagfile_classapplycuts); then /bin/rm -f $(cmt_local_tagfile_classapplycuts); fi ; \
+	  $(cmtexe) -tag=$(tags) $(classapplycuts_extratags) build tag_makefile >>$(cmt_local_tagfile_classapplycuts); \
+	  if test -f $(cmt_final_setup_classapplycuts); then /bin/rm -f $(cmt_final_setup_classapplycuts); fi; \
+	  $(cmtexe) -tag=$(tags) $(classapplycuts_extratags) show setup >>$(cmt_final_setup_classapplycuts)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_classapplycuts = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_classapplycuts = /tmp/CMT_cutssetup.make
+cmt_local_classapplycuts_makefile = /tmp/CMT_classapplycuts$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_classapplycuts = $(cuts_tag).make
+cmt_local_tagfile_classapplycuts = $(bin)$(cuts_tag).make
+cmt_final_setup_classapplycuts = $(bin)cutssetup.make
+cmt_local_classapplycuts_makefile = $(bin)classapplycuts.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_classapplycuts_makefile) :: $(classapplycuts_dependencies) $(cmt_local_tagfile_classapplycuts) build_library_links dirs
+else
+$(cmt_local_classapplycuts_makefile) :: $(cmt_local_tagfile_classapplycuts)
+endif
+	$(echo) "(constituents.make) Building classapplycuts.make"; \
+	  $(cmtexe) -tag=$(tags) $(classapplycuts_extratags) build constituent_makefile -out=$(cmt_local_classapplycuts_makefile) classapplycuts
+
+classapplycuts :: $(classapplycuts_dependencies) $(cmt_local_classapplycuts_makefile)
+	$(echo) "(constituents.make) Starting classapplycuts"
+	@$(MAKE) -f $(cmt_local_classapplycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} classapplycuts
+	$(echo) "(constituents.make) classapplycuts done"
+
+clean :: classapplycutsclean
+
+classapplycutsclean :: $(classapplycutsclean_dependencies) ##$(cmt_local_classapplycuts_makefile)
+	$(echo) "(constituents.make) Starting classapplycutsclean"
+	@-if test -f $(cmt_local_classapplycuts_makefile); then \
+	  $(MAKE) -f $(cmt_local_classapplycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} classapplycutsclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_classapplycuts_makefile) $(bin)classapplycuts_dependencies.make
+
+install :: classapplycutsinstall
+
+classapplycutsinstall :: $(classapplycuts_dependencies) $(cmt_local_classapplycuts_makefile)
+	$(echo) "(constituents.make) Starting install classapplycuts"
+	@-$(MAKE) -f $(cmt_local_classapplycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install classapplycuts done"
+
+uninstall :: classapplycutsuninstall
+
+classapplycutsuninstall :: $(cmt_local_classapplycuts_makefile)
+	$(echo) "(constituents.make) Starting uninstall classapplycuts"
+	@-$(MAKE) -f $(cmt_local_classapplycuts_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall classapplycuts done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ classapplycuts"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ classapplycuts done"
+endif
+
+
+#-- end of constituent ------
 #-- start of constituent_lock ------
 
 cmt_make_has_target_tag = 1
