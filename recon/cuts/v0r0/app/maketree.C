@@ -27,6 +27,7 @@
 #include <TGlobalBaseObjects.hxx>
 #include <TGRooTrackerVtx.hxx>
 #include <TTruthVerticesModule.hxx>
+#include <TTrackerECALReconModule.hxx>
 #include <TTrueVertex.hxx>
 #include <TTree.h>
 #include <TBranch.h>
@@ -51,6 +52,8 @@ int main(int argc, char** argv)
 	// Declare a TChain for the TGlobalPID module
 	TChain *gRecon = new TChain("ReconDir/Global");
 	TChain *P0Dinfo = new TChain("ReconDir/P0D");
+	TChain *ECalInfo = new TChain("ReconDir/TrackerECal");
+	
 	// Check if the file exists.
 	if (!inputFile.is_open()){
 	std::cout << "ERROR: File prod4 files not found!" << std::endl;
@@ -62,9 +65,11 @@ int main(int argc, char** argv)
 
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
-		while(getline(inputFile,curFileName)){
+		for(int i=0;i<3;i++) { getline(inputFile,curFileName);
+		//while(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
 				P0Dinfo->Add(curFileName.c_str());
+				ECalInfo->Add(curFileName.c_str());
 		}
 	}
 
@@ -74,13 +79,18 @@ int main(int argc, char** argv)
 	int NPIDs(0);  // This variable counts the number of particles per event
 	Int_t EventID(0);
 	Int_t NP0DClusters(0);
+	Int_t NECalReconObject(0);//within ECal object!
 	// Declare a TClonesArray to hold objects of type TGlobalPID
  	TClonesArray *globalPIDs = new TClonesArray("ND::TGlobalReconModule::TGlobalPID",50);
+	TClonesArray *ECalReconObject = new TClonesArray("ND::TTrackerECALReconModule::TECALReconObject",50);//No Idea if this even nearly alright.//for ECal/ReconObject
+	//used to be ND::TTrackerECALReconModule::TECALReconObject
     // Associate the right branch in the TTree to the right local variable
 	gRecon->SetBranchAddress("NPIDs",&NPIDs);
     gRecon->SetBranchAddress("PIDs",&globalPIDs);
 	gRecon->SetBranchAddress("EventID", &EventID);
 	P0Dinfo->SetBranchAddress("NClusters", &NP0DClusters);
+	cout << "NECAL setBranchadd = " << ECalInfo->SetBranchAddress("NReconObject", &NECalReconObject) << endl;
+	cout << "ECAL info setbranchaddress out = " << ECalInfo->SetBranchAddress("ReconObject",&ECalReconObject) << endl;
 	//========================================================
 	//			Declare Graphs n stuff here
 	//========================================================
@@ -88,7 +98,7 @@ int main(int argc, char** argv)
 	//adding tclones arrays for use with detectors
 
 	cout<<"got inputs"<<endl;
-	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("../../../tree/testtree.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -108,6 +118,7 @@ int main(int argc, char** argv)
 	TString FName;
 	TObjString FOName;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
+	TLorentzVector ECalBackPosition;
 
 	Int_t NFGDs;
 	TClonesArray FGD("ND::TGlobalReconModule::TFGDObject", 2);
@@ -129,9 +140,11 @@ int main(int argc, char** argv)
 	tree->Branch("Status", &Status);
 	tree->Branch("Quality", &Quality);
 	tree->Branch("NHits", &NHits);
+	tree->Branch("NECalReconObject", &NECalReconObject);
 	tree->Branch("IsForward", &IsForward);
 	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
+	tree->Branch("ECalBackPosition","TLorentzVector", &ECalBackPosition);
 	tree->Branch("FrontMomentum", &FrontMomentum);
 	tree->Branch("BackMomentum", &BackMomentum);
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
@@ -163,7 +176,10 @@ int main(int argc, char** argv)
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		P0Dinfo->GetEntry(i);
+		ECalInfo->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
+		ND::TTrackerECALReconModule::TECALReconTrack *eRecon = NULL;
+		//ND::TTrackerECALReconModule::TECALReconObject *eRecon = NULL;
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			int bunch = inTimeBunch(&gTrack->FrontPosition);
@@ -174,6 +190,7 @@ int main(int argc, char** argv)
 		for (int j=0; j<NPIDs; j++) {	//loop again to perform cuts
 			//Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
+			eRecon = (ND::TTrackerECALReconModule::TECALReconObject*(ND::TTrackerECALReconModule::TECALReconTrack*)ECalReconObject->At(j))->Track;
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
 			int bunch = inTimeBunch(&vec);
@@ -206,6 +223,9 @@ int main(int argc, char** argv)
 				P0D = *gTrack->P0D;
 				SMRD = *gTrack->SMRD; 
 				NTree++; //one more in the tree (for diagnostic purposes to see what root is doing with the trees)
+				//ECalBackPosition = eRecon->Track.BackPosition;
+				//cout << eRecon
+				ECalBackPosition = ERecon->BackPosition;
 				tree->Fill();
 			}
 		}
