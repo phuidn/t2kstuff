@@ -73,21 +73,22 @@ int posCharge(Int_t NTPCs, TClonesArray* TPC)
 	if (!NTPCs)
 		return 0;
 	else{
-		Int_t charge(1), tpcflag(0);
+		Int_t charge(1), hits(0);
 		for (int i=0; i<NTPCs; i++)
 			if( ((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->NHits > 18 ){
 				charge = charge && (((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->Charge == 1);
-				tpcflag = 1;
+				hits = 1;
 			}
-		return charge && tpcflag;
+		return charge && hits;
 	}
 }	
 
 int TPCHits(Int_t NTPCs, TClonesArray* TPC, int min = 18, int max = 100){
-	int tothits = 0;
+	int enoughhits(0), NHits;
 	for (int i=0; i<NTPCs; i++)
-		tothits += ((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->NHits;
-	return tothits>min && tothits<max;
+		NHits = ((ND::TGlobalReconModule::TTPCObject*) TPC->At(i))->NHits;
+		enoughhits =  NHits>min && NHits<max;
+	return enoughhits;
 }
 
 int protonPull(Int_t NTPCs, TClonesArray* TPC, double minPull = -3., double maxPull = 15.)

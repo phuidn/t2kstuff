@@ -46,7 +46,8 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. 
-	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
+//	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
+	TString fileName("../../../magnetfiles");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
 	// Declare a TChain for the TGlobalPID module
@@ -98,7 +99,8 @@ int main(int argc, char** argv)
 	//adding tclones arrays for use with detectors
 
 	cout<<"got inputs"<<endl;
-	TFile treefile("../../../tree/testtree.root", "RECREATE", "A test tree"); //create file for new tree
+//	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("../../../tree/magnettree.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree

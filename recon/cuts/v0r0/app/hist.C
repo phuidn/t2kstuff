@@ -64,12 +64,13 @@ int main(int argc, char** argv)
 	Double_t Quality;
 	Int_t NHits;
 	Bool_t IsForward;
+	Int_t NP0DClusters;
 	TLorentzVector *FrontPosition(0), *BackPosition(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
-//	Int_t EventID(0);
-//	TObjString *FOName(0);
+	Int_t EventID(0);
+	TObjString *FOName(0);
 
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
@@ -85,8 +86,8 @@ int main(int argc, char** argv)
 	// add them  to the tree
 	tree->SetBranchAddress("Detectors", &Detectors);
 	tree->SetBranchAddress("Status", &Status);
-//	tree->SetBranchAddress("FOName",&FOName);
-//	tree->SetBranchAddress("EventID",&EventID);
+	tree->SetBranchAddress("FOName",&FOName);
+	tree->SetBranchAddress("EventID",&EventID);
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
 	tree->SetBranchAddress("IsForward", &IsForward);
@@ -106,6 +107,7 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("FGD", &FGD);
 	tree->SetBranchAddress("ECAL", &ECAL);
 	tree->SetBranchAddress("P0D", &P0D);
+	tree->SetBranchAddress("NP0DClusters", &NP0DClusters);
 	tree->SetBranchAddress("SMRD", &SMRD);
 
 	//Counters
@@ -158,7 +160,7 @@ int main(int argc, char** argv)
 			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->NHits;
 		}
 	
-		Double_t fillval = (Double_t)avProPull;
+		Double_t fillval = NP0DClusters;
 		
 		//this is for filtering by particle type
 	//	if(avProPull!=0 && keep)
