@@ -1,0 +1,12 @@
+initially: eff = 0.59637, pur = 0.10084
+      NoTPC1:     eff = 0.59637, pur = 0.10104, e*p = 0.06026
+     TPCHits:     eff = 0.28458, pur = 0.07733, e*p = 0.02201
+   PosCharge:     eff = 0.27778, pur = 0.23048, e*p = 0.06402
+  ProtonPull:     eff = 0.24150, pur = 0.36348, e*p = 0.08778
+    MuonPull:     eff = 0.23129, pur = 0.45133, e*p = 0.10439
+    PionPull:     eff = 0.23129, pur = 0.45133, e*p = 0.10439
+    TotNHits:     eff = 0.21429, pur = 0.46437, e*p = 0.09951
+DetectorOrder:     eff = 0.21429, pur = 0.46552, e*p = 0.09975
+ MinMomentum:     eff = 0.21429, pur = 0.46552, e*p = 0.09975
+ MinMomentum:     eff = 0.21429, pur = 0.46552, e*p = 0.09975
+    CutECALs:     eff = 0.21429, pur = 0.46552, e*p = 0.09975

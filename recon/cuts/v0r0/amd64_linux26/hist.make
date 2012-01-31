@@ -3,11 +3,7 @@
 #====================================
 #  Application hist
 #
-<<<<<<< HEAD:recon/cuts/v0r0/amd64_linux26/hist.make
-#   Generated Thu Jan 26 16:59:21 2012  by phuidv
-=======
-#   Generated Fri Jan 27 17:18:11 2012  by phuidn
->>>>>>> 6e7e93cdbe2bbfcbda576add4ad10dbb2a6aa296:recon/cuts/v0r0/amd64_linux26/hist.make
+#   Generated Tue Jan 31 14:31:18 2012  by phuidn
 #
 #====================================
 

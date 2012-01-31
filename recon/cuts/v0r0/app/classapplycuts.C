@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnettree.root");
+	TFile *treefile = new TFile("../../../tree/magnetecalp0d.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree

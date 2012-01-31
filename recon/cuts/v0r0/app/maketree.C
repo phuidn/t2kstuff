@@ -66,8 +66,8 @@ int main(int argc, char** argv)
 
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
-		for(int i=0;i<3;i++) { getline(inputFile,curFileName);
-		//while(getline(inputFile,curFileName)){
+	//	for(int i=0;i<3;i++) { getline(inputFile,curFileName);
+		while(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
 				P0Dinfo->Add(curFileName.c_str());
 				ECalInfo->Add(curFileName.c_str());
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 
 	cout<<"got inputs"<<endl;
 //	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
-	TFile treefile("../../../tree/magnettree.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("../../../tree/testtree.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 	TString FName;
 	TObjString FOName;
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
-	TLorentzVector ECalBackPosition;
+	TLorentzVector ECalPosition, ECalBackPosition;
 
 	Int_t NFGDs;
 	TClonesArray FGD("ND::TGlobalReconModule::TFGDObject", 2);
@@ -142,11 +142,10 @@ int main(int argc, char** argv)
 	tree->Branch("Status", &Status);
 	tree->Branch("Quality", &Quality);
 	tree->Branch("NHits", &NHits);
-	tree->Branch("NECalReconObject", &NECalReconObject);
+//	tree->Branch("NECalReconObject", &NECalReconObject);
 	tree->Branch("IsForward", &IsForward);
 	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
-	tree->Branch("ECalBackPosition","TLorentzVector", &ECalBackPosition);
 	tree->Branch("FrontMomentum", &FrontMomentum);
 	tree->Branch("BackMomentum", &BackMomentum);
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
@@ -161,8 +160,9 @@ int main(int argc, char** argv)
 	tree->Branch("FGD", &FGD);
 	tree->Branch("ECAL", &ECAL);
 	tree->Branch("P0D", &P0D);
-	tree->Branch("NP0DClusters", &NP0DClusters);
 	tree->Branch("SMRD", &SMRD);
+//	tree->Branch("ECalBackPosition","TLorentzVector", &ECalBackPosition);
+//	tree->Branch("ECalPosition","TLorentzVector", &ECalBackPosition);
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
@@ -170,18 +170,48 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
 	unsigned int tot = gRecon->GetEntries();
-	int bunches[8] = {0,0,0,0,0,0,0,0};  //array to check number of hits per time bunch
+	cout << tot << " events" << endl;
+	int bunches[8] = {0,0,0,0,0,0,0,0},  //array to check number of hits per time bunch
+		ecalhits[8] = {0,0,0,0,0,0,0,0};
 	for(unsigned int i = 0; i < tot; ++i) {
 		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
 		//display status every 10,000 th entry
 		memset(bunches, 0, 8*sizeof(int));
+		memset(ecalhits, 0, 8*sizeof(int));
 		//Get an entry for the Recon tree
 		gRecon->GetEntry(i);
 		P0Dinfo->GetEntry(i);
 		ECalInfo->GetEntry(i);
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
-		ND::TTrackerECALReconModule::TECALReconTrack *eRecon = NULL;
-		//ND::TTrackerECALReconModule::TECALReconObject *eRecon = NULL;
+		//ND::TTrackerECALReconModule::TECALReconTrack *eRecon = NULL;
+		ND::TTrackerECALReconModule::TECALReconObject *eObject = NULL;
+		
+		for (int j=0; j<NECalReconObject; j++){
+			TLorentzVector* position;
+			int track(0), shower(0);
+			eObject = (ND::TTrackerECALReconModule::TECALReconObject*)ECalReconObject->At(j);
+			track  = eObject->IsTrackLike;
+			shower = eObject->IsShowerLike;
+			if(track){
+				int bunch = inTimeBunch(&(eObject->Track.Position), 500);
+				if(bunch != -1)
+					ecalhits[bunch]++;
+			}
+			else if(shower){	
+				int bunch = inTimeBunch(&(eObject->Shower.Position), 500);
+				if(bunch != -1)
+					ecalhits[bunch]+=2;
+			}
+			else{	
+				int bunch = inTimeBunch(&(eObject->Cluster.Position), 500);
+				if(bunch != -1)
+					ecalhits[bunch]++;
+			}
+		}
+		for (int j=0; j<8; j++)
+			cout << ecalhits[j];
+		cout << endl;
+		
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			int bunch = inTimeBunch(&gTrack->FrontPosition);
@@ -192,15 +222,16 @@ int main(int argc, char** argv)
 		for (int j=0; j<NPIDs; j++) {	//loop again to perform cuts
 			//Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			eRecon = (ND::TTrackerECALReconModule::TECALReconObject*(ND::TTrackerECALReconModule::TECALReconTrack*)ECalReconObject->At(j))->Track;
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
 			int bunch = inTimeBunch(&vec);
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ //cut only lets through particles which start in an FGD
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
-				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
+				if(bunch==-1 || bunches[bunch]>1 || ecalhits[bunch] > 1) //cut allows through particles with one hit per bunch 
 					continue;
+				if(NP0DClusters > 0)
+					break;
 				FName = TString(gRecon->GetFile()->GetName());
 				FOName.SetString(FName);
 				Detectors = gTrack->Detectors;	
@@ -227,7 +258,6 @@ int main(int argc, char** argv)
 				NTree++; //one more in the tree (for diagnostic purposes to see what root is doing with the trees)
 				//ECalBackPosition = eRecon->Track.BackPosition;
 				//cout << eRecon
-				ECalBackPosition = ERecon->BackPosition;
 				tree->Fill();
 			}
 		}
