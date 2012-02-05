@@ -13,3 +13,4 @@ application applycuts ../app/applycuts.C ../app/cuts.C
 application hist ../app/hist.C ../app/cuts.C
 application maketree ../app/maketree.C ../app/cuts.C
 application classapplycuts ../app/classapplycuts.C ../app/classcuts.C
+application classhist ../app/classhistcuts.C ../app/classcuts.C

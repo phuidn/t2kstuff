@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnetecalp0d.root");
+	TFile *treefile = new TFile("../../../tree/allmag.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -122,17 +122,28 @@ int main(int argc, char** argv)
 	cuts.push_back(new CutECALs(&NECALs));
 	
 	int NCuts = cuts.size();
-	int	correctCut[NCuts],
-		wrongCut[NCuts];
-	memset(correctCut, 0, NCuts*sizeof(int));
-	memset(wrongCut, 0, NCuts*sizeof(int));
+	int	NCEScount[NCuts],
+		totCount[NCuts],
+		CCQEScount[NCuts],
+		CCREScount[NCuts],
+		NCREScount[NCuts],
+		DIScount[NCuts],
+		otherCount[NCuts];
+	memset(NCEScount, 0, NCuts*sizeof(int));
+	memset(CCQEScount, 0, NCuts*sizeof(int));
+	memset(CCREScount, 0, NCuts*sizeof(int));
+	memset(NCREScount, 0, NCuts*sizeof(int));
+	memset(DIScount, 0, NCuts*sizeof(int));
+	memset(otherCount, 0, NCuts*sizeof(int));
+	memset(totCount, 0, NCuts*sizeof(int));
 	
 	for(unsigned int i = 0; i < NTOT; ++i) {
 		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
-		int keep(1), j(0), isNCES = TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1; //is the particle going to be kept, is it NCES
+		int keep(1), j(0), isNCES = TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1;
+
 		initialNCES += isNCES;
 		//apply cuts here
 		//cout<<TrueParticle->Vertex.ReactionCode<<endl;
@@ -144,17 +155,27 @@ int main(int argc, char** argv)
 			keep = cuts[j]->apply();
 			if(!keep)
 				break;
-			correctCut[j] += isNCES;
-			wrongCut[j] += !isNCES;
+			totCount[j]++;
+			NCEScount[j] += isNCES;
+			if (!isNCES){
+				CCQEScount[j] += TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1;
+				CCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1;
+				NCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1;
+				DIScount[j]  += TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1;	
+			}
 		}
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
 	for (int n(0); n < NCuts; n++){
-		double eff = (double)correctCut[n]/(double)NNCES, pur = (double)correctCut[n]/(double)(correctCut[n]+wrongCut[n]);
+		double eff = (double)NCEScount[n]/(double)NNCES, pur = (double)NCEScount[n]/(double)totCount[n];
 		printf("%12s:     eff = %6.5f, pur = %6.5f, e*p = %6.5f\n",cuts[n]->name.c_str(),eff, pur, eff*pur);
 	}
-		
+	cout << "Background components:" << endl;
+	printf("%6.5f%% CCQES\n", (double)CCQEScount[NCuts-1]/((double)totCount[NCuts-1] - (double)NCEScount[NCuts-1]));
+	printf("%6.5f%% NCRES\n", (double)NCREScount[NCuts-1]/((double)totCount[NCuts-1] - (double)NCEScount[NCuts-1]));
+	printf("%6.5f%% CCRES\n", (double)CCREScount[NCuts-1]/((double)totCount[NCuts-1] - (double)NCEScount[NCuts-1]));
+	printf("%6.5f%% DIS\n", (double)DIScount[NCuts-1]/((double)totCount[NCuts-1] - (double)NCEScount[NCuts-1]));
 	treefile->Close();
 	return 0;
 }
