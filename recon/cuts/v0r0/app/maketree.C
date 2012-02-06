@@ -46,8 +46,8 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. 
-//	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
-	TString fileName("../../../ALLmagnetfiles");
+	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
+//	TString fileName("../../../ALLmagnetfiles");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
 	// Declare a TChain for the TGlobalPID module
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 	//Variables which could be put in the new tree
 	UInt_t Detectors;
 	UInt_t Status;
-	Double_t Quality;
+	Double_t Quality, Length, Width;
 	Int_t NHits;
 	Bool_t IsForward;
 	Double_t FrontMomentum, BackMomentum;
@@ -142,8 +142,9 @@ int main(int argc, char** argv)
 	tree->Branch("Status", &Status);
 	tree->Branch("Quality", &Quality);
 	tree->Branch("NHits", &NHits);
-//	tree->Branch("NECalReconObject", &NECalReconObject);
 	tree->Branch("IsForward", &IsForward);
+	tree->Branch("Length", &Length);
+	tree->Branch("Width", &Width);
 	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
 	tree->Branch("FrontMomentum", &FrontMomentum);
@@ -169,7 +170,7 @@ int main(int argc, char** argv)
 
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
-	unsigned int tot = gRecon->GetEntries();
+	unsigned int tot = gRecon->GetEntries()/2;
 	cout << tot << " events" << endl;
 	int bunches[8] = {0,0,0,0,0,0,0,0},  //array to check number of hits per time bunch
 		ecalhits[8] = {0,0,0,0,0,0,0,0};
@@ -186,7 +187,7 @@ int main(int argc, char** argv)
 		//ND::TTrackerECALReconModule::TECALReconTrack *eRecon = NULL;
 		ND::TTrackerECALReconModule::TECALReconObject *eObject = NULL;
 		
-		for (int j=0; j<NECalReconObject; j++){
+/*		for (int j=0; j<NECalReconObject; j++){
 			TLorentzVector* position;
 			int track(0), shower(0);
 			eObject = (ND::TTrackerECALReconModule::TECALReconObject*)ECalReconObject->At(j);
@@ -207,7 +208,7 @@ int main(int argc, char** argv)
 				if(bunch != -1)
 					ecalhits[bunch]++;
 			}
-		}
+		}*/
 		
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -225,7 +226,7 @@ int main(int argc, char** argv)
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) ){ //cut only lets through particles which start in an FGD
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
-				if(bunch==-1 || bunches[bunch]>1 || ecalhits[bunch] > 1) //cut allows through particles with one hit per bunch 
+				if(bunch==-1 || bunches[bunch]>1/* || ecalhits[bunch] > 1*/) //cut allows through particles with one hit per bunch 
 					continue;		
 				FName = TString(gRecon->GetFile()->GetName());
 				FOName.SetString(FName);
@@ -233,6 +234,8 @@ int main(int argc, char** argv)
 				Quality = gTrack->Quality;
 				NHits = gTrack->NHits;
 				Status = gTrack->Status;
+				Width = gTrack->Width;
+				Length = gTrack->Length;
 				FrontPosition = gTrack->FrontPosition;
 				BackPosition = gTrack->BackPosition;
 				FrontDirection = gTrack->FrontDirection;

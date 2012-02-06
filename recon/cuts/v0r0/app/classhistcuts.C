@@ -49,13 +49,13 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnetnormal.root");
+	TFile *treefile = new TFile("../../../tree/testtree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
 	UInt_t Detectors(0);
 	UInt_t Status(0);
-	Double_t Quality,FrontMomentum(0), BackMomentum(0);
+	Double_t Quality,FrontMomentum(0), BackMomentum(0), Length(0), Width(0);
 	Int_t NHits(0);
 	Bool_t IsForward(0);
 	TLorentzVector *FrontPosition(0), *BackPosition(0);
@@ -88,6 +88,8 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("Quality", &Quality);
 	tree->SetBranchAddress("NHits", &NHits);
 	tree->SetBranchAddress("IsForward", &IsForward);
+	tree->SetBranchAddress("Length", &Length);
+	tree->SetBranchAddress("Width", &Width);
 	tree->SetBranchAddress("FrontPosition", &FrontPosition);
 	tree->SetBranchAddress("BackPosition", &BackPosition);
 	tree->SetBranchAddress("FrontMomentum", &FrontMomentum);
@@ -135,15 +137,15 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",100,-5, 50);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",100,0,3000);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",100,-5, 50);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",100,0,3000);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",100,-5, 50);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",100,0,3000);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",100,-5, 50);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",100,0,3000);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",100,-5, 50);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",100,0,3000);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",100,0,15000);
 	//hist6->SetFillColor(kBlack);
@@ -175,8 +177,8 @@ int main(int argc, char** argv)
 		//Horrible Dirty Hist bits
 		if(keep)
 		{
-			Double_t fillval = ((ND::TGlobalReconModule::TTPCObject*) TPC->At(0))->PullEle;
-
+			Double_t fillval = Length;
+			cout << Length << endl;
 			accepted++;
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 			{	//add to QES graph
