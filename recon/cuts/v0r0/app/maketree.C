@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	// Get list of files to run over. 
 //	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
-	TString fileName("../../../magnetfiles");
+	TString fileName("../../../ALLmagnetfiles");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
 	// Declare a TChain for the TGlobalPID module
@@ -197,7 +197,7 @@ int main(int argc, char** argv)
 				if(bunch != -1)
 					ecalhits[bunch]++;
 			}
-			else if(shower){	
+			else if(shower){
 				int bunch = inTimeBunch(&(eObject->Shower.Position), 500);
 				if(bunch != -1)
 					ecalhits[bunch]+=2;
@@ -208,9 +208,6 @@ int main(int argc, char** argv)
 					ecalhits[bunch]++;
 			}
 		}
-		for (int j=0; j<8; j++)
-			cout << ecalhits[j];
-		cout << endl;
 		
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -229,9 +226,7 @@ int main(int argc, char** argv)
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
 				if(bunch==-1 || bunches[bunch]>1 || ecalhits[bunch] > 1) //cut allows through particles with one hit per bunch 
-					continue;
-				if(NP0DClusters > 0)
-					break;
+					continue;		
 				FName = TString(gRecon->GetFile()->GetName());
 				FOName.SetString(FName);
 				Detectors = gTrack->Detectors;	

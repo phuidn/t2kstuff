@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnettree.root");
+	TFile *treefile = new TFile("../../../tree/magnetnormal.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -135,15 +135,15 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Frontmom as a function of reaction");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",100,0,1500);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",100,-5, 50);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",100,0,1500);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",100,-5, 50);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",100,0,1500);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",100,-5, 50);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",100,0,1500);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",100,-5, 50);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",100,0,1500);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",100,-5, 50);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",100,0,15000);
 	//hist6->SetFillColor(kBlack);
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 		//Horrible Dirty Hist bits
 		if(keep)
 		{
-			Double_t fillval = FrontMomentum;
+			Double_t fillval = ((ND::TGlobalReconModule::TTPCObject*) TPC->At(0))->PullEle;
 
 			accepted++;
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
