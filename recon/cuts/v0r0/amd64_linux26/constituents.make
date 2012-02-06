@@ -343,101 +343,6 @@ endif
 #-- end of constituent ------
 #-- start of constituent ------
 
-cmt_magnetecalp0d_has_no_target_tag = 1
-
-#--------------------------------------------------------
-
-ifdef cmt_magnetecalp0d_has_target_tag
-
-ifdef READONLY
-cmt_local_tagfile_magnetecalp0d = /tmp/CMT_$(cuts_tag)_magnetecalp0d.make$(cmt_lock_pid)
-cmt_final_setup_magnetecalp0d = /tmp/CMT_cuts_magnetecalp0dsetup.make
-cmt_local_magnetecalp0d_makefile = /tmp/CMT_magnetecalp0d$(cmt_lock_pid).make
-else
-#cmt_local_tagfile_magnetecalp0d = $(cuts_tag)_magnetecalp0d.make
-cmt_local_tagfile_magnetecalp0d = $(bin)$(cuts_tag)_magnetecalp0d.make
-cmt_final_setup_magnetecalp0d = $(bin)cuts_magnetecalp0dsetup.make
-cmt_local_magnetecalp0d_makefile = $(bin)magnetecalp0d.make
-endif
-
-magnetecalp0d_extratags = -tag_add=target_magnetecalp0d
-
-#$(cmt_local_tagfile_magnetecalp0d) : $(cmt_lock_setup)
-ifndef QUICK
-$(cmt_local_tagfile_magnetecalp0d) ::
-else
-$(cmt_local_tagfile_magnetecalp0d) :
-endif
-	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_magnetecalp0d)"
-	@if test -f $(cmt_local_tagfile_magnetecalp0d); then /bin/rm -f $(cmt_local_tagfile_magnetecalp0d); fi ; \
-	  $(cmtexe) -tag=$(tags) $(magnetecalp0d_extratags) build tag_makefile >>$(cmt_local_tagfile_magnetecalp0d); \
-	  if test -f $(cmt_final_setup_magnetecalp0d); then /bin/rm -f $(cmt_final_setup_magnetecalp0d); fi; \
-	  $(cmtexe) -tag=$(tags) $(magnetecalp0d_extratags) show setup >>$(cmt_final_setup_magnetecalp0d)
-	$(echo) setup.make ok
-
-else
-
-ifdef READONLY
-cmt_local_tagfile_magnetecalp0d = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_magnetecalp0d = /tmp/CMT_cutssetup.make
-cmt_local_magnetecalp0d_makefile = /tmp/CMT_magnetecalp0d$(cmt_lock_pid).make
-else
-#cmt_local_tagfile_magnetecalp0d = $(cuts_tag).make
-cmt_local_tagfile_magnetecalp0d = $(bin)$(cuts_tag).make
-cmt_final_setup_magnetecalp0d = $(bin)cutssetup.make
-cmt_local_magnetecalp0d_makefile = $(bin)magnetecalp0d.make
-endif
-
-endif
-
-ifndef QUICK
-$(cmt_local_magnetecalp0d_makefile) :: $(magnetecalp0d_dependencies) $(cmt_local_tagfile_magnetecalp0d) build_library_links dirs
-else
-$(cmt_local_magnetecalp0d_makefile) :: $(cmt_local_tagfile_magnetecalp0d)
-endif
-	$(echo) "(constituents.make) Building magnetecalp0d.make"; \
-	  $(cmtexe) -tag=$(tags) $(magnetecalp0d_extratags) build constituent_makefile -out=$(cmt_local_magnetecalp0d_makefile) magnetecalp0d
-
-magnetecalp0d :: $(magnetecalp0d_dependencies) $(cmt_local_magnetecalp0d_makefile)
-	$(echo) "(constituents.make) Starting magnetecalp0d"
-	@$(MAKE) -f $(cmt_local_magnetecalp0d_makefile) cmt_lock_pid=$${cmt_lock_pid} magnetecalp0d
-	$(echo) "(constituents.make) magnetecalp0d done"
-
-clean :: magnetecalp0dclean
-
-magnetecalp0dclean :: $(magnetecalp0dclean_dependencies) ##$(cmt_local_magnetecalp0d_makefile)
-	$(echo) "(constituents.make) Starting magnetecalp0dclean"
-	@-if test -f $(cmt_local_magnetecalp0d_makefile); then \
-	  $(MAKE) -f $(cmt_local_magnetecalp0d_makefile) cmt_lock_pid=$${cmt_lock_pid} magnetecalp0dclean; \
-	fi
-
-##	  /bin/rm -f $(cmt_local_magnetecalp0d_makefile) $(bin)magnetecalp0d_dependencies.make
-
-install :: magnetecalp0dinstall
-
-magnetecalp0dinstall :: $(magnetecalp0d_dependencies) $(cmt_local_magnetecalp0d_makefile)
-	$(echo) "(constituents.make) Starting install magnetecalp0d"
-	@-$(MAKE) -f $(cmt_local_magnetecalp0d_makefile) cmt_lock_pid=$${cmt_lock_pid} install
-	$(echo) "(constituents.make) install magnetecalp0d done"
-
-uninstall :: magnetecalp0duninstall
-
-magnetecalp0duninstall :: $(cmt_local_magnetecalp0d_makefile)
-	$(echo) "(constituents.make) Starting uninstall magnetecalp0d"
-	@-$(MAKE) -f $(cmt_local_magnetecalp0d_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
-	$(echo) "(constituents.make) uninstall magnetecalp0d done"
-
-ifndef PEDANTIC
-.DEFAULT::
-	$(echo) "(constituents.make) Starting $@ magnetecalp0d"
-	$(echo) Using default action for $@
-	$(echo) "(constituents.make) $@ magnetecalp0d done"
-endif
-
-
-#-- end of constituent ------
-#-- start of constituent ------
-
 cmt_classapplycuts_has_no_target_tag = 1
 
 #--------------------------------------------------------
@@ -527,6 +432,291 @@ ifndef PEDANTIC
 	$(echo) "(constituents.make) Starting $@ classapplycuts"
 	$(echo) Using default action for $@
 	$(echo) "(constituents.make) $@ classapplycuts done"
+endif
+
+
+#-- end of constituent ------
+#-- start of constituent ------
+
+cmt_classhistcuts_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_classhistcuts_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_classhistcuts = /tmp/CMT_$(cuts_tag)_classhistcuts.make$(cmt_lock_pid)
+cmt_final_setup_classhistcuts = /tmp/CMT_cuts_classhistcutssetup.make
+cmt_local_classhistcuts_makefile = /tmp/CMT_classhistcuts$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_classhistcuts = $(cuts_tag)_classhistcuts.make
+cmt_local_tagfile_classhistcuts = $(bin)$(cuts_tag)_classhistcuts.make
+cmt_final_setup_classhistcuts = $(bin)cuts_classhistcutssetup.make
+cmt_local_classhistcuts_makefile = $(bin)classhistcuts.make
+endif
+
+classhistcuts_extratags = -tag_add=target_classhistcuts
+
+#$(cmt_local_tagfile_classhistcuts) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_classhistcuts) ::
+else
+$(cmt_local_tagfile_classhistcuts) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_classhistcuts)"
+	@if test -f $(cmt_local_tagfile_classhistcuts); then /bin/rm -f $(cmt_local_tagfile_classhistcuts); fi ; \
+	  $(cmtexe) -tag=$(tags) $(classhistcuts_extratags) build tag_makefile >>$(cmt_local_tagfile_classhistcuts); \
+	  if test -f $(cmt_final_setup_classhistcuts); then /bin/rm -f $(cmt_final_setup_classhistcuts); fi; \
+	  $(cmtexe) -tag=$(tags) $(classhistcuts_extratags) show setup >>$(cmt_final_setup_classhistcuts)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_classhistcuts = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_classhistcuts = /tmp/CMT_cutssetup.make
+cmt_local_classhistcuts_makefile = /tmp/CMT_classhistcuts$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_classhistcuts = $(cuts_tag).make
+cmt_local_tagfile_classhistcuts = $(bin)$(cuts_tag).make
+cmt_final_setup_classhistcuts = $(bin)cutssetup.make
+cmt_local_classhistcuts_makefile = $(bin)classhistcuts.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_classhistcuts_makefile) :: $(classhistcuts_dependencies) $(cmt_local_tagfile_classhistcuts) build_library_links dirs
+else
+$(cmt_local_classhistcuts_makefile) :: $(cmt_local_tagfile_classhistcuts)
+endif
+	$(echo) "(constituents.make) Building classhistcuts.make"; \
+	  $(cmtexe) -tag=$(tags) $(classhistcuts_extratags) build constituent_makefile -out=$(cmt_local_classhistcuts_makefile) classhistcuts
+
+classhistcuts :: $(classhistcuts_dependencies) $(cmt_local_classhistcuts_makefile)
+	$(echo) "(constituents.make) Starting classhistcuts"
+	@$(MAKE) -f $(cmt_local_classhistcuts_makefile) cmt_lock_pid=$${cmt_lock_pid} classhistcuts
+	$(echo) "(constituents.make) classhistcuts done"
+
+clean :: classhistcutsclean
+
+classhistcutsclean :: $(classhistcutsclean_dependencies) ##$(cmt_local_classhistcuts_makefile)
+	$(echo) "(constituents.make) Starting classhistcutsclean"
+	@-if test -f $(cmt_local_classhistcuts_makefile); then \
+	  $(MAKE) -f $(cmt_local_classhistcuts_makefile) cmt_lock_pid=$${cmt_lock_pid} classhistcutsclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_classhistcuts_makefile) $(bin)classhistcuts_dependencies.make
+
+install :: classhistcutsinstall
+
+classhistcutsinstall :: $(classhistcuts_dependencies) $(cmt_local_classhistcuts_makefile)
+	$(echo) "(constituents.make) Starting install classhistcuts"
+	@-$(MAKE) -f $(cmt_local_classhistcuts_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install classhistcuts done"
+
+uninstall :: classhistcutsuninstall
+
+classhistcutsuninstall :: $(cmt_local_classhistcuts_makefile)
+	$(echo) "(constituents.make) Starting uninstall classhistcuts"
+	@-$(MAKE) -f $(cmt_local_classhistcuts_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall classhistcuts done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ classhistcuts"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ classhistcuts done"
+endif
+
+
+#-- end of constituent ------
+#-- start of constituent ------
+
+cmt_maketree_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_maketree_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_maketree = /tmp/CMT_$(cuts_tag)_maketree.make$(cmt_lock_pid)
+cmt_final_setup_maketree = /tmp/CMT_cuts_maketreesetup.make
+cmt_local_maketree_makefile = /tmp/CMT_maketree$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_maketree = $(cuts_tag)_maketree.make
+cmt_local_tagfile_maketree = $(bin)$(cuts_tag)_maketree.make
+cmt_final_setup_maketree = $(bin)cuts_maketreesetup.make
+cmt_local_maketree_makefile = $(bin)maketree.make
+endif
+
+maketree_extratags = -tag_add=target_maketree
+
+#$(cmt_local_tagfile_maketree) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_maketree) ::
+else
+$(cmt_local_tagfile_maketree) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_maketree)"
+	@if test -f $(cmt_local_tagfile_maketree); then /bin/rm -f $(cmt_local_tagfile_maketree); fi ; \
+	  $(cmtexe) -tag=$(tags) $(maketree_extratags) build tag_makefile >>$(cmt_local_tagfile_maketree); \
+	  if test -f $(cmt_final_setup_maketree); then /bin/rm -f $(cmt_final_setup_maketree); fi; \
+	  $(cmtexe) -tag=$(tags) $(maketree_extratags) show setup >>$(cmt_final_setup_maketree)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_maketree = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_maketree = /tmp/CMT_cutssetup.make
+cmt_local_maketree_makefile = /tmp/CMT_maketree$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_maketree = $(cuts_tag).make
+cmt_local_tagfile_maketree = $(bin)$(cuts_tag).make
+cmt_final_setup_maketree = $(bin)cutssetup.make
+cmt_local_maketree_makefile = $(bin)maketree.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_maketree_makefile) :: $(maketree_dependencies) $(cmt_local_tagfile_maketree) build_library_links dirs
+else
+$(cmt_local_maketree_makefile) :: $(cmt_local_tagfile_maketree)
+endif
+	$(echo) "(constituents.make) Building maketree.make"; \
+	  $(cmtexe) -tag=$(tags) $(maketree_extratags) build constituent_makefile -out=$(cmt_local_maketree_makefile) maketree
+
+maketree :: $(maketree_dependencies) $(cmt_local_maketree_makefile)
+	$(echo) "(constituents.make) Starting maketree"
+	@$(MAKE) -f $(cmt_local_maketree_makefile) cmt_lock_pid=$${cmt_lock_pid} maketree
+	$(echo) "(constituents.make) maketree done"
+
+clean :: maketreeclean
+
+maketreeclean :: $(maketreeclean_dependencies) ##$(cmt_local_maketree_makefile)
+	$(echo) "(constituents.make) Starting maketreeclean"
+	@-if test -f $(cmt_local_maketree_makefile); then \
+	  $(MAKE) -f $(cmt_local_maketree_makefile) cmt_lock_pid=$${cmt_lock_pid} maketreeclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_maketree_makefile) $(bin)maketree_dependencies.make
+
+install :: maketreeinstall
+
+maketreeinstall :: $(maketree_dependencies) $(cmt_local_maketree_makefile)
+	$(echo) "(constituents.make) Starting install maketree"
+	@-$(MAKE) -f $(cmt_local_maketree_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install maketree done"
+
+uninstall :: maketreeuninstall
+
+maketreeuninstall :: $(cmt_local_maketree_makefile)
+	$(echo) "(constituents.make) Starting uninstall maketree"
+	@-$(MAKE) -f $(cmt_local_maketree_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall maketree done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ maketree"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ maketree done"
+endif
+
+
+#-- end of constituent ------
+#-- start of constituent ------
+
+cmt_matrixplot_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_matrixplot_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_matrixplot = /tmp/CMT_$(cuts_tag)_matrixplot.make$(cmt_lock_pid)
+cmt_final_setup_matrixplot = /tmp/CMT_cuts_matrixplotsetup.make
+cmt_local_matrixplot_makefile = /tmp/CMT_matrixplot$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_matrixplot = $(cuts_tag)_matrixplot.make
+cmt_local_tagfile_matrixplot = $(bin)$(cuts_tag)_matrixplot.make
+cmt_final_setup_matrixplot = $(bin)cuts_matrixplotsetup.make
+cmt_local_matrixplot_makefile = $(bin)matrixplot.make
+endif
+
+matrixplot_extratags = -tag_add=target_matrixplot
+
+#$(cmt_local_tagfile_matrixplot) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_matrixplot) ::
+else
+$(cmt_local_tagfile_matrixplot) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_matrixplot)"
+	@if test -f $(cmt_local_tagfile_matrixplot); then /bin/rm -f $(cmt_local_tagfile_matrixplot); fi ; \
+	  $(cmtexe) -tag=$(tags) $(matrixplot_extratags) build tag_makefile >>$(cmt_local_tagfile_matrixplot); \
+	  if test -f $(cmt_final_setup_matrixplot); then /bin/rm -f $(cmt_final_setup_matrixplot); fi; \
+	  $(cmtexe) -tag=$(tags) $(matrixplot_extratags) show setup >>$(cmt_final_setup_matrixplot)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_matrixplot = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_matrixplot = /tmp/CMT_cutssetup.make
+cmt_local_matrixplot_makefile = /tmp/CMT_matrixplot$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_matrixplot = $(cuts_tag).make
+cmt_local_tagfile_matrixplot = $(bin)$(cuts_tag).make
+cmt_final_setup_matrixplot = $(bin)cutssetup.make
+cmt_local_matrixplot_makefile = $(bin)matrixplot.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_matrixplot_makefile) :: $(matrixplot_dependencies) $(cmt_local_tagfile_matrixplot) build_library_links dirs
+else
+$(cmt_local_matrixplot_makefile) :: $(cmt_local_tagfile_matrixplot)
+endif
+	$(echo) "(constituents.make) Building matrixplot.make"; \
+	  $(cmtexe) -tag=$(tags) $(matrixplot_extratags) build constituent_makefile -out=$(cmt_local_matrixplot_makefile) matrixplot
+
+matrixplot :: $(matrixplot_dependencies) $(cmt_local_matrixplot_makefile)
+	$(echo) "(constituents.make) Starting matrixplot"
+	@$(MAKE) -f $(cmt_local_matrixplot_makefile) cmt_lock_pid=$${cmt_lock_pid} matrixplot
+	$(echo) "(constituents.make) matrixplot done"
+
+clean :: matrixplotclean
+
+matrixplotclean :: $(matrixplotclean_dependencies) ##$(cmt_local_matrixplot_makefile)
+	$(echo) "(constituents.make) Starting matrixplotclean"
+	@-if test -f $(cmt_local_matrixplot_makefile); then \
+	  $(MAKE) -f $(cmt_local_matrixplot_makefile) cmt_lock_pid=$${cmt_lock_pid} matrixplotclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_matrixplot_makefile) $(bin)matrixplot_dependencies.make
+
+install :: matrixplotinstall
+
+matrixplotinstall :: $(matrixplot_dependencies) $(cmt_local_matrixplot_makefile)
+	$(echo) "(constituents.make) Starting install matrixplot"
+	@-$(MAKE) -f $(cmt_local_matrixplot_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install matrixplot done"
+
+uninstall :: matrixplotuninstall
+
+matrixplotuninstall :: $(cmt_local_matrixplot_makefile)
+	$(echo) "(constituents.make) Starting uninstall matrixplot"
+	@-$(MAKE) -f $(cmt_local_matrixplot_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall matrixplot done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ matrixplot"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ matrixplot done"
 endif
 
 
