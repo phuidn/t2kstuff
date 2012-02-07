@@ -1,3 +1,4 @@
+//recon is X truth is Y
 //-----------------------------------------------
 //	Current file
 //-----------------------------------------------
@@ -43,6 +44,10 @@ void SetupROOT();
 //---------------------------------------------------------------------------//
 int main(int argc, char** argv)
 {	
+	//Open the output file
+	ofstream outputfile;
+	outputfile.open("kinetic-out.txt");
+
 
 	//Making canvas and application - needed for standalone programs
 	TApplication *App = new TApplication("Application",(Int_t*)&argc, argv);
@@ -200,6 +205,10 @@ int main(int argc, char** argv)
 			Double_t recon_mom = gTrack->FrontMomentum;
 			TLorentzVector v = gTrack->TrueParticle.InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
+
+			Double_t recon_kin = recon_mom*recon_mom*0.5*938.272;
+			Double_t truth_kin = truth_mom*truth_mom*0.5*938.272;
+
 		/*
 			if(truth_mom<1500.0) clo++;
 			if(truth_mom>1500.0) c15++;
@@ -218,7 +227,9 @@ int main(int argc, char** argv)
 
 
 			//std::cout << "PDG = " << gTrack->TrueParticle.PDG << "\t\t" <<  recon_mom << "\t\t" << truth_mom <<  endl;
-			hist->Fill(recon_mom,truth_mom);
+			hist->Fill(recon_kin,truth_kin);
+			outputfile << recon_kin <<","<< truth_kin << endl;
+
 			//truthhist->Fill(truth_mom);
 			//reconhist->Fill(recon_mom);
 
@@ -244,6 +255,7 @@ int main(int argc, char** argv)
 	cout << "Percentage of events above 2400: " << (double)c24 / (double)totalevents << endl;
 	cout << "Percentage of events above 2500: " << (double)c25 / (double)totalevents << endl;*/
 	//reconhist->Draw();
+	outputfile.close();
 	App->Run();
 	return 0;
 }
