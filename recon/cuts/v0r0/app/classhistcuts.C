@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/testtree.root");
+	TFile *treefile = new TFile("../../../tree/allmag.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -121,10 +121,10 @@ int main(int argc, char** argv)
 	cuts.push_back(new ProtonPull(&NTPCs, &TPC));
 	cuts.push_back(new MuonPull(&NTPCs, &TPC));
 	cuts.push_back(new PionPull(&NTPCs, &TPC));
-	cuts.push_back(new TotNHits(&NHits));
+//	cuts.push_back(new TotNHits(&NHits));
 	cuts.push_back(new DetectorOrder(&Detectors, &FrontPosition));
-	cuts.push_back(new MinMomentum(&FrontMomentum));
-	cuts.push_back(new MinMomentum(&BackMomentum, 130));
+//	cuts.push_back(new MinMomentum(&FrontMomentum));
+//	cuts.push_back(new MinMomentum(&BackMomentum, 130));
 	cuts.push_back(new CutECALs(&NECALs));
 	
 	int NCuts = cuts.size();
@@ -135,17 +135,17 @@ int main(int argc, char** argv)
 
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Frontmom as a function of reaction");
+	THStack hs("hs","A histogram with a title.");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",100,0,3000);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,2000);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",100,0,3000);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,2000);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",100,0,3000);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,2000);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",100,0,3000);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,2000);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",100,0,3000);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,2000);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",100,0,15000);
 	//hist6->SetFillColor(kBlack);
@@ -177,8 +177,7 @@ int main(int argc, char** argv)
 		//Horrible Dirty Hist bits
 		if(keep)
 		{
-			Double_t fillval = Length;
-			cout << Length << endl;
+			Double_t fillval = FrontMomentum * FrontDirection->CosTheta();
 			accepted++;
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 			{	//add to QES graph

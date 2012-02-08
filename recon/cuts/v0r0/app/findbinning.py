@@ -3,18 +3,22 @@
 # WHHYYY!
 import csv
 import array
+import numpy as np
 
 truth_kin = ([])
 recon_kin = ([])
 
-file = open("kinetic-out-test.txt","rb")
+file = open("kinetic-out.txt","rb")
 csv_file = csv.reader(file)
 for data in csv_file:
-	truth_kin.append(float(data[0]))
-	recon_kin.append(float(data[1]))
+	recon_kin.append(float(data[0]))
+	truth_kin.append(float(data[1]))
+	if not isinstance(truth_kin[-1], float):
+		print "error error"
 
+truth_kin = np.array(truth_kin)
+truth_kin /= (0.5*938.72)
 truth_kin.sort()
-#truth_kin = sorted(truth_kin,reverse=False)
 
 segsize = len(truth_kin)/5.0
 x0 = 0.0
