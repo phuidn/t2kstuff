@@ -92,7 +92,8 @@ int main(int argc, char** argv)
 	//			Declare Graphs n stuff here
 
 	//Matrix one
-	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,0,1000,5,0,1500);
+	Float_t bins[] = {0,0.22, 0.36, 0.52, 0.76, 4};
+	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,bins,5,bins);
 	//Both stacked
 	//THStack hs("hs","Recon and truth proton momenta for NCQES");
 	////need seperate hists for adding to a stack
@@ -171,7 +172,7 @@ int main(int argc, char** argv)
 
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
-	unsigned int tot = gRecon->GetEntries();
+	unsigned int tot = gRecon->GetEntries()/5;
 	cout << tot << " events" << endl;
 	for(unsigned int i = 0; i < tot; ++i) {
 		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
@@ -200,34 +201,17 @@ int main(int argc, char** argv)
 			Double_t recon_mom = gTrack->FrontMomentum;
 			TLorentzVector v = gTrack->TrueParticle.InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
-		/*
-			if(truth_mom<1500.0) clo++;
-			if(truth_mom>1500.0) c15++;
-			if(truth_mom>1600.0) c16++;
-			if(truth_mom>1700.0) c17++;
-			if(truth_mom>1800.0) c18++;
-			if(truth_mom>1900.0) c19++;
-			if(truth_mom>2000.0) c20++;
-			if(truth_mom>2100.0) c21++;
-			if(truth_mom>2200.0) c22++;
-			if(truth_mom>2300.0) c23++;
-			if(truth_mom>2400.0) c24++;
-			if(truth_mom>2500.0) c25++;*/
-						
-
-
-
+			Double_t recon_T = recon_mom * recon_mom / 1000000.;
+			Double_t truth_T = truth_mom * truth_mom / 1000000.;
 			//std::cout << "PDG = " << gTrack->TrueParticle.PDG << "\t\t" <<  recon_mom << "\t\t" << truth_mom <<  endl;
-			hist->Fill(recon_mom,truth_mom);
+			hist->Fill(recon_T,truth_T);
 			//truthhist->Fill(truth_mom);
 			//reconhist->Fill(recon_mom);
-
 		}
 
-	
-		
 	} // End loop over events
 	//now stack up graphs
+	hist->Print("all");
 	hist->Draw("LEGO");
 	//printing out number out of ranges
 	//calcing total events as well
