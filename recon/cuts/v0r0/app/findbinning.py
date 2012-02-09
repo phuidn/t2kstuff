@@ -15,7 +15,8 @@ for data in csv_file:
 	truth_kin.append(float(data[1]))
 	if not isinstance(truth_kin[-1], float):
 		print "error error"
-
+recon_kin = sorted(recon_kin)
+print recon_kin
 truth_kin = np.array(truth_kin)
 truth_kin /= (0.5*938.72)
 truth_kin.sort()

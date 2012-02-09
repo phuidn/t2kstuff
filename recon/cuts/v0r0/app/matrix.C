@@ -92,15 +92,15 @@ int main(int argc, char** argv)
 	//			Declare Graphs n stuff here
 
 	//Matrix one
-	Float_t bins[] = {0,0.22, 0.36, 0.52, 0.76, 4};
+	Float_t bins[] = {0,0.15, 0.28, 0.40, 0.70, 4};
 	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,bins,5,bins);
 	//Both stacked
-	//THStack hs("hs","Recon and truth proton momenta for NCQES");
+	THStack hs("hs","Recon and truth proton momenta for NCQES");
 	////need seperate hists for adding to a stack
-	//TH1D *truthhist = new TH1D("truthhist","Generic Title",100,0,2500);
-	//truthhist->SetFillColor(kRed);
-	//TH1D *reconhist = new TH1D("reconhist","Generic Title",100,0,2500);
-	//reconhist->SetFillColor(kBlue);
+	TH1D *truthhist = new TH1D("truthhist","Generic Title",5, bins);
+	truthhist->SetFillColor(kRed);
+	TH1D *reconhist = new TH1D("reconhist","Generic Title",5, bins);
+	reconhist->SetFillColor(kBlue);
 
 	//========================================================
 
@@ -205,14 +205,17 @@ int main(int argc, char** argv)
 			Double_t truth_T = truth_mom * truth_mom / 1000000.;
 			//std::cout << "PDG = " << gTrack->TrueParticle.PDG << "\t\t" <<  recon_mom << "\t\t" << truth_mom <<  endl;
 			hist->Fill(recon_T,truth_T);
-			//truthhist->Fill(truth_mom);
-			//reconhist->Fill(recon_mom);
+		//	truthhist->Fill(truth_T);
+		//	reconhist->Fill(recon_T);
 		}
 
 	} // End loop over events
 	//now stack up graphs
-	hist->Print("all");
+//	hs.Add(truthhist);
+//	hs.Add(reconhist);
+//	hist->Print("all");
 	hist->Draw("LEGO");
+//	hs.Draw();
 	//printing out number out of ranges
 	//calcing total events as well
 /*	unsigned long  totalevents = c15+c16+c17+c18+c19+c20+c21+c22+c23+c24+c25+clo;
