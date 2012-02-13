@@ -5,20 +5,27 @@ import array
 import numpy as np
 import math
 
-def printmatrix():
-
+def findtruth()	
 	file = open("kinetic-out.txt","rb")
 	csv_file = csv.reader(file)
 	energies = [(float(data[0])/10**9, float(data[1])/10**9) for data in csv_file]
 	bounds = [0,0.15, 0.28, 0.40, 0.70, 4]
+	recon = makevector(energies[int(len(energies)/2):],0, bounds)
+	truth = makevector(energies[int(len(energies)/2):],1, bounds)
+	matrix = makematrix(energies[:int(len(energies)/2], bounds)
+	corrected = matrix * recon
+	print np.array(corrected)/np.array(truth)
+
+def makematrix(ens, bounds):
+	energies = ens
 	numbins = len(bounds)-1
 	matrix = np.matrix(np.zeros((numbins,numbins)))
 	for i in energies:
 		setbin(i, bounds, matrix)
 	for i in range(numbins):
 		matrix[i]/=matrix[i].sum()
-	print matrix
-
+	return matrix.I #returns the inverse of the matrix
+	
 def setbin(ens, bounds, matrix):
 	if not isinstance(ens, tuple) and len(ens)==2:
 		print "error, error"
@@ -34,6 +41,4 @@ def setbin(ens, bounds, matrix):
 	if col != -1 and row != -1:	
 		matrix[row,col]+=1	
 
-printmatrix()
-
-
+makematrix()
