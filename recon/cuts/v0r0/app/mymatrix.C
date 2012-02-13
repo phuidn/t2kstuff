@@ -32,7 +32,6 @@
 #include <TTree.h>
 #include <TBranch.h>
 #include <THStack.h>
-#include <TColor.h>
 #include "cuts.h"
 #define ABS(x) (x>0?x:-x)
 
@@ -93,24 +92,15 @@ int main(int argc, char** argv)
 	//			Declare Graphs n stuff here
 
 	//Matrix one
-	Float_t bins[] = {0,0.15, 0.28, 0.40, 0.70, 4};
+	Float_t bins[] = {0,0.22, 0.36, 0.52, 0.76, 4};
 	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,bins,5,bins);
 	//Both stacked
-	THStack hs("hs","Recon and truth proton momenta for NCQES");
+	//THStack hs("hs","Recon and truth proton momenta for NCQES");
 	////need seperate hists for adding to a stack
-	TH1D *truthhist = new TH1D("truthhist","Generic Title",5, bins);
-	truthhist->SetFillColor(kRed);
-	TH1D *reconhist = new TH1D("reconhist","Generic Title",5, bins);
-	reconhist->SetFillColor(kBlue);
-
-	//setting palette
-	Double_t Red[3]    = { 1.00, 0.00, 0.00};
-	Double_t Green[3]  = { 0.00, 1.00, 0.00};
-	Double_t Blue[3]   = { 1.00, 0.00, 1.00};
-	Double_t Length[3] = { 0.00, 0.50, 1.00 };
-	Int_t nb=50;
-	TColor itsCOLOUR;
-	itsCOLOUR.CreateGradientColorTable(3,Length,Red,Green,Blue,nb);
+	//TH1D *truthhist = new TH1D("truthhist","Generic Title",100,0,2500);
+	//truthhist->SetFillColor(kRed);
+	//TH1D *reconhist = new TH1D("reconhist","Generic Title",100,0,2500);
+	//reconhist->SetFillColor(kBlue);
 
 	//========================================================
 
@@ -184,7 +174,7 @@ int main(int argc, char** argv)
 	cout<<"branched tree"<<endl;
 	unsigned int tot = gRecon->GetEntries()/5;
 	cout << tot << " events" << endl;
-	for(unsigned int i = 0; i < tot/2; ++i) {
+	for(unsigned int i = 0; i < tot; ++i) {
 		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
 		//display status every 10,000 th entry
 		//Get an entry for the Recon tree
@@ -215,20 +205,17 @@ int main(int argc, char** argv)
 			Double_t truth_T = truth_mom * truth_mom / 1000000.;
 			//std::cout << "PDG = " << gTrack->TrueParticle.PDG << "\t\t" <<  recon_mom << "\t\t" << truth_mom <<  endl;
 			hist->Fill(recon_T,truth_T);
-		//	truthhist->Fill(truth_T);
-		//	reconhist->Fill(recon_T);
+			//truthhist->Fill(truth_mom);
+			//reconhist->Fill(recon_mom);
 		}
 
 	} // End loop over events
 	//now stack up graphs
-//	hs.Add(truthhist);
-//	hs.Add(reconhist);
-//	hist->Print("all");
+	hist->Print("all");
 	hist->Draw("LEGO");
-	hist->GetXaxis()->SetTitle("Recon Energy");
-	hist->GetYaxis()->SetTitle("Truth Energy");
+	hist->GetXaxis()->SetRangeUser(0.0,1.0);
+	hist->GetYaxis()->SetRangeUser(0.0,1.0);
 	hist->Draw("LEGO");
-//	hs.Draw();
 	//printing out number out of ranges
 	//calcing total events as well
 /*	unsigned long  totalevents = c15+c16+c17+c18+c19+c20+c21+c22+c23+c24+c25+clo;
