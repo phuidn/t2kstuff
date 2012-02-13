@@ -10,13 +10,15 @@ def findtruth():
 	csv_file = csv.reader(file)
 	energies = [(float(data[0])/10**9, float(data[1])/10**9) for data in csv_file]
 	bounds = [0,0.15, 0.28, 0.40, 0.70, 4]
-	recon = makevector(energies,0, bounds)
-	truth = makevector(energies,1, bounds)
-	matrix = makematrix(energies, bounds)
+	recon = makevector(energies[int(len(energies)/2):],0, bounds)
+	truth = makevector(energies[int(len(energies)/2):],1, bounds)
+	matrix = makematrix(energies[:int(len(energies)/2)], bounds)
 	corrected = matrix.dot(recon)
+	print matrix.I
 	print recon
-	print corrected
 	print truth
+	print corrected
+	print corrected/truth
 
 def makematrix(ens, bounds):
 	energies = ens
@@ -25,23 +27,23 @@ def makematrix(ens, bounds):
 	for i in energies:
 		setbin(i, bounds, matrix)
 	for i in range(numbins):
-		matrix[i]/=matrix[i].sum()
-	return matrix.I #returns the inverse of the matrix
+		matrix[:,i]/=matrix[:,i].sum()
+	return matrix.I
 	
 def setbin(ens, bounds, matrix):
 	if not isinstance(ens, tuple) and len(ens)==2:
 		print "error, error"
 		return -1
-	col = -1
-	row = -1
+	rec = -1
+	tru = -1
 	it = 0
 	for i in range(len(bounds)-1):
 		if bounds[i+1] > ens[0] and bounds[i] < ens[0]:
-			col = i
+			rec = i
 		if bounds[i+1] > ens[1] and bounds[i] < ens[1]:
-			row = i
-	if col != -1 and row != -1:	
-		matrix[row,col]+=1	
+			tru = i
+	if rec != -1 and tru != -1:	
+		matrix[rec,tru]+=1	
 
 def makevector(energies,usecol,bounds):
 	numbins = len(bounds)-1
