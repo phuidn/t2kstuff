@@ -37,3 +37,15 @@ def setbin(ens, bounds, matrix):
 printmatrix()
 
 
+def makevector(energies,usecol,bounds):
+	numbins = len(bounds)-1
+	vector = np.matrix(np.zeros(numbins))
+	for energy in energies:
+		element = -1
+		for i in range(numbins):
+			if bounds[i+1] > energy[usecol] and bounds[i] < energy[usecol]:
+				element = i
+		if element != -1:
+			vector[element]+=1
+	print vector #just for debugging
+	return vector
