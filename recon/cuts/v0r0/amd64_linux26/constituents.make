@@ -721,6 +721,101 @@ endif
 
 
 #-- end of constituent ------
+#-- start of constituent ------
+
+cmt_matrixout_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_matrixout_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_matrixout = /tmp/CMT_$(cuts_tag)_matrixout.make$(cmt_lock_pid)
+cmt_final_setup_matrixout = /tmp/CMT_cuts_matrixoutsetup.make
+cmt_local_matrixout_makefile = /tmp/CMT_matrixout$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_matrixout = $(cuts_tag)_matrixout.make
+cmt_local_tagfile_matrixout = $(bin)$(cuts_tag)_matrixout.make
+cmt_final_setup_matrixout = $(bin)cuts_matrixoutsetup.make
+cmt_local_matrixout_makefile = $(bin)matrixout.make
+endif
+
+matrixout_extratags = -tag_add=target_matrixout
+
+#$(cmt_local_tagfile_matrixout) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_matrixout) ::
+else
+$(cmt_local_tagfile_matrixout) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_matrixout)"
+	@if test -f $(cmt_local_tagfile_matrixout); then /bin/rm -f $(cmt_local_tagfile_matrixout); fi ; \
+	  $(cmtexe) -tag=$(tags) $(matrixout_extratags) build tag_makefile >>$(cmt_local_tagfile_matrixout); \
+	  if test -f $(cmt_final_setup_matrixout); then /bin/rm -f $(cmt_final_setup_matrixout); fi; \
+	  $(cmtexe) -tag=$(tags) $(matrixout_extratags) show setup >>$(cmt_final_setup_matrixout)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_matrixout = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_matrixout = /tmp/CMT_cutssetup.make
+cmt_local_matrixout_makefile = /tmp/CMT_matrixout$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_matrixout = $(cuts_tag).make
+cmt_local_tagfile_matrixout = $(bin)$(cuts_tag).make
+cmt_final_setup_matrixout = $(bin)cutssetup.make
+cmt_local_matrixout_makefile = $(bin)matrixout.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_matrixout_makefile) :: $(matrixout_dependencies) $(cmt_local_tagfile_matrixout) build_library_links dirs
+else
+$(cmt_local_matrixout_makefile) :: $(cmt_local_tagfile_matrixout)
+endif
+	$(echo) "(constituents.make) Building matrixout.make"; \
+	  $(cmtexe) -tag=$(tags) $(matrixout_extratags) build constituent_makefile -out=$(cmt_local_matrixout_makefile) matrixout
+
+matrixout :: $(matrixout_dependencies) $(cmt_local_matrixout_makefile)
+	$(echo) "(constituents.make) Starting matrixout"
+	@$(MAKE) -f $(cmt_local_matrixout_makefile) cmt_lock_pid=$${cmt_lock_pid} matrixout
+	$(echo) "(constituents.make) matrixout done"
+
+clean :: matrixoutclean
+
+matrixoutclean :: $(matrixoutclean_dependencies) ##$(cmt_local_matrixout_makefile)
+	$(echo) "(constituents.make) Starting matrixoutclean"
+	@-if test -f $(cmt_local_matrixout_makefile); then \
+	  $(MAKE) -f $(cmt_local_matrixout_makefile) cmt_lock_pid=$${cmt_lock_pid} matrixoutclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_matrixout_makefile) $(bin)matrixout_dependencies.make
+
+install :: matrixoutinstall
+
+matrixoutinstall :: $(matrixout_dependencies) $(cmt_local_matrixout_makefile)
+	$(echo) "(constituents.make) Starting install matrixout"
+	@-$(MAKE) -f $(cmt_local_matrixout_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install matrixout done"
+
+uninstall :: matrixoutuninstall
+
+matrixoutuninstall :: $(cmt_local_matrixout_makefile)
+	$(echo) "(constituents.make) Starting uninstall matrixout"
+	@-$(MAKE) -f $(cmt_local_matrixout_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall matrixout done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ matrixout"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ matrixout done"
+endif
+
+
+#-- end of constituent ------
 #-- start of constituent_lock ------
 
 cmt_make_has_target_tag = 1
