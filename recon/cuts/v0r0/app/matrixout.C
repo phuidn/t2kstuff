@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 {	
 	//Open the output file
 	ofstream outputfile;
-	outputfile.open("kinetic-out.txt");
+	outputfile.open("kinetic-out2.txt");
 
 
 	//Making canvas and application - needed for standalone programs
@@ -205,9 +205,12 @@ int main(int argc, char** argv)
 			Double_t recon_mom = gTrack->FrontMomentum;
 			TLorentzVector v = gTrack->TrueParticle.InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
-
-			Double_t recon_kin = recon_mom*recon_mom*0.5*938.272;
-			Double_t truth_kin = truth_mom*truth_mom*0.5*938.272;
+			if(recon_mom != recon_mom){
+				cout << recon_mom << endl;
+				continue;
+			}
+			Double_t recon_kin = recon_mom*recon_mom;
+			Double_t truth_kin = truth_mom*truth_mom;
 
 		/*
 			if(truth_mom<1500.0) clo++;
