@@ -176,7 +176,11 @@ int main(int argc, char** argv)
 
 	// Loop over the entries in the TChain.
 	cout<<"branched tree"<<endl;
-	unsigned int tot = gRecon->GetEntries();
+	unsigned int tot = gRecon->GetEntries(),
+				 totNCES = 0,
+				 totRecon = 0,
+				 totwithTPC = 0,
+				 reconNCES = 0;
 	cout << tot << " events" << endl;
 	for(unsigned int i = 0; i < tot; ++i) {
 		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
@@ -198,17 +202,20 @@ int main(int argc, char** argv)
 			{//then not proton - then we dont care: NEXT!
 				continue;
 			}
+			totNCES++;
 			if( gTrack->NTPCs == 0 )
 			{//then we cannot reconstruct it probs
 				continue;
 			}
+			totwithTPC++;
 			Double_t recon_mom = gTrack->FrontMomentum;
 			TLorentzVector v = gTrack->TrueParticle.InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
-			if(recon_mom != recon_mom){
+			if(recon_mom != recon_mom || recon_mom==0.){
 				cout << recon_mom << endl;
 				continue;
 			}
+			reconNCES++;
 			Double_t recon_kin = recon_mom*recon_mom;
 			Double_t truth_kin = truth_mom*truth_mom;
 
@@ -241,8 +248,9 @@ int main(int argc, char** argv)
 	
 		
 	} // End loop over events
+	cout << "totNCES = " << totNCES << ", totwithTPC = " << totwithTPC << ", reconNCES = " << reconNCES << endl;
 	//now stack up graphs
-	hist->Draw("LEGO");
+	//hist->Draw("LEGO");
 	//printing out number out of ranges
 	//calcing total events as well
 /*	unsigned long  totalevents = c15+c16+c17+c18+c19+c20+c21+c22+c23+c24+c25+clo;
@@ -259,7 +267,7 @@ int main(int argc, char** argv)
 	cout << "Percentage of events above 2500: " << (double)c25 / (double)totalevents << endl;*/
 	//reconhist->Draw();
 	outputfile.close();
-	App->Run();
+	//App->Run();
 	return 0;
 }
 

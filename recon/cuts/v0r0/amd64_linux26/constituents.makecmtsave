@@ -721,6 +721,101 @@ endif
 
 
 #-- end of constituent ------
+#-- start of constituent ------
+
+cmt_makematrix_has_no_target_tag = 1
+
+#--------------------------------------------------------
+
+ifdef cmt_makematrix_has_target_tag
+
+ifdef READONLY
+cmt_local_tagfile_makematrix = /tmp/CMT_$(cuts_tag)_makematrix.make$(cmt_lock_pid)
+cmt_final_setup_makematrix = /tmp/CMT_cuts_makematrixsetup.make
+cmt_local_makematrix_makefile = /tmp/CMT_makematrix$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_makematrix = $(cuts_tag)_makematrix.make
+cmt_local_tagfile_makematrix = $(bin)$(cuts_tag)_makematrix.make
+cmt_final_setup_makematrix = $(bin)cuts_makematrixsetup.make
+cmt_local_makematrix_makefile = $(bin)makematrix.make
+endif
+
+makematrix_extratags = -tag_add=target_makematrix
+
+#$(cmt_local_tagfile_makematrix) : $(cmt_lock_setup)
+ifndef QUICK
+$(cmt_local_tagfile_makematrix) ::
+else
+$(cmt_local_tagfile_makematrix) :
+endif
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_makematrix)"
+	@if test -f $(cmt_local_tagfile_makematrix); then /bin/rm -f $(cmt_local_tagfile_makematrix); fi ; \
+	  $(cmtexe) -tag=$(tags) $(makematrix_extratags) build tag_makefile >>$(cmt_local_tagfile_makematrix); \
+	  if test -f $(cmt_final_setup_makematrix); then /bin/rm -f $(cmt_final_setup_makematrix); fi; \
+	  $(cmtexe) -tag=$(tags) $(makematrix_extratags) show setup >>$(cmt_final_setup_makematrix)
+	$(echo) setup.make ok
+
+else
+
+ifdef READONLY
+cmt_local_tagfile_makematrix = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_makematrix = /tmp/CMT_cutssetup.make
+cmt_local_makematrix_makefile = /tmp/CMT_makematrix$(cmt_lock_pid).make
+else
+#cmt_local_tagfile_makematrix = $(cuts_tag).make
+cmt_local_tagfile_makematrix = $(bin)$(cuts_tag).make
+cmt_final_setup_makematrix = $(bin)cutssetup.make
+cmt_local_makematrix_makefile = $(bin)makematrix.make
+endif
+
+endif
+
+ifndef QUICK
+$(cmt_local_makematrix_makefile) :: $(makematrix_dependencies) $(cmt_local_tagfile_makematrix) build_library_links dirs
+else
+$(cmt_local_makematrix_makefile) :: $(cmt_local_tagfile_makematrix)
+endif
+	$(echo) "(constituents.make) Building makematrix.make"; \
+	  $(cmtexe) -tag=$(tags) $(makematrix_extratags) build constituent_makefile -out=$(cmt_local_makematrix_makefile) makematrix
+
+makematrix :: $(makematrix_dependencies) $(cmt_local_makematrix_makefile)
+	$(echo) "(constituents.make) Starting makematrix"
+	@$(MAKE) -f $(cmt_local_makematrix_makefile) cmt_lock_pid=$${cmt_lock_pid} makematrix
+	$(echo) "(constituents.make) makematrix done"
+
+clean :: makematrixclean
+
+makematrixclean :: $(makematrixclean_dependencies) ##$(cmt_local_makematrix_makefile)
+	$(echo) "(constituents.make) Starting makematrixclean"
+	@-if test -f $(cmt_local_makematrix_makefile); then \
+	  $(MAKE) -f $(cmt_local_makematrix_makefile) cmt_lock_pid=$${cmt_lock_pid} makematrixclean; \
+	fi
+
+##	  /bin/rm -f $(cmt_local_makematrix_makefile) $(bin)makematrix_dependencies.make
+
+install :: makematrixinstall
+
+makematrixinstall :: $(makematrix_dependencies) $(cmt_local_makematrix_makefile)
+	$(echo) "(constituents.make) Starting install makematrix"
+	@-$(MAKE) -f $(cmt_local_makematrix_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install makematrix done"
+
+uninstall :: makematrixuninstall
+
+makematrixuninstall :: $(cmt_local_makematrix_makefile)
+	$(echo) "(constituents.make) Starting uninstall makematrix"
+	@-$(MAKE) -f $(cmt_local_makematrix_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall makematrix done"
+
+ifndef PEDANTIC
+.DEFAULT::
+	$(echo) "(constituents.make) Starting $@ makematrix"
+	$(echo) Using default action for $@
+	$(echo) "(constituents.make) $@ makematrix done"
+endif
+
+
+#-- end of constituent ------
 #-- start of constituent_lock ------
 
 cmt_make_has_target_tag = 1

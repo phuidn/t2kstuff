@@ -15,3 +15,4 @@ application classapplycuts ../app/classapplycuts.C ../app/classcuts.C
 application classhistcuts ../app/classhistcuts.C ../app/classcuts.C
 application maketree ../app/maketree.C ../app/cuts.C
 application matrixplot ../app/matrix.C 
+application makematrix ../app/matrixout.C
