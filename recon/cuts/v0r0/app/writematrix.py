@@ -12,15 +12,16 @@ def findtruth():
 	energies /= (2*938)
 	bounds = np.array([0,0.13, 0.25, 0.40, 0.90, 17])
 	bounds *= 1000000/(2*938)
-	recon = makevector(energies[int(len(energies)/2):],0, bounds)
-	truth = makevector(energies[int(len(energies)/2):],1, bounds)
-	matrix = makematrix(energies[:int(len(energies)/2)], bounds)
+	recon = makevector(energies[int(len(energies)*2./3.):],0, bounds)
+	truth = makevector(energies[int(len(energies)*2./3.):],1, bounds)
+	matrix = makematrix(energies[:int(len(energies)*2./3.)], bounds)
 	corrected = matrix.dot(recon)
-	print bounds
-	print recon, recon.sum()
-	print truth, truth.sum()
-	print corrected, corrected.sum()
-	print corrected/truth
+	finalvalues(truth, corrected, 46148) 
+#	print bounds
+#	print recon, recon.sum()
+#	print truth, truth.sum()
+#	print corrected, corrected.sum()
+#	print corrected/truth
 
 def makematrix(ens, bounds):
 	energies = ens
@@ -56,5 +57,16 @@ def makevector(energies,usecol,bounds):
 			if element != -1:
 				vector[element]+=1
 	return vector
+
+def finalvalues(truth, corrected, tothits):
+	errors = np.sqrt(corrected)
+	hits = truth.sum()
+	scale = tothits/hits
+	truth *= scale
+	corrected *= scale
+	errors *= scale
+	print truth
+	print corrected
+	print errors
 
 findtruth()
