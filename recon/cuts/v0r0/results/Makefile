@@ -1,2 +1,2 @@
 all:
-	g++ `root-config --cflags` `root-config --libs` makeagraph.C -o run
+	g++ `root-config --cflags` `root-config --libs` migrationgraph.C -o run

@@ -12,16 +12,20 @@ def findtruth():
 	energies /= (2*938)
 	bounds = np.array([0,0.13, 0.25, 0.40, 0.90, 17])
 	bounds *= 1000000/(2*938)
-	recon = makevector(energies[int(len(energies)*2./3.):],0, bounds)
-	truth = makevector(energies[int(len(energies)*2./3.):],1, bounds)
-	matrix = makematrix(energies[:int(len(energies)*2./3.)], bounds)
+	
+	#recon and truth are last 1/3 (from 2/3 onwards)
+	recon = makevector(energies[int(len(energies)*(2/3)):],0, bounds)
+	truth = makevector(energies[int(len(energies)*(2/3)):],1, bounds)
+	#matrix is calculated from first 2/3 of MC data
+	matrix = makematrix(energies[:int(len(energies)*(2/3))], bounds)
+	#unsmear recon
 	corrected = matrix.dot(recon)
 	finalvalues(truth, corrected, 46148) 
-#	print bounds
-#	print recon, recon.sum()
-#	print truth, truth.sum()
-#	print corrected, corrected.sum()
-#	print corrected/truth
+#	print "Using bounds: ",bounds
+#	print "Recon vector and sum:  ",recon, recon.sum()
+#	print "Truth vector and sum:  ",truth, truth.sum()
+#	print "Corrected Vector and sum :  ",corrected, corrected.sum()
+#	print "Corrected / truth : ", corrected/truth
 
 def makematrix(ens, bounds):
 	energies = ens
@@ -70,3 +74,4 @@ def finalvalues(truth, corrected, tothits):
 	print errors
 
 findtruth()
+
