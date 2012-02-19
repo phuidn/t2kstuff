@@ -19,9 +19,13 @@ int main()
 	string line;
 	getline(infile, line);	//line 1: number of bins
 	nbins = atoi(line.c_str());
-	cout << nbins << endl;
+	cout << "nbins= "<< nbins << endl;
 	double bounds[nbins+1], recon[nbins], truth[nbins], data[nbins], matrix[nbins][nbins];
 	parseline(nbins+1, bounds, &infile);
+	parseline(nbins, recon, &infile);
+	parseline(nbins, truth, &infile);
+	for(int i=0; i<nbins; i++)
+		parseline(nbins,matrix[i],&infile);
 	return 0;	
 }
 
@@ -30,7 +34,9 @@ int parseline(int nelements, double* outarray, ifstream *file){
 	for(int i=0;i<nelements; i++){
 		getline(*file, line, ',');
 		outarray[i] = atof(line.c_str());
-		cout << outarray[i] << endl;
+		cout << outarray[i];
+		if(i==nelements-1) cout<<endl;
+		else cout<<",";
 	}
 	return 0;
 }
