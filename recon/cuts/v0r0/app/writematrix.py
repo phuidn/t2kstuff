@@ -9,23 +9,29 @@ def findtruth():
 	file = open("kinetic-out2.txt","rb")
 	csv_file = csv.reader(file)
 	energies = np.array([(float(data[0]), float(data[1])) for data in csv_file])
-	energies /= (2*938)
-	bounds = np.array([0,0.13, 0.25, 0.40, 0.90, 17])
-	bounds *= 1000000/(2*938)
+	energies /= (2.*938.)
+	bounds = np.array([0.,0.13, 0.25, 0.40, 0.90, 17.])
+	bounds *= 1000000./(2.*938.)
 	
 	#recon and truth are last 1/3 (from 2/3 onwards)
-	recon = makevector(energies[int(len(energies)*(2/3)):],0, bounds)
-	truth = makevector(energies[int(len(energies)*(2/3)):],1, bounds)
+	recon = makevector(energies[int(len(energies)*(2./3.)):],0, bounds)
+	truth = makevector(energies[int(len(energies)*(2./3.)):],1, bounds)
 	#matrix is calculated from first 2/3 of MC data
-	matrix = makematrix(energies[:int(len(energies)*(2/3))], bounds)
+	matrix = makematrix(energies[:int(len(energies)*(2./3.))], bounds)
 	#unsmear recon
-	corrected = matrix.dot(recon)
-	finalvalues(truth, corrected, 46148) 
-#	print "Using bounds: ",bounds
-#	print "Recon vector and sum:  ",recon, recon.sum()
-#	print "Truth vector and sum:  ",truth, truth.sum()
-#	print "Corrected Vector and sum :  ",corrected, corrected.sum()
-#	print "Corrected / truth : ", corrected/truth
+	outfile = open("energyhists.txt", "w")
+	outfile.write(str(len(bounds)-1) + ",\n")
+	writelist(outfile, bounds)
+	writelist(outfile, recon)
+	writelist(outfile, truth)
+	matrix = np.array(matrix)
+	for i in matrix:
+		writelist(outfile, i)
+
+def writelist(file, list):
+	for i in list:
+		file.write(str(i) + ',')
+	file.write('\n')
 
 def makematrix(ens, bounds):
 	energies = ens
@@ -35,7 +41,7 @@ def makematrix(ens, bounds):
 		setbin(i, bounds, matrix)
 	for i in range(numbins):
 		matrix[:,i]/=matrix[:,i].sum()
-	return matrix.I
+	return matrix
 	
 def setbin(ens, bounds, matrix):
 	rec = -1
