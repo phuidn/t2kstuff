@@ -1,0 +1,58 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <TSystem.h>
+#include <TROOT.h>
+
+using namespace std;
+void SetupROOT();
+
+int main()
+{
+	SetupROOT();		
+	ifstream infile("energyhists.txt");
+	double bounds[] = {0., 69, 133, 213, 479, 9061},
+		*recon, *truth;
+	unsigned int nbins(0);
+	string line;
+	getline(infile, line);	//line 1: number of bins
+	nbins = atoi(line.c_str());
+	cout << nbins << endl;
+	double bounds[nbins+1]; 
+	getline(infile, line);	//line 2: bin bounds
+	istringstream linedata(line);
+	for(int i(0); i<nbins+1; i++){
+		string element;
+		getline(linedata, element, ",");
+		bounds[i] = atof(element.c_str);
+		cout << bounds[i] << endl;
+	}
+	infile.clear();
+	infile.seekg(0, ios::beg);
+	return 0;	
+}
+
+void SetupROOT(){
+	gROOT->SetBatch(1);
+	gSystem->AddIncludePath("-I$OAEVENT/src");
+	gSystem->AddIncludePath("-I$OAANALYSISROOT/src");
+
+	gSystem->Load("libPhysics");
+	gSystem->Load("libGeom");
+	gSystem->Load("libTree");
+	gSystem->Load("libEG");
+	gSystem->Load("libMinuit");
+	gSystem->Load("libCLHEP.so");
+	gSystem->Load("librecpack.so");
+	gSystem->Load("liboaEvent.so");
+	gSystem->Load("liboaRuntimeParameters.so");
+	gSystem->Load("libMinosDBI.so");
+	gSystem->Load("liboaOfflineDatabase.so");
+	gSystem->Load("liboaUtility.so");
+	gSystem->Load("libsmrdRecon.so");
+	gSystem->Load("libBeamData.so");
+	gSystem->Load("liboaBeamData.so");
+	gSystem->Load("liboaAnalysis.so");
+}
+
