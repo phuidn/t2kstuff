@@ -14,8 +14,8 @@ def findtruth():
 	bounds *= 1000000./(2.*938.)
 	
 	#recon and truth are last 1/3 (from 2/3 onwards)
-	recon = makevector(energies[int(len(energies)*(2./3.)):],0, bounds)
-	truth = makevector(energies[int(len(energies)*(2./3.)):],1, bounds)
+	recon = makevector(energies[:int(len(energies)*(2./3.))],0, bounds)
+	truth = makevector(energies[:int(len(energies)*(2./3.))],1, bounds)
 	#matrix is calculated from first 2/3 of MC data
 	matrix = makematrix(energies[:int(len(energies)*(2./3.))], bounds)
 	#unsmear recon
@@ -24,6 +24,7 @@ def findtruth():
 	writelist(outfile, bounds)
 	writelist(outfile, recon)
 	writelist(outfile, truth)
+	matrix = matrix.T
 	matrix = np.array(matrix)
 	for i in matrix:
 		writelist(outfile, i)
@@ -39,8 +40,8 @@ def makematrix(ens, bounds):
 	matrix = np.matrix(np.zeros((numbins,numbins)))
 	for i in energies:
 		setbin(i, bounds, matrix)
-	for i in range(numbins):
-		matrix[:,i]/=matrix[:,i].sum()
+#	for i in range(numbins):
+#		matrix[:,i]/=matrix[:,i].sum() #normalising matrix, possibly not required for TSVDUnfold
 	return matrix
 	
 def setbin(ens, bounds, matrix):
