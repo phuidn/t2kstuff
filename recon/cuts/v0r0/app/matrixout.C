@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 {	
 	//Open the output file
 	ofstream outputfile;
-	outputfile.open("kinetic-out2.txt");
+	outputfile.open("magnetenergies.txt");
 
 
 	//Making canvas and application - needed for standalone programs
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. - using basket to save time
-	TString fileName("/storage/epp2/phseaj/exercise/basket_2010b.list");
+	TString fileName("../../../ALLmagnetfiles");
 	//TString fileName("../../../magnetfiles");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
@@ -146,31 +146,31 @@ int main(int argc, char** argv)
 	
 	cout<<"declared things"<<endl;
 	// add them  to the tree
-	tree->Branch("FOName",&FOName);
+//	tree->Branch("FOName",&FOName);
 	tree->Branch("EventID", &EventID);
 	tree->Branch("Detectors", &Detectors);
-	tree->Branch("Status", &Status);
-	tree->Branch("Quality", &Quality);
-	tree->Branch("NHits", &NHits);
+//	tree->Branch("Status", &Status);
+//	tree->Branch("Quality", &Quality);
+//	tree->Branch("NHits", &NHits);
 //	tree->Branch("NECalReconObject", &NECalReconObject);
-	tree->Branch("IsForward", &IsForward);
-	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
-	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
+//	tree->Branch("IsForward", &IsForward);
+//	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
+//	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
 	tree->Branch("FrontMomentum", &FrontMomentum);
-	tree->Branch("BackMomentum", &BackMomentum);
-	tree->Branch("FrontDirection","TVector3", &FrontDirection);
-	tree->Branch("BackDirection","TVector3", &BackDirection);
+//	tree->Branch("BackMomentum", &BackMomentum);
+//	tree->Branch("FrontDirection","TVector3", &FrontDirection);
+//	tree->Branch("BackDirection","TVector3", &BackDirection);
 	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
-	tree->Branch("NTPCs", &NTPCs);	
-	tree->Branch("NFGDs", &NFGDs);	
-	tree->Branch("NECALs", &NECALs);
-	tree->Branch("NP0Ds", &NP0Ds);
-	tree->Branch("NSMRDs", &NSMRDs);
-	tree->Branch("TPC", &TPC);
-	tree->Branch("FGD", &FGD);
-	tree->Branch("ECAL", &ECAL);
-	tree->Branch("P0D", &P0D);
-	tree->Branch("SMRD", &SMRD);
+//	tree->Branch("NTPCs", &NTPCs);	
+//	tree->Branch("NFGDs", &NFGDs);	
+//	tree->Branch("NECALs", &NECALs);
+//	tree->Branch("NP0Ds", &NP0Ds);
+//	tree->Branch("NSMRDs", &NSMRDs);
+//	tree->Branch("TPC", &TPC);
+//	tree->Branch("FGD", &FGD);
+//	tree->Branch("ECAL", &ECAL);
+//	tree->Branch("P0D", &P0D);
+//	tree->Branch("SMRD", &SMRD);
 	//counters for finding cut off points
 //	unsigned long  c15=0,c16=0,c17=0,c18=0,c19=0,c20=0,c21=0,c22=0,c23=0,c24=0,c25=0,clo=0;
 

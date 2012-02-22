@@ -818,95 +818,95 @@ endif
 #-- end of constituent ------
 #-- start of constituent ------
 
-cmt_correctenergy_has_no_target_tag = 1
+cmt_energycorrect_has_no_target_tag = 1
 
 #--------------------------------------------------------
 
-ifdef cmt_correctenergy_has_target_tag
+ifdef cmt_energycorrect_has_target_tag
 
 ifdef READONLY
-cmt_local_tagfile_correctenergy = /tmp/CMT_$(cuts_tag)_correctenergy.make$(cmt_lock_pid)
-cmt_final_setup_correctenergy = /tmp/CMT_cuts_correctenergysetup.make
-cmt_local_correctenergy_makefile = /tmp/CMT_correctenergy$(cmt_lock_pid).make
+cmt_local_tagfile_energycorrect = /tmp/CMT_$(cuts_tag)_energycorrect.make$(cmt_lock_pid)
+cmt_final_setup_energycorrect = /tmp/CMT_cuts_energycorrectsetup.make
+cmt_local_energycorrect_makefile = /tmp/CMT_energycorrect$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_correctenergy = $(cuts_tag)_correctenergy.make
-cmt_local_tagfile_correctenergy = $(bin)$(cuts_tag)_correctenergy.make
-cmt_final_setup_correctenergy = $(bin)cuts_correctenergysetup.make
-cmt_local_correctenergy_makefile = $(bin)correctenergy.make
+#cmt_local_tagfile_energycorrect = $(cuts_tag)_energycorrect.make
+cmt_local_tagfile_energycorrect = $(bin)$(cuts_tag)_energycorrect.make
+cmt_final_setup_energycorrect = $(bin)cuts_energycorrectsetup.make
+cmt_local_energycorrect_makefile = $(bin)energycorrect.make
 endif
 
-correctenergy_extratags = -tag_add=target_correctenergy
+energycorrect_extratags = -tag_add=target_energycorrect
 
-#$(cmt_local_tagfile_correctenergy) : $(cmt_lock_setup)
+#$(cmt_local_tagfile_energycorrect) : $(cmt_lock_setup)
 ifndef QUICK
-$(cmt_local_tagfile_correctenergy) ::
+$(cmt_local_tagfile_energycorrect) ::
 else
-$(cmt_local_tagfile_correctenergy) :
+$(cmt_local_tagfile_energycorrect) :
 endif
-	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_correctenergy)"
-	@if test -f $(cmt_local_tagfile_correctenergy); then /bin/rm -f $(cmt_local_tagfile_correctenergy); fi ; \
-	  $(cmtexe) -tag=$(tags) $(correctenergy_extratags) build tag_makefile >>$(cmt_local_tagfile_correctenergy); \
-	  if test -f $(cmt_final_setup_correctenergy); then /bin/rm -f $(cmt_final_setup_correctenergy); fi; \
-	  $(cmtexe) -tag=$(tags) $(correctenergy_extratags) show setup >>$(cmt_final_setup_correctenergy)
+	$(echo) "(constituents.make) Rebuilding setup.make $(cmt_local_tagfile_energycorrect)"
+	@if test -f $(cmt_local_tagfile_energycorrect); then /bin/rm -f $(cmt_local_tagfile_energycorrect); fi ; \
+	  $(cmtexe) -tag=$(tags) $(energycorrect_extratags) build tag_makefile >>$(cmt_local_tagfile_energycorrect); \
+	  if test -f $(cmt_final_setup_energycorrect); then /bin/rm -f $(cmt_final_setup_energycorrect); fi; \
+	  $(cmtexe) -tag=$(tags) $(energycorrect_extratags) show setup >>$(cmt_final_setup_energycorrect)
 	$(echo) setup.make ok
 
 else
 
 ifdef READONLY
-cmt_local_tagfile_correctenergy = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
-cmt_final_setup_correctenergy = /tmp/CMT_cutssetup.make
-cmt_local_correctenergy_makefile = /tmp/CMT_correctenergy$(cmt_lock_pid).make
+cmt_local_tagfile_energycorrect = /tmp/CMT_$(cuts_tag).make$(cmt_lock_pid)
+cmt_final_setup_energycorrect = /tmp/CMT_cutssetup.make
+cmt_local_energycorrect_makefile = /tmp/CMT_energycorrect$(cmt_lock_pid).make
 else
-#cmt_local_tagfile_correctenergy = $(cuts_tag).make
-cmt_local_tagfile_correctenergy = $(bin)$(cuts_tag).make
-cmt_final_setup_correctenergy = $(bin)cutssetup.make
-cmt_local_correctenergy_makefile = $(bin)correctenergy.make
+#cmt_local_tagfile_energycorrect = $(cuts_tag).make
+cmt_local_tagfile_energycorrect = $(bin)$(cuts_tag).make
+cmt_final_setup_energycorrect = $(bin)cutssetup.make
+cmt_local_energycorrect_makefile = $(bin)energycorrect.make
 endif
 
 endif
 
 ifndef QUICK
-$(cmt_local_correctenergy_makefile) :: $(correctenergy_dependencies) $(cmt_local_tagfile_correctenergy) build_library_links dirs
+$(cmt_local_energycorrect_makefile) :: $(energycorrect_dependencies) $(cmt_local_tagfile_energycorrect) build_library_links dirs
 else
-$(cmt_local_correctenergy_makefile) :: $(cmt_local_tagfile_correctenergy)
+$(cmt_local_energycorrect_makefile) :: $(cmt_local_tagfile_energycorrect)
 endif
-	$(echo) "(constituents.make) Building correctenergy.make"; \
-	  $(cmtexe) -tag=$(tags) $(correctenergy_extratags) build constituent_makefile -out=$(cmt_local_correctenergy_makefile) correctenergy
+	$(echo) "(constituents.make) Building energycorrect.make"; \
+	  $(cmtexe) -tag=$(tags) $(energycorrect_extratags) build constituent_makefile -out=$(cmt_local_energycorrect_makefile) energycorrect
 
-correctenergy :: $(correctenergy_dependencies) $(cmt_local_correctenergy_makefile)
-	$(echo) "(constituents.make) Starting correctenergy"
-	@$(MAKE) -f $(cmt_local_correctenergy_makefile) cmt_lock_pid=$${cmt_lock_pid} correctenergy
-	$(echo) "(constituents.make) correctenergy done"
+energycorrect :: $(energycorrect_dependencies) $(cmt_local_energycorrect_makefile)
+	$(echo) "(constituents.make) Starting energycorrect"
+	@$(MAKE) -f $(cmt_local_energycorrect_makefile) cmt_lock_pid=$${cmt_lock_pid} energycorrect
+	$(echo) "(constituents.make) energycorrect done"
 
-clean :: correctenergyclean
+clean :: energycorrectclean
 
-correctenergyclean :: $(correctenergyclean_dependencies) ##$(cmt_local_correctenergy_makefile)
-	$(echo) "(constituents.make) Starting correctenergyclean"
-	@-if test -f $(cmt_local_correctenergy_makefile); then \
-	  $(MAKE) -f $(cmt_local_correctenergy_makefile) cmt_lock_pid=$${cmt_lock_pid} correctenergyclean; \
+energycorrectclean :: $(energycorrectclean_dependencies) ##$(cmt_local_energycorrect_makefile)
+	$(echo) "(constituents.make) Starting energycorrectclean"
+	@-if test -f $(cmt_local_energycorrect_makefile); then \
+	  $(MAKE) -f $(cmt_local_energycorrect_makefile) cmt_lock_pid=$${cmt_lock_pid} energycorrectclean; \
 	fi
 
-##	  /bin/rm -f $(cmt_local_correctenergy_makefile) $(bin)correctenergy_dependencies.make
+##	  /bin/rm -f $(cmt_local_energycorrect_makefile) $(bin)energycorrect_dependencies.make
 
-install :: correctenergyinstall
+install :: energycorrectinstall
 
-correctenergyinstall :: $(correctenergy_dependencies) $(cmt_local_correctenergy_makefile)
-	$(echo) "(constituents.make) Starting install correctenergy"
-	@-$(MAKE) -f $(cmt_local_correctenergy_makefile) cmt_lock_pid=$${cmt_lock_pid} install
-	$(echo) "(constituents.make) install correctenergy done"
+energycorrectinstall :: $(energycorrect_dependencies) $(cmt_local_energycorrect_makefile)
+	$(echo) "(constituents.make) Starting install energycorrect"
+	@-$(MAKE) -f $(cmt_local_energycorrect_makefile) cmt_lock_pid=$${cmt_lock_pid} install
+	$(echo) "(constituents.make) install energycorrect done"
 
-uninstall :: correctenergyuninstall
+uninstall :: energycorrectuninstall
 
-correctenergyuninstall :: $(cmt_local_correctenergy_makefile)
-	$(echo) "(constituents.make) Starting uninstall correctenergy"
-	@-$(MAKE) -f $(cmt_local_correctenergy_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
-	$(echo) "(constituents.make) uninstall correctenergy done"
+energycorrectuninstall :: $(cmt_local_energycorrect_makefile)
+	$(echo) "(constituents.make) Starting uninstall energycorrect"
+	@-$(MAKE) -f $(cmt_local_energycorrect_makefile) cmt_lock_pid=$${cmt_lock_pid} uninstall
+	$(echo) "(constituents.make) uninstall energycorrect done"
 
 ifndef PEDANTIC
 .DEFAULT::
-	$(echo) "(constituents.make) Starting $@ correctenergy"
+	$(echo) "(constituents.make) Starting $@ energycorrect"
 	$(echo) Using default action for $@
-	$(echo) "(constituents.make) $@ correctenergy done"
+	$(echo) "(constituents.make) $@ energycorrect done"
 endif
 
 

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <TMath.h>
 #include <TSystem.h>
 #include <TROOT.h>
 #include <TApplication.h>
@@ -55,9 +56,13 @@ int main(int argc, char* argv[])
 	//Unfolding section
 	//****Using the same recon data atm!! ***** CHANGE!!*****//
 	TSVDUnfold *unf = new TSVDUnfold(reconhist,reconhist,truthhist,matrixhist);
-	TH1D *unfresult = unf->Unfold(1);
+	unf->SetNormalize(kFALSE);
+	TH1D *unfresult = unf->Unfold(0.1);
+	TH1D* Dvec = unf->GetD();
+	TH1D* SV = unf->GetSV();
 	unfresult->Draw();
-	truthhist->Draw("same");
+//	unfresult->Draw();
+//	truthhist->Draw("same");
 	for(int k(0); k<nbins+2; k++)
 		cout << unfresult->GetBinContent(k)/truthhist->GetBinContent(k) << "	";
 	cout << endl;

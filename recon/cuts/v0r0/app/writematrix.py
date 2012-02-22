@@ -14,10 +14,10 @@ def findtruth():
 	bounds *= 1000000./(2.*938.)
 	
 	#recon and truth are last 1/3 (from 2/3 onwards)
-	recon = makevector(energies[:int(len(energies)*(2./3.))],0, bounds)
-	truth = makevector(energies[:int(len(energies)*(2./3.))],1, bounds)
+	recon = makevector(energies,0, bounds)
+	truth = makevector(energies,1, bounds)
 	#matrix is calculated from first 2/3 of MC data
-	matrix = makematrix(energies[:int(len(energies)*(2./3.))], bounds)
+	matrix = makematrix(energies, bounds)
 	#unsmear recon
 	outfile = open("energyhists.txt", "w")
 	outfile.write(str(len(bounds)-1) + ",\n")
