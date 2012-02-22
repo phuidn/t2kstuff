@@ -17,13 +17,18 @@ def findtruth():
 	recon = makevector(energies,0, bounds)
 	truth = makevector(energies,1, bounds)
 	#matrix is calculated from first 2/3 of MC data
-	matrix = makematrix(energies, bounds)
+	matrix = makematrix(energies[:int(len(energies)*(2./3.))], bounds)
+	#data to test with unfolding
+	finaldata = makevector(energies[int(len(energies)*(2./3.)):],0,bounds)
+	finaltruth = makevector(energies[int(len(energies)*(2./3.)):],1,bounds)
 	#unsmear recon
 	outfile = open("energyhists.txt", "w")
 	outfile.write(str(len(bounds)-1) + ",\n")
 	writelist(outfile, bounds)
 	writelist(outfile, recon)
 	writelist(outfile, truth)
+	writelist(outfile, finaldata)
+	writelist(outfile, finaltruth)
 	matrix = matrix.T
 	matrix = np.array(matrix)
 	for i in matrix:

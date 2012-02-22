@@ -3,7 +3,7 @@
 #====================================
 #  Application energycorrect
 #
-#   Generated Tue Feb 21 21:24:30 2012  by phuidn
+#   Generated Wed Feb 22 13:22:02 2012  by phuidn
 #
 #====================================
 
@@ -118,9 +118,9 @@ energycorrect :: dirs  $(bin)energycorrect${application_suffix}
 #-- end of application_header
 #-- start of application
 
-$(bin)energycorrect${application_suffix} :: $(bin)energycorrect.o $(use_stamps) $(energycorrectstamps) requirements $(use_requirements)
+$(bin)energycorrect${application_suffix} :: $(bin)energycorrectnopython.o $(use_stamps) $(energycorrectstamps) requirements $(use_requirements)
 	$(link_echo) "application $@"
-	$(link_silent) $(cpplink) -o $(@).new $(bin)energycorrect.o $(cmt_installarea_linkopts) $(energycorrect_use_linkopts) $(energycorrectlinkopts) && mv -f $(@).new $(@)
+	$(link_silent) $(cpplink) -o $(@).new $(bin)energycorrectnopython.o $(cmt_installarea_linkopts) $(energycorrect_use_linkopts) $(energycorrectlinkopts) && mv -f $(@).new $(@)
 
 #-----------------------------------------------------------------
 #
@@ -171,9 +171,9 @@ ifneq ($(MAKECMDGOALS),energycorrectclean)
 #$(bin)energycorrect_dependencies.make :: dirs
 
 ifndef QUICK
-$(bin)energycorrect_dependencies.make : ../app/energycorrect.C $(use_requirements) $(cmt_final_setup_energycorrect)
+$(bin)energycorrect_dependencies.make : ../app/energycorrectnopython.C $(use_requirements) $(cmt_final_setup_energycorrect)
 	$(echo) "(energycorrect.make) Rebuilding $@"; \
-	  $(build_dependencies) energycorrect -all_sources -out=$@ ../app/energycorrect.C
+	  $(build_dependencies) energycorrect -all_sources -out=$@ ../app/energycorrectnopython.C
 endif
 
 #$(energycorrect_dependencies)
@@ -184,11 +184,11 @@ endif
 #-- end of dependency -------------------
 #-- start of cpp ------
 
-$(bin)energycorrect_dependencies.make : $(energycorrect_C_dependencies)
+$(bin)energycorrect_dependencies.make : $(energycorrectnopython_C_dependencies)
 
-$(bin)$(binobj)energycorrect.o : $(energycorrect_C_dependencies)
-	$(cpp_echo) ../app/energycorrect.C
-	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(energycorrect_pp_cppflags) $(app_energycorrect_pp_cppflags) $(energycorrect_pp_cppflags) $(use_cppflags) $(energycorrect_cppflags) $(app_energycorrect_cppflags) $(energycorrect_cppflags) $(energycorrect_C_cppflags) -I../app ../app/energycorrect.C
+$(bin)$(binobj)energycorrectnopython.o : $(energycorrectnopython_C_dependencies)
+	$(cpp_echo) ../app/energycorrectnopython.C
+	$(cpp_silent) $(cppcomp) -o $(@) $(use_pp_cppflags) $(energycorrect_pp_cppflags) $(app_energycorrect_pp_cppflags) $(energycorrectnopython_pp_cppflags) $(use_cppflags) $(energycorrect_cppflags) $(app_energycorrect_cppflags) $(energycorrectnopython_cppflags) $(energycorrectnopython_C_cppflags) -I../app ../app/energycorrectnopython.C
 
 #-- end of cpp ------
 #-- start of cleanup_header --------------
@@ -228,6 +228,6 @@ energycorrectclean ::
 #-- end of cleanup_application ------
 #-- start of cleanup_objects ------
 	$(cleanup_echo) objects
-	-$(cleanup_silent) /bin/rm -f $(bin)energycorrect.o
+	-$(cleanup_silent) /bin/rm -f $(bin)energycorrectnopython.o
 	-$(cleanup_silent) cd $(bin); /bin/rm -rf energycorrect_deps energycorrect_dependencies.make
 #-- end of cleanup_objects ------
