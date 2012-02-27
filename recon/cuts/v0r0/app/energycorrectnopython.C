@@ -15,6 +15,7 @@
 #include <TSVDUnfold.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include <math.h>
 
 using namespace std;
 
@@ -73,7 +74,9 @@ int main(int argc, char* argv[])
 	TH2D *matrixhist= new TH2D("matrixhist","Titl3",nbins,bounds,nbins,bounds);
 	TH1D *datahist = new TH1D("datahist","Title",nbins,bounds);
 	TH1D *truedatahist = new TH1D("truedatahist","Title",nbins,bounds);
+	TH2D *meascov;
 	TH1D *unfolded;
+	TH2D *unfcov;
 	cout <<"Looping over vectors to make TH1Ds..."<<endl;
 	for(int i=0;i<len;i++)
 	{
@@ -88,8 +91,18 @@ int main(int argc, char* argv[])
 	
 	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
 	unfolded = unf->Unfold(2.);
-	unfolded->Draw();
+//	meascov = unf->GetXinv();	//this doesn't seem to work, not sure why
+	unfcov = unf->GetAdetCovMatrix(5000, 32);
+	cout << "truth count = " << truedatahist->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
+//	meascov->Draw("COLZ");
+//	unfcov->Draw("COLZ");
+	for(int k(1); k<nbins+1; k++){
+		unfolded->SetBinError(k,sqrt(unfcov->GetBinContent(k,k)));
+		cout << unfolded->GetBinContent(k) << "	";
+	}
+	unfolded->Draw("E1");
 	truedatahist->Draw("same");
+	cout << endl;
 	App->Run();
 
 	return 0;
