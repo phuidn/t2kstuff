@@ -15,6 +15,7 @@
 #include <TSVDUnfold.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include <math.h>
 
 using namespace std;
 
@@ -91,12 +92,17 @@ int main(int argc, char* argv[])
 	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
 	unfolded = unf->Unfold(2.);
 //	meascov = unf->GetXinv();	//this doesn't seem to work, not sure why
-	unfcov = unf->GetAdetCovMatrix(10000, 32);
+	unfcov = unf->GetAdetCovMatrix(5000, 32);
 	cout << "truth count = " << truedatahist->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
 //	meascov->Draw("COLZ");
-	unfcov->Draw("COL");
-//	unfolded->Draw("");
-//	truedatahist->Draw("same");
+//	unfcov->Draw("COLZ");
+	for(int k(1); k<nbins+1; k++){
+		unfolded->SetBinError(k,sqrt(unfcov->GetBinContent(k,k)));
+		cout << unfolded->GetBinContent(k) << "	";
+	}
+	unfolded->Draw("E1");
+	truedatahist->Draw("same");
+	cout << endl;
 	App->Run();
 
 	return 0;
