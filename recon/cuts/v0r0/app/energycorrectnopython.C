@@ -105,56 +105,6 @@ int main(int argc, char* argv[])
 	cout << endl;
 	App->Run();
 
-	return 0;
-
-/*	//Input section (old)
-	ifstream infile("energyhists.txt");
-	unsigned int nbins(0), felement(0);
-	string line;
-	getline(infile, line);	//line 1: number of bins
-	nbins = atoi(line.c_str());
-	//cout << "nbins= "<< nbins << endl;
-	double bounds[nbins+1], recon[nbins], truth[nbins], data[nbins],truedata[nbins];//,matrix[nbins][nbins];
-	double **matrix;
-	matrix = (double**)malloc(nbins*sizeof(double*));
-	for(int i=0; i<nbins;i++)
-		matrix[i] = (double*)malloc(nbins*sizeof(double));
-	parseline(nbins+1, bounds, &infile); //line2: bin boundaries
-	parseline(nbins, recon, &infile); //line3: recon vector
-	parseline(nbins, truth, &infile); //line4: truth vector
-	for(int i=0; i<nbins; i++)		//line5-10: migration matrix
-		parseline(nbins,matrix[i],&infile);
-	parseline(nbins, data, &infile); //lines 11 data
-	parseline(nbins, truedata, &infile);//line 12 true values of data
-*/
-
-/*	//Populate Histograms for unfolding
-	TH1D *reconhist = new TH1D("reconhist","Title",nbins,bounds);
-	populateTH1D(nbins,bounds,recon,reconhist);
-	TH1D *truthhist = new TH1D("truthhist","Title",nbins,bounds);
-	populateTH1D(nbins,bounds,truth,truthhist);
-	TH2D *matrixhist= new TH2D("matrixhist","Titl3",nbins,bounds,nbins,bounds);
-	populateTH2D(nbins,bounds,matrix,matrixhist);
-	TH1D *datahist = new TH1D("datahist","Title",nbins,bounds);
-	populateTH1D(nbins,bounds,data,datahist);
-	TH1D *truedatahist = new TH1D("truedatahist","Title",nbins,bounds);
-	populateTH1D(nbins,bounds,truedata,truedatahist);
-
-	//Unfolding section
-	//Using the same recon data atm!! ***** CHANGE!!
-	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
-	TH1D *unfresult = unf->Unfold(1);
-	for(int k(0); k<nbins+2;k++)
-	{
-		cout << unfresult->GetBinContent(k)/truedatahist->GetBinContent(k) << "	";
-	}
-	truedatahist->Draw();
-	unfresult->Draw("same");
-	
-	cout << endl;
-//	reconhist->Draw("same");
-	App->Run();
-*/	
 	return 0;	
 }
 
