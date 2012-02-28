@@ -42,10 +42,10 @@ void SetupROOT();
 int main(int argc, char** argv)
 {	
 
-	// Set up ROOT as we require.
-	SetupROOT();
 	TApplication *App = new TApplication("Application",(Int_t*)&argc, argv);
 	TCanvas *canvas = new TCanvas("canvas", "canvas", 640, 640);
+	// Set up ROOT as we require.
+	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
 	TFile *treefile = new TFile("../../../tree/magnet3xwindow.root");
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 	cuts.push_back(new MinMomentum(&FrontMomentum));
 	cuts.push_back(new MinMomentum(&BackMomentum, 130));
 	cuts.push_back(new CutECALs(&NECALs));
-	
+
 	int NCuts = cuts.size();
 	int	NCEScount[NCuts],
 		totCount[NCuts],
@@ -169,10 +169,13 @@ int main(int argc, char** argv)
 		double eff = (double)NCEScount[n]/(double)NNCES, pur = (double)NCEScount[n]/(double)totCount[n];
 		printf("%12s:     eff = %6.5f, pur = %6.5f, e*p = %6.5f\n",cuts[n]->name.c_str(),eff, pur, eff*pur);
 	}
+	
 	int nbins = 5;
 	double bounds[6]={0.,0.224,0.448,0.672,0.896,1.12};
-	TH1D *truth = new TH1D("truthhist", "Title", nbins, bounds),
-		*recon = new TH1D("reconhist", "Title", nbins, bounds);
+	for(int i=0;i<6;i++) bounds[i] = bounds[i]*1000000./(2.*938.);
+	for(int i=0;i<6;i++) cout <<bounds[i] <<endl;
+	TH1D *datatruth = new TH1D("datatruth", "Title", nbins, bounds),
+		*data = new TH1D("data", "Title", nbins, bounds);
 	for(unsigned int i = NTOT/2; i < NTOT; ++i) {
 		tree->GetEntry(i);
 		int keep(1), j(0);
@@ -183,25 +186,74 @@ int main(int argc, char** argv)
 				break;
 		}
 		if(keep){
-			recon->Fill(FrontMomentum*FrontMomentum/(2.*938.));	
+			data->Fill(FrontMomentum*FrontMomentum/(2.*938.));	
 			TLorentzVector v = TrueParticle->InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
-			truth->Fill(truth_mom*truth_mom/(2.*938.));
+			datatruth->Fill(truth_mom*truth_mom/(2.*938.));
 		}
 
 	}
+
+	//new bit
+	//Input section
+	//	Reads from kinetic energy list to make matrix and data vectors
+	ifstream matrixfile("kinetic-out2.txt"), datafile("magnetenergies.txt");
+	string line;
+	vector<double> truthv,reconv;
 	
-	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
-	TH1D unfolded = unf->Unfold(2.);
-	TH2D unfcov = unf->GetAdetCovMatrix(5000, 32);
-	cout << "truth count = " << truedatahist->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
+//int nbins = 5;
+//	double bounds[6]={0.,0.224,0.448,0.672,0.896,1.12};
+	int startpos,endpos;
+	int len=-1;
+	std::cout << "reading matrix file" << std::endl;
+	while(matrixfile.good())
+	{
+		getline(matrixfile,line,',');
+		reconv.push_back(atof(line.c_str()));
+		getline(matrixfile,line);
+		truthv.push_back(atof(line.c_str()));
+		len++;
+	}
+	std::cout << "scaling matrix data" << std::endl;
+	for(int i=0;i<len;i++)
+	{//normalise to correct units
+		truthv[i] = truthv[i]/(2.*938.);
+		reconv[i] = reconv[i]/(2.*938.);
+	}
+	std::cout << "Vectors made, "<<len<<" lines long."<<std::endl;
+
+	//Populate Histograms for unfolding
+	TH1D *reconhist = new TH1D("reconhist","Title",nbins,bounds);
+	TH1D *truthhist = new TH1D("truthhist","Title",nbins,bounds);
+	TH2D *matrixhist= new TH2D("matrixhist","Titl3",nbins,bounds,nbins,bounds);
+	cout <<"Looping over vectors to make TH1Ds..."<<endl;
+	for(int i=0;i<len;i++)
+	{
+		reconhist->Fill(reconv[i]);
+		truthhist->Fill(truthv[i]);
+		matrixhist->Fill(reconv[i],truthv[i]);
+	}
+	//end new bit
+	
+//DEBUG
+	for(int i=-1; i<nbins+1;i++)
+	{
+		std::cout<<"DAta Bin "<<i<<" = "<<data->GetBinContent(i+1)<<std::endl;
+		std::cout<<"Truth Bin "<<i<<" = "<<datatruth->GetBinContent(i+1)<<std::endl;
+	}
+	
+
+	TSVDUnfold *unf = new TSVDUnfold(data,reconhist,truthhist,matrixhist);
+	TH1D* unfolded = unf->Unfold(2.);
+	TH2D* unfcov = unf->GetAdetCovMatrix(5000, 32);
+	cout << "truth count = " << datatruth->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
 //	unfcov->Draw("COLZ");
 	for(int k(1); k<nbins+1; k++){
 		unfolded->SetBinError(k,sqrt(unfcov->GetBinContent(k,k)));
 		cout << unfolded->GetBinContent(k) << "	";
 	}
-	unfolded->Draw("E1");
-	truedatahist->Draw("same");
+	datatruth->Draw();
+	unfolded->Draw("E1same");
 	cout << endl;
 	App->Run();
 
