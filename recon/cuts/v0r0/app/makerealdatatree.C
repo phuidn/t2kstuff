@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. 
-	TString fileName("../../../realdatafiles.txt");
+	TString fileName("../../../realdatafiles2.txt");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
 	// Declare a TChain for the TGlobalPID module
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 	TLorentzVector ECalPosition, ECalBackPosition;
 	//NEW! - declarations
-	UInt_t fPOT(0);
+	double fPOT(0);
 	UInt_t fTriggerTime(0);
 	int timeRegime;//0=MC , 1=2010a, 2=2010bpt1, 3=2010bpt2 
 
@@ -211,31 +211,32 @@ int main(int argc, char** argv)
 		ND::TTrackerECALReconModule::TECALReconObject *eObject = NULL;
 		//NEW!
 		ND::TBeamSummaryDataModule::TBeamSummaryData *bsdObj=NULL;
-		
+	
+		//NEW! - get event specific BeamSummary data
+		bsdObj = (ND::TBeamSummaryDataModule::TBeamSummaryData*)(*bsdObjects)[0];
+		if(bsdObj==NULL) cout<<"bsdObj is NULL"<<endl;
+	    //NEW! - get POT (assuming only want total fPOT)
+	    fPOT += bsdObj->CT5ProtonsPerSpill;
+	    //NEW! - get Trigger time! (add to tree!?)
+	    fTriggerTime = bsdObj->GPS1TriggerTime;
+
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			int bunch = inTimeBunch(&gTrack->FrontPosition, 700.);
+			int bunch = inTimeBunch(&gTrack->FrontPosition,timeRegime,300.);
 			if(bunch != -1)
 				bunches[bunch]++;
 		}
+
 		
 		for (int j=0; j<NPIDs; j++) {	//loop again to perform cuts
 			//Get a specific track from the TClonesArray
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			//NEW! - get event specific BeamSummary data
-			bsdObj = (ND::TBeamSummaryDataModule::TBeamSummaryData*)(*bsdObjects)[0];
-			if(bsdObj==NULL) cout<<"bsdObj is NULL"<<endl;
-			//NEW! - get POT (assuming only want total fPOT)
-			fPOT += bsdObj->CT5ProtonsPerSpill;
-			//NEW! - get Trigger time! (add to tree!?)
-			fTriggerTime = bsdObj->GPS1TriggerTime;
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
-			int bunch = inTimeBunch(&vec, 700.);
+			int bunch = inTimeBunch(&vec,timeRegime, 300.);
 			//NEW! - cut if detector was bad!
 			if(nd280DQFlag!=0)
 			{
-				std::cout<<"Bad detector!"<<std::endl;
 				continue;
 			}
 			//NEW! - cut with trigger time

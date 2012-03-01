@@ -15,5 +15,5 @@ int cutMomentum(Double_t momentum, Double_t minVal = 75.);
 int cutNECAL(int NECALs);
 int cutNSMRD(int NSMRDs);
 int inBeamTime(TLorentzVector *FrontPosition,int timeRegime, double beamTimeCut = 100.);
-int inTimeBunch(TLorentzVector *FrontPosition, double beamTimeCut = 100.);
+int inTimeBunch(TLorentzVector *FrontPosition,int timeRegime, double beamTimeCut = 100.);
 int consecutiveDetectors(UInt_t Detectors);

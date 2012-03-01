@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 		
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			int bunch = inTimeBunch(&gTrack->FrontPosition, 700.);
+			int bunch = inTimeBunch(&gTrack->FrontPosition, 0,700.);
 			if(bunch != -1)
 				bunches[bunch]++;
 		}
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
-			int bunch = inTimeBunch(&vec, 700.);
+			int bunch = inTimeBunch(&vec, 0,700.);
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec,0) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
