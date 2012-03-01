@@ -199,12 +199,23 @@ int cutNSMRD(int NSMRDs){
 	return NSMRDs < 1;
 }
 
-int inBeamTime(TLorentzVector *FrontPosition, double beamTimeCut = 100.) {
+int inBeamTime(TLorentzVector *FrontPosition,int timeRegime, double beamTimeCut = 100.) {
 //returns 1 if the particle corresponded with the beam, 0 if it didn't
         int nBunches = 8;
         bool isInBeamTime(0);
 		double vertexTime = FrontPosition->T();
-		const double beamTimeArray[8] = {2752.,3333.,3915.,4498.,5080.,5661.,6244.,6826.};
+		double *beamTimeArray,a[8]={2752.,3333.,3915.,4498.,5080.,5661.,6244.,6826.}
+							 ,b[8]={2847.,3434.,4014.,4598.,5174.,5756.,6351.,6923.}
+							 ,c[8]={3020.,3600.,4138.,4767.,5348.,5926.,6508.,7095.};
+		if(timeRegime==0) //MC data - no shift
+			beamTimeArray = a;
+		if(timeRegime==1) //2010a (same as below, but 6 peaks)
+			beamTimeArray = b;
+		if(timeRegime==2) //2010b(1) (same as above but 8 peaks)
+			beamTimeArray = b;
+		if(timeRegime==3) //2010b(2)
+			beamTimeArray = c;
+			
         for (int i = 0; i < nBunches; ++i) {
 
                 if((vertexTime > beamTimeArray[i] - beamTimeCut) && (vertexTime < beamTimeArray[i] + beamTimeCut)) {

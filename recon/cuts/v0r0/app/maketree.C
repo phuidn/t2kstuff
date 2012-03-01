@@ -201,7 +201,7 @@ int main(int argc, char** argv)
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
 			int bunch = inTimeBunch(&vec, 700.);
-			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
+			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec,0) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
 				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
