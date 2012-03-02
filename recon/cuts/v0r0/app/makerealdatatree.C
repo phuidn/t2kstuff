@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. 
-	TString fileName("../../../realdatafiles2.txt");
+	TString fileName("../../../realdatafiles.txt");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 
 	// Declare a TChain for the TGlobalPID module
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
 		// Add the input files to the TChains.
 		//only doing 10 of the basket files, revert to while to do whole run
-		//for(int i=0;i<3;i++) { getline(inputFile,curFileName);
+		//for(int i=0;i<10;i++) { getline(inputFile,curFileName);
 		while(getline(inputFile,curFileName)){
 				gRecon->Add(curFileName.c_str());
 				P0Dinfo->Add(curFileName.c_str());
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
 	TLorentzVector ECalPosition, ECalBackPosition;
 	//NEW! - declarations
-	double fPOT(0);
+	Double_t fPOT(0);
 	UInt_t fTriggerTime(0);
 	int timeRegime;//0=MC , 1=2010a, 2=2010bpt1, 3=2010bpt2 
 
@@ -195,7 +195,11 @@ int main(int argc, char** argv)
 	int bunches[8] = {0,0,0,0,0,0,0,0},  //array to check number of hits per time bunch
 		ecalhits[8] = {0,0,0,0,0,0,0,0};
 	for(unsigned int i = 0; i < tot; ++i) {
-		if((i+1)%10000 == 0) std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
+		if((i+1)%10000 == 0)
+		{
+			std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
+			std::cout << "fPOT = " << fPOT <<std::endl;
+		}
 		//display status every 10,000 th entry
 		memset(bunches, 0, 8*sizeof(int));
 		memset(ecalhits, 0, 8*sizeof(int));
@@ -219,6 +223,9 @@ int main(int argc, char** argv)
 	    fPOT += bsdObj->CT5ProtonsPerSpill;
 	    //NEW! - get Trigger time! (add to tree!?)
 	    fTriggerTime = bsdObj->GPS1TriggerTime;
+		if(fTriggerTime<1285934400) timeRegime=1;//2010a 
+		else if(fTriggerTime<1285934400) timeRegime=2;//2010b pt1
+		else timeRegime=3;//2010b pt2
 
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
@@ -240,9 +247,6 @@ int main(int argc, char** argv)
 				continue;
 			}
 			//NEW! - cut with trigger time
-			if(fTriggerTime<1285934400) timeRegime=1;//2010a 
-			else if(fTriggerTime<1285934400) timeRegime=2;//2010b pt1
-			else timeRegime=3;//2010b pt2
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec,timeRegime) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
 				//Real data has no true particle!
 //				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
@@ -293,6 +297,7 @@ int main(int argc, char** argv)
 	treefile.Close();
 	
 	cout<<"NTree = "<<NTree<<endl;
+	std::cout << "final fPOT = " << fPOT <<std::endl;
 
 	return 0;
 }
