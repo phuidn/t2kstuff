@@ -243,7 +243,6 @@ int inTimeBunch(TLorentzVector *FrontPosition,int timeRegime, double beamTimeCut
 		if(timeRegime==3) //2010b(2)
 			beamTimeArray = c;
         for (int i = 0; i < nBunches; ++i) {
-
                 if((vertexTime > beamTimeArray[i] - beamTimeCut) && (vertexTime < beamTimeArray[i] + beamTimeCut)) {
                         timeBunch = i;
                         break;

@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 	cout<<"got inputs"<<endl;
 //	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
 //	TFile treefile("../../../tree/magnet7xwindow.root", "RECREATE", "A test tree"); //create file for new tree
-	TFile treefile("../../../tree/realdata.root","RECREATE","Real Data");
+	TFile treefile("../../../tree/realdatafull.root","RECREATE","Real Data");
 	TTree *tree = new TTree("newtree", "Real Data");
 	
 	//Variables which could be put in the new tree
@@ -126,7 +126,6 @@ int main(int argc, char** argv)
 	Double_t FrontMomentum, BackMomentum;
 	TLorentzVector FrontPosition, BackPosition;
 	TVector3 FrontDirection, BackDirection;
-	ND::TTrueParticle TrueParticle; //from here on aren't added to the tree yet
 	UInt_t NNCES(0);
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
@@ -169,7 +168,6 @@ int main(int argc, char** argv)
 	tree->Branch("BackMomentum", &BackMomentum);
 	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 	tree->Branch("BackDirection","TVector3", &BackDirection);
-	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
 	tree->Branch("NTPCs", &NTPCs);	
 	tree->Branch("NFGDs", &NFGDs);	
 	tree->Branch("NECALs", &NECALs);
@@ -197,7 +195,7 @@ int main(int argc, char** argv)
 	for(unsigned int i = 0; i < tot; ++i) {
 		if((i+1)%10000 == 0)
 		{
-			std::cout << 100.*(double)(i+1)/(double)tot << "percent complete" << std::endl;
+			std::cout << 100.*(double)(i+1)/(double)tot << " %% complete" << std::endl;
 			std::cout << "fPOT = " << fPOT <<std::endl;
 		}
 		//display status every 10,000 th entry
@@ -224,7 +222,7 @@ int main(int argc, char** argv)
 	    //NEW! - get Trigger time! (add to tree!?)
 	    fTriggerTime = bsdObj->GPS1TriggerTime;
 		if(fTriggerTime<1285934400) timeRegime=1;//2010a 
-		else if(fTriggerTime<1285934400) timeRegime=2;//2010b pt1
+		else if(fTriggerTime<1294000000) timeRegime=2;//2010b pt1
 		else timeRegime=3;//2010b pt2
 
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
@@ -267,7 +265,6 @@ int main(int argc, char** argv)
 				BackDirection = gTrack->BackDirection;
 				FrontMomentum = gTrack->FrontMomentum;
 				BackMomentum = gTrack->BackMomentum;
-				TrueParticle = gTrack->TrueParticle;
 				NTPCs = gTrack->NTPCs;
 				NFGDs = gTrack->NFGDs;
 				NECALs = gTrack->NECALs;
