@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 
 	cout<<"got inputs"<<endl;
 //	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
-	TFile treefile("../../../tree/magnet7xwindow.root", "RECREATE", "A test tree"); //create file for new tree
+	TFile treefile("../../../tree/magnetneighbour.root", "RECREATE", "A test tree"); //create file for new tree
 	TTree *tree = new TTree("newtree", "a new tree");
 	
 	//Variables which could be put in the new tree
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 		
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			int bunch = inTimeBunch(&gTrack->FrontPosition, 0,700.);
+			int bunch = inTimeBunch(&gTrack->FrontPosition, 0,291.);
 			if(bunch != -1)
 				bunches[bunch]++;
 		}
@@ -200,11 +200,12 @@ int main(int argc, char** argv)
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
-			int bunch = inTimeBunch(&vec, 0,700.);
+			int bunch = inTimeBunch(&vec, 0,291.);
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec,0) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
 				if(gTrack->TrueParticle.Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 					NNCES++;		//one more qes event
-				if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
+				if(bunch == -1 || bunches[bunch]>1 || bunch != 0 && bunches[bunch-1] || bunch != 7 && bunches[bunch+1])
+				//if(bunch==-1 || bunches[bunch]>1) //cut allows through particles with one hit per bunch 
 					continue;
 				FName = TString(gRecon->GetFile()->GetName());
 				FOName.SetString(FName);
