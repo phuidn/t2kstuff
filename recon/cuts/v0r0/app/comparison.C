@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
 	Double_t FrontMomentum,BackMomentum;
-	UInt_t NTOT(0);
+	UInt_t NTOT(0), NHits(0);
 	Int_t NTPCs;
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
 	Int_t NFGDs;
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	TLorentzVector *realFrontPosition(0), *realBackPosition(0);
 	TVector3 *realFrontDirection(0), *realBackDirection(0);
 	Double_t realFrontMomentum,realBackMomentum;
-	UInt_t realNTOT(0);
+	UInt_t realNTOT(0), realNHits(0);
 	Int_t realNTPCs;
 	TClonesArray *realTPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
 	Int_t realNFGDs;
@@ -91,6 +91,7 @@ int main(int argc, char** argv)
   	mctree->SetBranchAddress("TPC", &TPC);
 	mctree->SetBranchAddress("FGD", &FGD);
 	mctree->SetBranchAddress("NTOT", &NTOT);
+	mctree->SetBranchAddress("NHits", &NHits);
 
 	realtree->SetBranchAddress("FrontPosition", &realFrontPosition);
 	realtree->SetBranchAddress("BackPosition", &realBackPosition);
@@ -103,6 +104,7 @@ int main(int argc, char** argv)
   	realtree->SetBranchAddress("TPC", &realTPC);
 	realtree->SetBranchAddress("FGD", &realFGD);
 	realtree->SetBranchAddress("NTOT", &realNTOT);
+	realtree->SetBranchAddress("NHits", &realNHits);
 	//Counters
 	Double_t mcPOT = 5.e17 * 1554;
 	Double_t realPOT = 1.378e20;
@@ -110,19 +112,19 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Monte Carlo");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-100,1200);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-10,1200);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-100,1200);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-10,1200);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-100,1200);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-10,1200);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-100,1200);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-10,1200);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-100,1200);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-10,1200);
 	hist5->SetFillColor(kGreen);
 
-	TH1D *realhist=new TH1D("realdata","Real Data",200,-100,1200);
-
+	TH1D *realhist=new TH1D("realdata","Real Data",200,-10,1200);
+	
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
@@ -130,9 +132,10 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TTree
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
-		Double_t fillval = realFrontMomentum;
-		if (fillval != 500.)
+		if(realNTPCs){
+			Double_t fillval = realFrontMomentum;
 			realhist->Fill(fillval);
+		}
 	}
 	cout << NTOT << realNTOT << endl;
 	realhist->Scale(mcPOT/realPOT);
@@ -140,11 +143,10 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		mctree->GetEntry(i);
-		int keep(1);	
+		int keep(1);
 		Double_t fillval = FrontMomentum;
-		
 //this is for reaction type, commented out as I want particle type
-		if(keep && fillval!=500.)
+		if(keep && fillval)
 		{
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 			{	//add to QES graph
@@ -182,7 +184,7 @@ int main(int argc, char** argv)
 	hs.Add(hist4);
 	hs.Add(hist5);
 	//draw stacked hist
-	hs.Draw();
+	hs.Draw("");
 	realhist->Draw("sameE1");
 	//display the canvas!
 	App->Run();

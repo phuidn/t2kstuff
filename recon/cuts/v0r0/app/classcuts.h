@@ -74,7 +74,7 @@ class TPCHits : public Cut {
 
 class ProtonPull : public Cut {
 	public:
-		ProtonPull(Int_t *NTPCs, TClonesArray** TPC, double minPull = -3., double maxPull = 15.){
+		ProtonPull(Int_t *NTPCs, TClonesArray** TPC, double minPull = -1.5, double maxPull = 15.){
 			this->NTPCs = NTPCs;
 			this->TPC = TPC;
 			this-> minPull = minPull;

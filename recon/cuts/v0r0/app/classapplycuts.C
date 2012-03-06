@@ -47,7 +47,6 @@ int main(int argc, char** argv)
 	// Open the TTree we made
 	TFile *treefile = new TFile("../../../tree/magnet3xwindow.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
-
 	//Variables to get from the tree
 	UInt_t Detectors(0);
 	UInt_t Status(0);
@@ -114,8 +113,8 @@ int main(int argc, char** argv)
 	cuts.push_back(new PosCharge(&NTPCs, &TPC));
 	cuts.push_back(new ProtonPull(&NTPCs, &TPC));
 	cuts.push_back(new MuonPull(&NTPCs, &TPC));
-	cuts.push_back(new PionPull(&NTPCs, &TPC));
-	cuts.push_back(new TotNHits(&NHits));
+//	cuts.push_back(new PionPull(&NTPCs, &TPC));
+//	cuts.push_back(new TotNHits(&NHits));
 	cuts.push_back(new DetectorOrder(&Detectors, &FrontPosition));
 	cuts.push_back(new MinMomentum(&FrontMomentum));
 	cuts.push_back(new MinMomentum(&BackMomentum, 130));
@@ -137,6 +136,8 @@ int main(int argc, char** argv)
 	memset(otherCount, 0, NCuts*sizeof(int));
 	memset(totCount, 0, NCuts*sizeof(int));
 	
+	ofstream Outfile("../../../scripts/magback.log", ios::out);
+
 	for(unsigned int i = 0; i < NTOT; ++i) {
 		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
 		//display status every 1,000 th entry
@@ -157,13 +158,34 @@ int main(int argc, char** argv)
 				break;
 			totCount[j]++;
 			NCEScount[j] += isNCES;
-			if (!isNCES){
-				CCQEScount[j] += TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1;
-				CCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1;
-				NCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1;
-				DIScount[j]  += TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1;	
-			}
+//			if (!isNCES){
+//				
+//				CCQEScount[j] += TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1;
+//				CCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1;
+//				NCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1;
+//				DIScount[j]  += TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1;	
+//			}
 		}
+			if (!isNCES&&keep){
+				string type;
+				if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1){
+					CCQEScount[j]++;
+					type = string("CCQES");
+				}
+				else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1){
+					CCREScount[j]++;
+					type = string("RES");
+				}
+				else if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1){
+					NCREScount[j]++; 
+					type = string("RES");
+				}
+				else if(TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1){	
+					DIScount[j]++;
+					type = string("DIS");
+				}
+				Outfile << type << "," << FOName->GetString().Data() << "," << EventID << endl;
+			}		
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
@@ -179,6 +201,7 @@ int main(int argc, char** argv)
 	treefile->Close();
 	return 0;
 }
+
 
 //---------------------------------------------------------------------------//
 //										Method to set up ROOT as required.										 //

@@ -67,7 +67,11 @@ int ProtonPull :: apply(){
 int PionPull :: apply(){
 	double pull = 0.;
 	for (int i=0; i<*NTPCs; i++)
-		pull += ((ND::TGlobalReconModule::TTPCObject*)(*TPC)->At(i))->PullPion/(double)*NTPCs;
+		if(((ND::TGlobalReconModule::TTPCObject*)(*TPC)->At(i))->NHits > 18)
+			pull += ((ND::TGlobalReconModule::TTPCObject*)(*TPC)->At(i))->PullPion;
+		else
+			*NTPCs--;
+	pull/=(double)*NTPCs;
 	return  (pull > minPull);
 }
 

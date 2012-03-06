@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 
-file = open('list.out', 'r')
+file = open('magback.log', 'r')
 lines = file.readlines()
 datas = [tup.split(',') for tup in lines]
 paths = [["path","NCQES", "CCQES", "DIS", "RES", "events"]]
