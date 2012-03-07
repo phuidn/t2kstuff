@@ -110,38 +110,47 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Monte Carlo");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-100,1200);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-100,1500);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-100,1200);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-100,1500);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-100,1200);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-100,1500);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-100,1200);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-100,1500);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-100,1200);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-100,1500);
 	hist5->SetFillColor(kGreen);
 
-	TH1D *realhist=new TH1D("realdata","Real Data",200,-100,1200);
+	TH1D *realhist=new TH1D("realdata","Real Data",200,-100,1500);
 
 	//========================================================
 	//	end		Declare Graphs n stuff here
 	//========================================================
 
 	// Loop over the entries in the TTree
+	cout<<"Real Tree loop"<<endl;
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
 		Double_t fillval = realFrontMomentum;
-		if (fillval != 500.)
-			realhist->Fill(fillval);
+		realhist->Fill(fillval);
+		//if(realNTPCs!=0)
+		//{
+		//	Double_t fillval = ((ND::TGlobalReconModule::TTPCObject*)realTPC->At(0))->FrontMomentum;
+		//	realhist->Fill(fillval);
+		//}
 	}
-	cout << NTOT << realNTOT << endl;
+	cout<<"NTOT: " << NTOT << "    realNTOT: "<< realNTOT << endl;
 	realhist->Scale(mcPOT/realPOT);
+	cout<<"MC Tree Loop"<<endl;
 	for(unsigned int i = 0; i < mctree->GetEntries(); ++i) {
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		mctree->GetEntry(i);
-		int keep(1);	
+		int keep(1);
 		Double_t fillval = FrontMomentum;
+		//Double_t fillval = -200.;
+		//if(NTPCs!=0)
+		//	fillval = ((ND::TGlobalReconModule::TTPCObject*)TPC->At(0))->FrontMomentum;
 		
 //this is for reaction type, commented out as I want particle type
 		if(keep && fillval!=500.)
@@ -174,6 +183,7 @@ int main(int argc, char** argv)
 		}
 	} // End loop over events
 
+	cout<<"HIST section"<<endl;
 
 	//add QES and Non-QES to TStack
 	hs.Add(hist1);
