@@ -16,6 +16,6 @@ application classhistcuts ../app/classhistcuts.C ../app/classcuts.C
 application maketree ../app/maketree.C ../app/cuts.C
 application matrixplot ../app/matrix.C 
 application makematrix ../app/matrixout.C
-application energycorrect ../app/energycorrect.C ../app/classcuts.C 
+application energycorrect ../app/energycorrectnopython.C ../app/classcuts.C 
 application makerealdatatree ../app/makerealdatatree.C  ../app/cuts.C
 application comparison ../app/comparison.C

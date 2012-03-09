@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 	memset(otherCount, 0, NCuts*sizeof(int));
 	memset(totCount, 0, NCuts*sizeof(int));
 	
-	ofstream Outfile("../../../scripts/magback.log", ios::out);
+	ofstream Outfile("magnetCUTS.txt", ios::out);
 
 	for(unsigned int i = 0; i < NTOT; ++i) {
 		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
@@ -158,34 +158,40 @@ int main(int argc, char** argv)
 				break;
 			totCount[j]++;
 			NCEScount[j] += isNCES;
-//			if (!isNCES){
-//				
-//				CCQEScount[j] += TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1;
-//				CCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1;
-//				NCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1;
-//				DIScount[j]  += TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1;	
-//			}
+			if (!isNCES){
+				
+				CCQEScount[j] += TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1;
+				CCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1;
+				NCREScount[j]  += TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1;
+				DIScount[j]  += TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1;	
+			}
 		}
-			if (!isNCES&&keep){
-				string type;
-				if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1){
-					CCQEScount[j]++;
-					type = string("CCQES");
-				}
-				else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1){
-					CCREScount[j]++;
-					type = string("RES");
-				}
-				else if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1){
-					NCREScount[j]++; 
-					type = string("RES");
-				}
-				else if(TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1){	
-					DIScount[j]++;
-					type = string("DIS");
-				}
-				Outfile << type << "," << FOName->GetString().Data() << "," << EventID << endl;
-			}		
+		if(keep){	
+			Double_t recon_mom = ((ND::TGlobalReconModule::TTPCObject*)TPC->At(0))->FrontMomentum;
+			TLorentzVector v = TrueParticle->InitMom;
+			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
+			Outfile << recon_mom * recon_mom << "," << truth_mom*truth_mom << endl;
+		}
+//			if (!isNCES&&keep){
+//				string type;
+//				if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1){
+//					CCQEScount[j]++;
+//					type = string("CCQES");
+//				}
+//				else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],RES;",0)!=-1){
+//					CCREScount[j]++;
+//					type = string("RES");
+//				}
+//				else if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],RES;",0)!=-1){
+//					NCREScount[j]++; 
+//					type = string("RES");
+//				}
+//				else if(TrueParticle->Vertex.ReactionCode.find("DIS;",0)!=-1){	
+//					DIScount[j]++;
+//					type = string("DIS");
+//				}
+//				Outfile << type << "," << FOName->GetString().Data() << "," << EventID << endl;
+//			}		
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);

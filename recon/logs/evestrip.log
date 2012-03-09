@@ -1,0 +1,37 @@
+% *** Initializing ND::TOARuntimeParameters
+->Get event (91210004,81,1890)
+->Get event (91210004,81,2191)
+->Get event (91210004,81,3481)
+->Get event (91210004,81,3702)
+->Get event (91210004,81,4558)
+->Get event (91210004,81,5513)
+->Get event (91210004,81,5513)
+ERROR: ../src/TND280Input.cxx:38: ROOT may produce warning messages about missing ShowMembers methods which may be ignored
+% Events Processed: 10
+% Events Processed: 32
+% Events Processed: 100
+% Events Processed: 316
+% Events Processed: 1000
+ Writing Event 1890
+% Geometry read from oa_gn_beam_91210004-0081_7uk65hdvhoc7_reco_000_prod004magnet201011waterb.root
+% Geometry identifier map with 49499 entries.
+% Loaded ND280Geometry-9f07a64d-04bddaad-c80cfc01-4c8afc38-191c12d7:da39a3ee-5e6b4b0d-3255bfef-95601890-afd80709
+% ** Geometry ND280Geometry-9f07a64d-04bddaad-c80cfc01-4c8afc38-191c12d7:da39a3ee-5e6b4b0d-3255bfef-95601890-afd80709 written to output file 
+% Events Processed: 2000
+ Writing Event 2191
+% Events Processed: 3000
+ Writing Event 3481
+ Writing Event 3702
+% Events Processed: 4000
+ Writing Event 4558
+% Events Processed: 5000
+ Writing Event 5513
+% Events Processed: 6000
+% Events Processed: 7000
+Total Events Read: 7736
+Total Events Written: 6
+ND::TND280Output**		../../../tree/magstrip2.root	ROOT Output File
+ ND::TND280Output*		../../../tree/magstrip2.root	ROOT Output File
+  OBJ: TTree	ND280Events	ND280 Event Tree : 0 at: 0xc17520
+  KEY: TGeoManager	ND280Geometry-9f07a64d-04bddaad-c80cfc01-4c8afc38-191c12d7:da39a3ee-5e6b4b0d-3255bfef-95601890-afd80709;1	ND280 Detector Geometry
+  KEY: TTree	ND280Events;1	ND280 Event Tree

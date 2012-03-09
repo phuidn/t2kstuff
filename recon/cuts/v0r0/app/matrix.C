@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 	//Matrix one
 	Float_t bins[] = {0,0.15, 0.28, 0.40, 0.70, 4};
-	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,bins,5,bins);
+	TH2D *hist = new TH2D("hist","Recon vs Truth Proton Momenta",5,0,1.2, 5,0,1.2);
 	//Both stacked
 	THStack hs("hs","Recon and truth proton momenta for NCQES");
 	////need seperate hists for adding to a stack

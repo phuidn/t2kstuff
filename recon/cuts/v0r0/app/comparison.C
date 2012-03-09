@@ -29,6 +29,7 @@
 #include <TTruthVerticesModule.hxx>
 #include <TTrueVertex.hxx>
 #include <TTree.h>
+#include <TLegend.h>
 #include <THStack.h>
 #include <cuts.h>
 #define ABS(x) (x>0?x:-x)
@@ -62,9 +63,9 @@ int main(int argc, char** argv)
 	TLorentzVector *FrontPosition(0), *BackPosition(0);
 	TVector3 *FrontDirection(0), *BackDirection(0);
 	ND::TTrueParticle *TrueParticle(0);
-	Double_t FrontMomentum,BackMomentum;
-	UInt_t NTOT(0), NHits(0);
-	Int_t NTPCs;
+	Double_t FrontMomentum,BackMomentum,Quality;
+	UInt_t NTOT(0);
+	Int_t NTPCs(0), NHits(0);
 	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
 	Int_t NFGDs;
 	TClonesArray *FGD = new TClonesArray("ND::TGlobalReconModule::TFGDObject",2);
@@ -72,9 +73,9 @@ int main(int argc, char** argv)
 	//Things from the real tree
 	TLorentzVector *realFrontPosition(0), *realBackPosition(0);
 	TVector3 *realFrontDirection(0), *realBackDirection(0);
-	Double_t realFrontMomentum,realBackMomentum;
-	UInt_t realNTOT(0), realNHits(0);
-	Int_t realNTPCs;
+	Double_t realFrontMomentum,realBackMomentum, realQuality;
+	UInt_t realNTOT(0);
+	Int_t realNTPCs(0), realNHits(0);
 	TClonesArray *realTPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
 	Int_t realNFGDs;
 	TClonesArray *realFGD = new TClonesArray("ND::TGlobalReconModule::TFGDObject",2);
@@ -92,6 +93,7 @@ int main(int argc, char** argv)
 	mctree->SetBranchAddress("FGD", &FGD);
 	mctree->SetBranchAddress("NTOT", &NTOT);
 	mctree->SetBranchAddress("NHits", &NHits);
+	mctree->SetBranchAddress("Quality", &Quality);
 
 	realtree->SetBranchAddress("FrontPosition", &realFrontPosition);
 	realtree->SetBranchAddress("BackPosition", &realBackPosition);
@@ -105,25 +107,26 @@ int main(int argc, char** argv)
 	realtree->SetBranchAddress("FGD", &realFGD);
 	realtree->SetBranchAddress("NTOT", &realNTOT);
 	realtree->SetBranchAddress("NHits", &realNHits);
+	realtree->SetBranchAddress("Quality", &Quality);
 	//Counters
 	Double_t mcPOT = 5.e17 * 1554;
 	Double_t realPOT = 1.378e20;
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Monte Carlo");
+	THStack hs("hs","Angular Distribution Comparison");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-10,1200);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",20,-1,1);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-10,1200);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",20,-1,1);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-10,1200);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",20,-1,1);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-10,1200);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",20,-1,1);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-10,1200);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",20,-1,1);
 	hist5->SetFillColor(kGreen);
 
-	TH1D *realhist=new TH1D("realdata","Real Data",200,-10,1200);
+	TH1D *realhist=new TH1D("realdata","Real Data",20,-1,1);
 	
 	//========================================================
 	//	end		Declare Graphs n stuff here
@@ -133,8 +136,9 @@ int main(int argc, char** argv)
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
 		if(realNTPCs){
-			Double_t fillval = realFrontMomentum;
-			realhist->Fill(fillval);
+			Double_t fillval = realFrontDirection->Z();
+			if(fillval==fillval)// && realFrontPosition->Y()>-777 && realFrontPosition->Y()<887)
+				realhist->Fill(fillval);
 		}
 	}
 	cout << NTOT << realNTOT << endl;
@@ -143,10 +147,10 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		mctree->GetEntry(i);
-		int keep(1);
-		Double_t fillval = FrontMomentum;
+		int keep = NTPCs>0;
+		Double_t fillval = FrontDirection->Z();
 //this is for reaction type, commented out as I want particle type
-		if(keep && fillval)
+		if(keep && fillval==fillval)// && FrontPosition->Y()>-777 && FrontPosition->Y()<887)
 		{
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 			{	//add to QES graph
@@ -155,17 +159,17 @@ int main(int argc, char** argv)
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
 			{	//RES is noise
-				hist2->Fill( fillval );
+				hist3->Fill( fillval );
 			//	cout << "RES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
 			{	//DIS is noise
-				hist3->Fill( fillval );
+				hist4->Fill( fillval );
 			//	cout << "DIS," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
 			{	//CCQES is noise
-				hist4->Fill( fillval );
+				hist2->Fill( fillval );
 			//	cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else
@@ -185,7 +189,18 @@ int main(int argc, char** argv)
 	hs.Add(hist5);
 	//draw stacked hist
 	hs.Draw("");
+	hs.GetXaxis()->SetTitle("sin (#theta_{z})");
+	hs.GetYaxis()->SetTitle("Counts");
+	realhist->SetMarkerStyle(20);
 	realhist->Draw("sameE1");
+	TLegend *leg = new TLegend(0.1, 0.7, 0.5, 0.9);
+	leg->AddEntry(hist1, "NC Elastic", "f"); 
+	leg->AddEntry(hist2, "CC Quasi-elastic", "f"); 
+	leg->AddEntry(hist3, "Resonance Production", "f"); 
+	leg->AddEntry(hist4, "Deep Inelastic", "f"); 
+	leg->AddEntry(hist5, "Coherent Scattering", "f"); 
+	leg->AddEntry(realhist, "Real Data", "lep");
+	leg->Draw();
 	//display the canvas!
 	App->Run();
 	realtreefile->Close();

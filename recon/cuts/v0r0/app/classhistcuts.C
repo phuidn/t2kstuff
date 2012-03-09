@@ -22,6 +22,7 @@
 #include <TH2D.h>
 #include <TH1D.h>
 #include <TCanvas.h>
+#include <TLegend.h>
 #include <TLorentzVector.h>
 #include <TGlobalReconModule.hxx>
 #include <TGlobalBaseObjects.hxx>
@@ -49,7 +50,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/allmag.root");
+	TFile *treefile = new TFile("../../../tree/magnet3xwindow.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -115,17 +116,17 @@ int main(int argc, char** argv)
 	// Loop over the entries in the TTree
 	cout<<"looping over " <<NTOT<<" events"<<endl;
 	vector<Cut*> cuts;
-	cuts.push_back(new NoTPC1(&Detectors));
-	cuts.push_back(new TPCHits(&NTPCs, &TPC, 18, 1000));
-	cuts.push_back(new PosCharge(&NTPCs, &TPC));
-	cuts.push_back(new ProtonPull(&NTPCs, &TPC));
-	cuts.push_back(new MuonPull(&NTPCs, &TPC));
-	cuts.push_back(new PionPull(&NTPCs, &TPC));
+//	cuts.push_back(new NoTPC1(&Detectors));
+//	cuts.push_back(new TPCHits(&NTPCs, &TPC, 18, 1000));
+//	cuts.push_back(new PosCharge(&NTPCs, &TPC));
+//	cuts.push_back(new ProtonPull(&NTPCs, &TPC));
+//	cuts.push_back(new MuonPull(&NTPCs, &TPC));
+//	cuts.push_back(new PionPull(&NTPCs, &TPC));
 //	cuts.push_back(new TotNHits(&NHits));
-	cuts.push_back(new DetectorOrder(&Detectors, &FrontPosition));
+//	cuts.push_back(new DetectorOrder(&Detectors, &FrontPosition));
 //	cuts.push_back(new MinMomentum(&FrontMomentum));
 //	cuts.push_back(new MinMomentum(&BackMomentum, 130));
-	cuts.push_back(new CutECALs(&NECALs));
+//	cuts.push_back(new CutECALs(&NECALs));
 	
 	int NCuts = cuts.size();
 	int	correctCut[NCuts],
@@ -135,17 +136,17 @@ int main(int argc, char** argv)
 
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","A histogram with a title.");
+	THStack hs("hs","Proton Pull");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,2000);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",100,-30, 10);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,2000);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",100,-30, 10);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,2000);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",100,-30, 10);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,2000);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",100,-30, 10);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,2000);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",100,-30, 10);
 	hist5->SetFillColor(kGreen);
 	//TH1D *hist6 = new TH1D("hist6","Generic Title",100,0,15000);
 	//hist6->SetFillColor(kBlack);
@@ -174,10 +175,10 @@ int main(int argc, char** argv)
 			correctCut[j] += isNCES;
 			wrongCut[j] += !isNCES;
 		}
-		//Horrible Dirty Hist bits
-		if(keep)
+		
+		if(keep && NTPCs)
 		{
-			Double_t fillval = FrontMomentum * FrontDirection->CosTheta();
+			Double_t fillval = ((ND::TGlobalReconModule::TTPCObject*)TPC->At(0))->PullProton;
 			accepted++;
 			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
 			{	//add to QES graph
@@ -188,25 +189,26 @@ int main(int argc, char** argv)
 			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
 			{	//RES is noise
 				acceptedNoise++;
-				hist2->Fill( fillval );
+				hist3->Fill( fillval );
 			//	cout << "RES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
 			{	//DIS is noise
 				acceptedNoise++;
-				hist3->Fill( fillval );
+				hist4->Fill( fillval );
 			//	cout << "DIS," << FOName->GetString() << "," << EventID << endl;
 			}
 			else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
 			{	//CCQES is noise
 				acceptedNoise++;
-				hist4->Fill( fillval );
+				hist2->Fill( fillval );
 			//	cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
 			}
 			else
 			{	//other stuff is noise
 				acceptedNoise++;
 				hist5->Fill( fillval );
+				cout << TrueParticle->Vertex.ReactionCode << endl;
 			//	cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
 			}
 		}
@@ -228,7 +230,13 @@ int main(int argc, char** argv)
 	//hs.Add(hist8);
 	//draw stacked hist
 	hs.Draw();
-
+	TLegend *leg = new TLegend(0.1, 0.7, 0.5, 0.9);
+	leg->AddEntry(hist1, "NC Elastic", "f"); 
+	leg->AddEntry(hist2, "CC Quasi-elastic", "f"); 
+	leg->AddEntry(hist3, "Resonance Production", "f"); 
+	leg->AddEntry(hist4, "Deep Inelastic", "f"); 
+	leg->AddEntry(hist5, "Coherent Scattering", "f"); 
+	leg->Draw();
 	//display the canvas!
 	App->Run();
 		

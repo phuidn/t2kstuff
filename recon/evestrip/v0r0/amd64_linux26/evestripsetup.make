@@ -67,13 +67,11 @@
 #         use ROOT * 
 #         use oaEvent * 
 #         use oaOfflineDatabase * 
-#         use oaRuntimeParameters * 
-#         use testBase * 
 #     use tfbApplyCalib * 
 #       use oaEvent * 
 #       use oaOfflineDatabase * 
+#       use oaSlowControlDatabase * 
 #       use oaRuntimeParameters * 
-#       use testBase * 
 #     use oaRuntimeParameters * 
 #     use oaSlowControlDatabase * 
 #     use oaOfflineDatabase * 
@@ -147,42 +145,42 @@
 #
 # Selection :
 use CMT v1r20p20081118 (/storage/epp2/t2k/software)
-use EXTERN v3r7  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use CLHEP v2r0p4n05  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use MYSQL v5r051an01  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use ROOT v5r28p00fn00  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use nd280Policy v2r35  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaDataQuality v1r5p3  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use RECPACK v1r17p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use testBase v1r13  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaEvent v8r5p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use MinosDBI v1r1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaOfflineDatabase v1r5  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaRuntimeParameters v0r5  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use tfbApplyCalib v2r9p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaChanInfo v1r17p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaRawEvent v3r21  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaUnpack v3r3  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaBeamData v0r11  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaSlowControlDatabase v1r5  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use fgdRawData v1r21  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use magnetCalib v3r11  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaUtility v4r11  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaGeomInfo v4r5p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use smrdCalib v1r13  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use p0dRecon v7r5p5  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use sbcat v4r13p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaApplyAlign v0r5p3  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaCalib v3r3  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaRecPack v2r25p9  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use ecalRecon v8r9p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use p0decalRecon v0r23  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use tpcRecon v5r17p5  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use smrdRecon v3r3p3  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use fgdRecon v3r5p1  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use trackerRecon v0r15p9  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaRecon v3r5p7  (/storage/epp2/t2k/software/ND280/v9r11p9)
-use oaAnalysis v5r1p7  (/storage/epp2/t2k/software/ND280/v9r11p9)
+use EXTERN v3r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use CLHEP v2r0p4n05  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use MYSQL v5r051an01  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use ROOT v5r28p00n01  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use nd280Policy v2r35  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaDataQuality v1r5p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use RECPACK v1r17p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use testBase v1r13  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaEvent v8r5p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use MinosDBI v1r1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaOfflineDatabase v1r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaChanInfo v1r9p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaRuntimeParameters v0r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaRawEvent v3r19  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaUnpack v3r3  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaBeamData v0r11  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaSlowControlDatabase v1r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use tfbApplyCalib v2r3p3  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use fgdRawData v1r21  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use magnetCalib v3r7  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaUtility v4r9p5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaGeomInfo v4r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use smrdCalib v1r13  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use p0dRecon v7r3p9  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use sbcat v4r13p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaApplyAlign v0r5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaCalib v2r17p5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaRecPack v2r25p9  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use ecalRecon v8r7p7  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use p0decalRecon v0r19  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use tpcRecon v5r17p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use smrdRecon v3r3p3  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use fgdRecon v3r5p1  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use trackerRecon v0r15p9  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaRecon v3r5p5  (/storage/epp2/t2k/software/ND280/v9r7p9)
+use oaAnalysis v4r37p5  (/storage/epp2/t2k/software/ND280/v9r7p9)
 ----------> tags
 CMTv1 (from CMTVERSION)
 CMTr20 (from CMTVERSION)
@@ -200,4 +198,4 @@ suse11 (from package CMT)
 gcc434 (from package CMT)
 Unix (from package CMT) excludes [WIN32 Win32]
 ----------> CMTPATH
-# Add path /storage/epp2/t2k/software/ND280/v9r11p9 from initialization
+# Add path /storage/epp2/t2k/software/ND280/v9r7p9 from initialization
