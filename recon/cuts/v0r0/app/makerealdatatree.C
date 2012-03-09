@@ -238,6 +238,7 @@ int main(int argc, char** argv)
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
+			FrontMomentum = gTrack->FrontMomentum;
 			int bunch = inTimeBunch(&vec,timeRegime, 300.);
 			//NEW! - cut if detector was bad!
 			if(nd280DQFlag!=0)

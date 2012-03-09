@@ -21,7 +21,7 @@ for event in datas:
 		else:
 			paths.append([event[1], nces, ccqes, dis, res, [int(event[2])]])
 			current = event[1]
-paths = sorted(paths, key = lambda x: -len(x[5]))
+paths[1:] = sorted(paths[1:], key = lambda x: -len(x[5]))
 for i in range(10):
  print paths[i]
 

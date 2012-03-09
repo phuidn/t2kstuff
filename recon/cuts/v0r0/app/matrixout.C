@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 {	
 	//Open the output file
 	ofstream outputfile;
-	outputfile.open("magnetenergies.txt");
+	outputfile.open("magnetTPC.txt");
 
 
 	//Making canvas and application - needed for standalone programs
@@ -127,23 +127,19 @@ int main(int argc, char** argv)
 	UInt_t NNCES(0);
 	UInt_t NTOT(0);
 	UInt_t NTree(0);
-	Int_t NTPCs;
 	TString FName;
 	TObjString FOName;
-	TClonesArray TPC("ND::TGlobalReconModule::TTPCObject", 3);
-
-	Int_t NFGDs;
-	TClonesArray FGD("ND::TGlobalReconModule::TFGDObject", 2);
-
-	Int_t NECALs;
-	TClonesArray ECAL("ND::TGlobalReconModule::TECALObject", 3);
-
-	Int_t NP0Ds;
-	TClonesArray P0D("ND::TGlobalReconModule::TP0DObject", 2);
-
-	Int_t NSMRDs;
-	TClonesArray SMRD("ND::TGlobalReconModule::TSMRDObject", 3);
 	
+	Int_t NTPCs;
+	TClonesArray *TPC = new TClonesArray("ND::TGlobalReconModule::TTPCObject",3);
+//	Int_t NFGDs;
+//	TClonesArray *FGD = new TClonesArray("ND::TGlobalReconModule::TFGDObject",2);
+//	Int_t NECALs;
+//	TClonesArray *ECAL = new TClonesArray("ND::TGlobalReconModule::TECALObject",3);
+//	Int_t NP0Ds;
+//	TClonesArray *P0D = new TClonesArray("ND::TGlobalReconModule::TP0DObject",2);
+//	Int_t NSMRDs;
+//	TClonesArray *SMRD = new TClonesArray("ND::TGlobalReconModule::TSMRDObject",3);
 	cout<<"declared things"<<endl;
 	// add them  to the tree
 //	tree->Branch("FOName",&FOName);
@@ -156,11 +152,11 @@ int main(int argc, char** argv)
 //	tree->Branch("IsForward", &IsForward);
 //	tree->Branch("FrontPosition","TLorentzVector", &FrontPosition);
 //	tree->Branch("BackPosition","TLorentzVector", &BackPosition);
-	tree->Branch("FrontMomentum", &FrontMomentum);
+//	tree->Branch("FrontMomentum", &FrontMomentum);
 //	tree->Branch("BackMomentum", &BackMomentum);
 //	tree->Branch("FrontDirection","TVector3", &FrontDirection);
 //	tree->Branch("BackDirection","TVector3", &BackDirection);
-	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
+//	tree->Branch("TrueParticle", "TTrueParticle", &TrueParticle);
 //	tree->Branch("NTPCs", &NTPCs);	
 //	tree->Branch("NFGDs", &NFGDs);	
 //	tree->Branch("NECALs", &NECALs);
@@ -203,12 +199,13 @@ int main(int argc, char** argv)
 				continue;
 			}
 			totNCES++;
-			if( gTrack->NTPCs == 0 )
+			if( gTrack->NTPCs == 0 || ((ND::TGlobalReconModule::TTPCObject*)gTrack->TPC->At(0))->NHits < 18)
 			{//then we cannot reconstruct it probs
 				continue;
 			}
 			totwithTPC++;
-			Double_t recon_mom = gTrack->FrontMomentum;
+			//Double_t recon_mom = gTrack->FrontMomentum
+			Double_t recon_mom = ((ND::TGlobalReconModule::TTPCObject*)gTrack->TPC->At(0))->FrontMomentum;
 			TLorentzVector v = gTrack->TrueParticle.InitMom;
 			Double_t truth_mom = sqrt(v.X()*v.X()+v.Y()*v.Y()+v.Z()*v.Z());
 			if(recon_mom != recon_mom || recon_mom==0.){
