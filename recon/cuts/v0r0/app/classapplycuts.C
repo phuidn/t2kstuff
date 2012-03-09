@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnet3xwindow.root");
+	TFile *treefile = new TFile("../../../tree/magnetcounttree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 	//Variables to get from the tree
 	UInt_t Detectors(0);
@@ -60,6 +60,8 @@ int main(int argc, char** argv)
 	UInt_t NTOT(0);
 	TObjString *FOName(0);
 	Int_t EventID(0);
+	UInt_t NNCESatb(0);
+	UInt_t NTOTatb(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -93,6 +95,8 @@ int main(int argc, char** argv)
 	//cout to debug - Tree->NNCES doesnt work properly: return value is NOT 0 !
 	tree->SetBranchAddress("NNCES", &NNCES);
 	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
+	tree->SetBranchAddress("NNCESatb",&NNCESatb);
+	tree->SetBranchAddress("NTOTatb",&NTOTatb);
 	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
 	tree->SetBranchAddress("NECALs", &NECALs);
 	tree->SetBranchAddress("NP0Ds", &NP0Ds);
@@ -136,7 +140,7 @@ int main(int argc, char** argv)
 	memset(otherCount, 0, NCuts*sizeof(int));
 	memset(totCount, 0, NCuts*sizeof(int));
 	
-	ofstream Outfile("../../../scripts/magback.log", ios::out);
+	//ofstream Outfile("../../../scripts/magback.log", ios::out);
 
 	for(unsigned int i = 0; i < NTOT; ++i) {
 		if((i+1)%1000 == 0) std::cout << "Processing event: " << (i+1) << std::endl;
@@ -184,11 +188,13 @@ int main(int argc, char** argv)
 					DIScount[j]++;
 					type = string("DIS");
 				}
-				Outfile << type << "," << FOName->GetString().Data() << "," << EventID << endl;
+				//Outfile << type << "," << FOName->GetString().Data() << "," << EventID << endl;
 			}		
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
-	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
+	//printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
+	cout<<"After FGD cuts: eff="<<(double)NNCES/(double)NNCES<<"  pur="<<(double)NNCES/(double)NTOT<<endl;
+	cout<<"After in beam time cut: eff="<<(double)NNCESatb/(double)NNCES<<"  pur="<<(double)NNCESatb/(double)NTOTatb<<endl;
 	for (int n(0); n < NCuts; n++){
 		double eff = (double)NCEScount[n]/(double)NNCES, pur = (double)NCEScount[n]/(double)totCount[n];
 		printf("%12s:     eff = %6.5f, pur = %6.5f, e*p = %6.5f\n",cuts[n]->name.c_str(),eff, pur, eff*pur);
