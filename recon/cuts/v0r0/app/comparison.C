@@ -112,18 +112,18 @@ int main(int argc, char** argv)
 	// change title for specific stuff
 	THStack hs("hs","Monte Carlo");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,-10,1200);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",50,-832,832);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,-10,1200);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",50,-832,832);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,-10,1200);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",50,-832,832);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,-10,1200);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",50,-832,832);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,-10,1200);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",50,-832,832);
 	hist5->SetFillColor(kGreen);
 
-	TH1D *realhist=new TH1D("realdata","Real Data",200,-10,1200);
+	TH1D *realhist=new TH1D("realdata","Real Data",50,-832,832);
 	
 	//========================================================
 	//	end		Declare Graphs n stuff here
@@ -133,10 +133,8 @@ int main(int argc, char** argv)
 	cout<<"Real Tree loop"<<endl;
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
-		if(realNTPCs){
-			Double_t fillval = realFrontMomentum;
-			realhist->Fill(fillval);
-		}
+		Double_t fillval = realFrontPosition->Y();
+		realhist->Fill(fillval);
 	}
 	cout<<"NTOT: " << NTOT << "    realNTOT: "<< realNTOT << endl;
 	realhist->Scale(mcPOT/realPOT);
