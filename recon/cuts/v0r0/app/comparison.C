@@ -133,6 +133,7 @@ int main(int argc, char** argv)
 	//========================================================
 
 	// Loop over the entries in the TTree
+	cout<<"Real Tree loop"<<endl;
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
 		if(realNTPCs){
@@ -141,8 +142,9 @@ int main(int argc, char** argv)
 				realhist->Fill(fillval);
 		}
 	}
-	cout << NTOT << realNTOT << endl;
+	cout<<"NTOT: " << NTOT << "    realNTOT: "<< realNTOT << endl;
 	realhist->Scale(mcPOT/realPOT);
+	cout<<"MC Tree Loop"<<endl;
 	for(unsigned int i = 0; i < mctree->GetEntries(); ++i) {
 		//display status every 1,000 th entry
 		// Get an entry for the tree
@@ -180,6 +182,7 @@ int main(int argc, char** argv)
 		}
 	} // End loop over events
 
+	cout<<"HIST section"<<endl;
 
 	//add QES and Non-QES to TStack
 	hs.Add(hist1);
