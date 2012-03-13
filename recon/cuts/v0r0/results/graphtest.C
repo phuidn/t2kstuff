@@ -19,7 +19,7 @@ TCanvas * makegraph()
 	Double_t xer[5]={0.125,0.125,0.125,0.125,0.125};
 	Double_t pfluxerr[5]={4.2,4.8,5.1,4.5,6.3};
 	Double_t pmaerr[5]={4.9,11.3,16.2,21.0,20.0};
-	Double_t pstaterr[5]={0.02,0.016,0.02,0.03,0.04};
+	Double_t pstaterr[5]={0.02,0.02,0.02,0.03,0.05};
 	Double_t fluxerr[5];
 	Double_t maerr[5];
 	Double_t staterr[5];
