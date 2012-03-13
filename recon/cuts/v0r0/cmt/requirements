@@ -20,3 +20,4 @@ application energycorrect ../app/energycorrectnopython.C ../app/classcuts.C
 application makerealdatatree ../app/makerealdatatree.C  ../app/cuts.C
 application comparison ../app/comparison.C
 application fgdcount ../app/fgdtest.C ../app/classcuts.C ../app/cuts.C
+application vary ../app/vary.C ../app/classcuts.C
