@@ -93,8 +93,8 @@ int main(int argc, char* argv[])
 	Double_t mcPOT = 5.e17 * 1554;
 	
 	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
-	unfolded = unf->Unfold(2.25);
-	unfcov = unf->GetAdetCovMatrix(5000, 32);  
+	unfolded = unf->Unfold(3);
+	unfcov = unf->GetAdetCovMatrix(2500, 32);  
 	unfcov->Scale(sqrt(mcPOT / 1.e21));
 	dvec = unf->GetD();
 	cout << "truth count = " << truedatahist->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
@@ -107,12 +107,12 @@ int main(int argc, char* argv[])
 		unfolded->SetBinError(k,sqrt(unfcov->GetBinContent(k,k)));
 		cout << unfolded->GetBinError(k) / unfolded->GetBinContent(k) << "	";
 	}
-	unfolded->Draw("E1");
-	truedatahist->Draw("same");
+//	unfolded->Draw("E1");
+//	truedatahist->Draw("same");
 //	dvec->Draw();
 	matrixhist->SetXTitle("Q^{2} / GeV^{2} (truth)");
 	matrixhist->SetYTitle("Q^{2} / GeV^{2} (reconstructed)");
-//	matrixhist->Draw("COLZ");
+	matrixhist->Draw("COLZ");
 	cout << endl;
 	App->Run();
 
