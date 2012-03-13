@@ -6,34 +6,32 @@ import numpy as np
 import math
 
 def findtruth():
-	file = open("kinetic-out2.txt","rb")
+	file = open("baskettpcmom.txt","rb")
 	csv_file = csv.reader(file)
 	energies = np.array([(float(data[0]), float(data[1])) for data in csv_file])
-	energies /= (2.*938.)
-	bounds = np.array([0.,0.13, 0.25, 0.40, 0.90, 17.])
-	bounds *= 1000000./(2.*938.)
-	
+	energies /= 1000000.
+	bounds = np.array([0.,0.25, 0.5, 0.75, 1., 1.25])
+	otherfile = open("magnetTPC.txt","rb")
+	magmoms = np.array([(float(data[0]), float(data[1])) for data in csv.reader(otherfile)])
+	magmoms /= 1000000.
 	#recon and truth are last 1/3 (from 2/3 onwards)
 	recon = makevector(energies,0, bounds)
 	truth = makevector(energies,1, bounds)
+
+	magrecon = makevector(magmoms,0,bounds)
+	magtruth = makevector(magmoms,1,bounds)
 	#matrix is calculated from first 2/3 of MC data
-	matrix = makematrix(energies[:int(len(energies)*(2./3.))], bounds)
-	#data to test with unfolding
-	finaldata = makevector(energies[int(len(energies)*(2./3.)):],0,bounds)
-	finaltruth = makevector(energies[int(len(energies)*(2./3.)):],1,bounds)
+	matrix = makematrix(energies, bounds)
+	
 	#unsmear recon
 	outfile = open("energyhists.txt", "w")
 	outfile.write(str(len(bounds)-1) + ",\n")
 	writelist(outfile, bounds)
-	writelist(outfile, recon)
-	writelist(outfile, truth)
-	writelist(outfile, finaldata)
-	writelist(outfile, finaltruth)
-	matrix = matrix.T
-	matrix = np.array(matrix)
-	for i in matrix:
-		writelist(outfile, i)
-
+	writelist(outfile, magtruth)
+	unfolded = matrix.dot(magrecon)
+	writelist(outfile, unfolded)
+	print magtruth
+		
 def writelist(file, list):
 	for i in list:
 		file.write(str(i) + ',')
@@ -45,9 +43,9 @@ def makematrix(ens, bounds):
 	matrix = np.matrix(np.zeros((numbins,numbins)))
 	for i in energies:
 		setbin(i, bounds, matrix)
-#	for i in range(numbins):
-#		matrix[:,i]/=matrix[:,i].sum() #normalising matrix, possibly not required for TSVDUnfold
-	return matrix
+	for i in range(numbins):
+		matrix[:,i]/=matrix[:,i].sum() #normalising matrix, possibly not required for TSVDUnfold
+	return matrix.I
 	
 def setbin(ens, bounds, matrix):
 	rec = -1

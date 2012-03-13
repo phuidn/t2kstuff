@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 {	
 	//Open the output file
 	ofstream outputfile;
-	outputfile.open("magnetTPC.txt");
+	outputfile.open("baskettpcmom.txt");
 
 
 	//Making canvas and application - needed for standalone programs
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 	// Set up ROOT as we require.
 	SetupROOT();
 	// Get list of files to run over. - using basket to save time
-	TString fileName("../../../ALLmagnetfiles");
+	TString fileName("../../../basket_2010b.list");
 	//TString fileName("../../../magnetfiles");
 	std::ifstream inputFile(fileName.Data(), ios::in);
 

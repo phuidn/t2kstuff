@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 	cout<<"got inputs"<<endl;
 //	TFile treefile("../../../tree/evetree.root", "RECREATE", "A test tree"); //create file for new tree
 //	TFile treefile("../../../tree/magnet7xwindow.root", "RECREATE", "A test tree"); //create file for new tree
-	TFile treefile("../../../tree/realdatafull.root","RECREATE","Real Data");
+	TFile treefile("../../../tree/datamovedqual.root","RECREATE","Real Data");
 	TTree *tree = new TTree("newtree", "Real Data");
 	
 	//Variables which could be put in the new tree
@@ -207,6 +207,11 @@ int main(int argc, char** argv)
 		ECalInfo->GetEntry(i);
 		fBeamSummary->GetEntry(i);
 		fDataQuality->GetEntry(i);
+		//NEW! - cut if detector was bad!
+		if(nd280DQFlag!=0)
+		{
+			continue;
+		}
 
 		ND::TGlobalReconModule::TGlobalPID *gTrack = NULL;
 		//ND::TTrackerECALReconModule::TECALReconTrack *eRecon = NULL;
@@ -240,11 +245,6 @@ int main(int argc, char** argv)
 			TLorentzVector vec = gTrack->FrontPosition;
 			FrontMomentum = gTrack->FrontMomentum;
 			int bunch = inTimeBunch(&vec,timeRegime, 291.);
-			//NEW! - cut if detector was bad!
-			if(nd280DQFlag!=0)
-			{
-				continue;
-			}
 			//NEW! - cut with trigger time
 			if( (inFGD1(&vec) || inFGD2(&vec)) && inBeamTime(&vec,timeRegime) && FrontMomentum != 0. ){ //cut only lets through particles which start in an FGD
 				//Real data has no true particle!

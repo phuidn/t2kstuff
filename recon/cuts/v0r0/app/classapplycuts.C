@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 	SetupROOT();
 	cout<<"opening tree"<<endl;
 	// Open the TTree we made
-	TFile *treefile = new TFile("../../../tree/magnetfullwindow.root");
+	TFile *treefile = new TFile("../../../tree/magnetcounttree.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 	//Variables to get from the tree
 	UInt_t Detectors(0);
@@ -107,8 +107,10 @@ int main(int argc, char** argv)
 	tree->SetBranchAddress("P0D", &P0D);
 	tree->SetBranchAddress("SMRD", &SMRD);
 	UInt_t accepted(0), acceptedNCES(0), acceptedNoise(0), initialNCES(0);
-	
+	unsigned int NFiles(1);
+	TString prevdata(0);
 	NTOT = tree->GetEntries();
+
 	// Loop over the entries in the TTree
 	cout<<"looping over " <<NTOT<<" events"<<endl;
 	vector<Cut*> cuts;
@@ -147,6 +149,11 @@ int main(int argc, char** argv)
 		//display status every 1,000 th entry
 		// Get an entry for the tree
 		tree->GetEntry(i);
+		if(prevdata){	//checking number of files
+			if(FOName->GetString().CompareTo(prevdata))
+				NFiles++;
+		}
+		prevdata = FOName->GetString();
 		int keep(1), j(0), isNCES = TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1;
 
 		initialNCES += isNCES;
@@ -199,6 +206,7 @@ int main(int argc, char** argv)
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
 	//printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
+	cout << "nfiles = " << NFiles << endl;
 	cout<<"After FGD cuts: eff="<<(double)NNCES/(double)NNCES<<"  pur="<<(double)NNCES/(double)NTOT<<endl;
 	cout<<"After in beam time cut: eff="<<(double)NNCESatb/(double)NNCES<<"  pur="<<(double)NNCESatb/(double)NTOTatb<<endl;
 	for (int n(0); n < NCuts; n++){

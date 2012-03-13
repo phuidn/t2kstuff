@@ -13,6 +13,7 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 #include <TSVDUnfold.h>
+#include <TLegend.h>
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TStyle.h>
@@ -34,7 +35,7 @@ int main(int argc, char* argv[])
 
 	//Input section
 	//	Reads from kinetic energy list to make matrix and data vectors
-	ifstream matrixfile("kinetic-out2.txt"), datafile("magnetTPC.txt");
+	ifstream matrixfile("baskettpcmom.txt"), datafile("magnetTPC.txt");
 	string line;
 	vector<double> truthv,reconv,data,datatruth;
 	int nbins=5;
@@ -94,7 +95,7 @@ int main(int argc, char* argv[])
 	
 	TSVDUnfold *unf = new TSVDUnfold(datahist,reconhist,truthhist,matrixhist);
 	unfolded = unf->Unfold(3);
-	unfcov = unf->GetAdetCovMatrix(2500, 32);  
+	unfcov = unf->GetAdetCovMatrix(2500, 32); 
 	unfcov->Scale(sqrt(mcPOT / 1.e21));
 	dvec = unf->GetD();
 	cout << "truth count = " << truedatahist->GetEntries() << ", unfolded count = " << unfolded->GetEntries() << endl;
@@ -107,12 +108,23 @@ int main(int argc, char* argv[])
 		unfolded->SetBinError(k,sqrt(unfcov->GetBinContent(k,k)));
 		cout << unfolded->GetBinError(k) / unfolded->GetBinContent(k) << "	";
 	}
-//	unfolded->Draw("E1");
-//	truedatahist->Draw("same");
+	truedatahist->SetStats(0);
+	unfolded->SetStats(0);
+	truedatahist->SetFillColor(kBlue);
+	unfolded->SetMarkerStyle(20);
+	truedatahist->SetMaximum(5000);
+	truedatahist->Draw("");
+	unfolded->Draw("sameE1");
+	truedatahist->GetXaxis()->SetTitle("Q^{2}/GeV^{2}");
+	truedatahist->GetYaxis()->SetTitle("Counts");
+	TLegend *leg = new TLegend(0.1, 0.7, 0.5, 0.9);
+	leg->AddEntry(unfolded, "Unfolded Momentum", "lep"); 
+	leg->AddEntry(truedatahist, "True Momentum", "f"); 
+	leg->Draw();
 //	dvec->Draw();
-	matrixhist->SetXTitle("Q^{2} / GeV^{2} (truth)");
-	matrixhist->SetYTitle("Q^{2} / GeV^{2} (reconstructed)");
-	matrixhist->Draw("COLZ");
+//	matrixhist->SetXTitle("Q^{2} / GeV^{2} (reconstructed)");
+//	matrixhist->SetYTitle("Q^{2} / GeV^{2} (truth)");
+//	matrixhist->Draw("COLZ");
 	cout << endl;
 	App->Run();
 
