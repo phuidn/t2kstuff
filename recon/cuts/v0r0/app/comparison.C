@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
-	TFile *mctreefile = new TFile("../../../tree/magnet3xwindow.root");
+	TFile *mctreefile = new TFile("../../../tree/magnetfullwindow.root");
 	TTree *mctree = (TTree*) mctreefile->Get("newtree");
 	TFile *realtreefile = new TFile("../../../tree/realdatafull.root");
 	TTree *realtree = (TTree*) realtreefile->Get("newtree");
@@ -113,20 +113,20 @@ int main(int argc, char** argv)
 	Double_t realPOT = 1.378e20;
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Angular Distribution Comparison");
+	THStack hs("hs","Initial Particle Momentum");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",20,-1,1);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",50,0,1500);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",20,-1,1);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",50,0,1500);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",20,-1,1);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",50,0,1500);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",20,-1,1);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",50,0,1500);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",20,-1,1);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",50,0,1500);
 	hist5->SetFillColor(kGreen);
 
-	TH1D *realhist=new TH1D("realdata","Real Data",20,-1,1);
+	TH1D *realhist=new TH1D("realdata","Real Data",50,0,1500);
 	
 	//========================================================
 	//	end		Declare Graphs n stuff here
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
 	for(unsigned int i = 0; i < realtree->GetEntries();i++){
 		realtree->GetEntry(i);
 		if(realNTPCs){
-			Double_t fillval = realFrontDirection->Z();
+			Double_t fillval = ((ND::TGlobalReconModule::TTPCObject*)realTPC->At(0))->FrontMomentum;
 			if(fillval==fillval)// && realFrontPosition->Y()>-777 && realFrontPosition->Y()<887)
 				realhist->Fill(fillval);
 		}
@@ -150,7 +150,9 @@ int main(int argc, char** argv)
 		// Get an entry for the tree
 		mctree->GetEntry(i);
 		int keep = NTPCs>0;
-		Double_t fillval = FrontDirection->Z();
+		Double_t fillval;
+		if (keep)
+			fillval = ((ND::TGlobalReconModule::TTPCObject*)TPC->At(0))->FrontMomentum;
 //this is for reaction type, commented out as I want particle type
 		if(keep && fillval==fillval)// && FrontPosition->Y()>-777 && FrontPosition->Y()<887)
 		{
@@ -192,7 +194,7 @@ int main(int argc, char** argv)
 	hs.Add(hist5);
 	//draw stacked hist
 	hs.Draw("");
-	hs.GetXaxis()->SetTitle("sin (#theta_{z})");
+	hs.GetXaxis()->SetTitle("Initial Momentum / MeV/c");
 	hs.GetYaxis()->SetTitle("Counts");
 	realhist->SetMarkerStyle(20);
 	realhist->Draw("sameE1");

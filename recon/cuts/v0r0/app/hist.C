@@ -29,6 +29,7 @@
 #include <TTruthVerticesModule.hxx>
 #include <TTrueVertex.hxx>
 #include <TTree.h>
+#include <TLegend.h>
 #include <THStack.h>
 #include <cuts.h>
 #define ABS(x) (x>0?x:-x)
@@ -55,7 +56,7 @@ int main(int argc, char** argv)
 
 	// Open the TTree we made 
 	//NOTE: MUST BE 3 DIRECTORIES ABOVE THE "recon" directory!!! (relative path)
-	TFile *treefile = new TFile("../../../tree/newtree.root");
+	TFile *treefile = new TFile("../../../tree/magnetfullwindow.root");
 	TTree *tree = (TTree*) treefile->Get("newtree");
 
 	//Variables to get from the tree
@@ -115,24 +116,18 @@ int main(int argc, char** argv)
 
 	//Adding graphhs
 	// change title for specific stuff
-	THStack hs("hs","Frontmom as a function of reaction");
+	THStack hs("hs","Muon Pull for Different Particle Types");
 	//need seperate hists for adding to a stack
-	TH1D *hist1 = new TH1D("hist1","Generic Title",200,0,150);
+	TH1D *hist1 = new TH1D("hist1","Generic Title",50,-5, 10);
 	hist1->SetFillColor(kRed);
-	TH1D *hist2 = new TH1D("hist2","Generic Title",200,0,150);
+	TH1D *hist2 = new TH1D("hist2","Generic Title",50,-5, 10);
 	hist2->SetFillColor(kBlue);
-	TH1D *hist3 = new TH1D("hist3","Generic Title",200,0,150);
+	TH1D *hist3 = new TH1D("hist3","Generic Title",50,-5, 10);
 	hist3->SetFillColor(kMagenta);
-	TH1D *hist4 = new TH1D("hist4","Generic Title",200,0,150);
+	TH1D *hist4 = new TH1D("hist4","Generic Title",50,-5, 10);
 	hist4->SetFillColor(kCyan);
-	TH1D *hist5 = new TH1D("hist5","Generic Title",200,0,150);
+	TH1D *hist5 = new TH1D("hist5","Generic Title",50,-5, 10);
 	hist5->SetFillColor(kGreen);
-	//TH1D *hist6 = new TH1D("hist6","Generic Title",200,0,1500);
-	//hist6->SetFillColor(kBlack);
-	//TH1D *hist7 = new TH1D("hist7","Generic Title",200,0,1500);
-	//hist7->SetFillColor(kYellow);
-	//TH1D *hist8 = new TH1D("hist8","Generic Title",200,0,1500);
-	//hist8->SetFillColor(kPink);
 
 
 	//========================================================
@@ -155,83 +150,77 @@ int main(int argc, char** argv)
 		//to get average proton pull
 		//looping over the number of TPCs particle passed through
 				//to get average proton pull
+		int avnum(0);
 		for(j=0,avProPull=0;j<NTPCs;j++)
 		{
-			avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->NHits;
+			if(((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->NHits > 18){
+				avnum++;
+				avProPull += ((ND::TGlobalReconModule::TTPCObject*)TPC->At(j))->PullMuon;
+			}
 		}
-	
-		Double_t fillval = NP0DClusters;
+		avProPull/=avnum;
+		Double_t fillval = avProPull;
 		
 		//this is for filtering by particle type
-	//	if(avProPull!=0 && keep)
-	//	{
-	//		if(TrueParticle->PDG == 2212)
-	//		{//then its a proton - yay!
-	//			hist1->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == 211)
-	//		{// pi+
-	//			hist2->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == -211)
-	//		{// pi-
-	//			hist3->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == -11)
-	//		{//e+
-	//			hist4->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == 11)
-	//		{//e-
-	//			hist5->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == 13)
-	//		{//mu-
-	//			hist6->Fill((Double_t)avProPull);
-	//		}
-	//		else if(TrueParticle->PDG == -13)
-	//		{//mu+
-	//			hist7->Fill((Double_t)avProPull);
-	//		}
-	//		else
-	//			hist8->Fill((Double_t)avProPull);
-	//	}
-
-//this is for reaction type, commented out as I want particle type
-		if(keep)
+		if(fillval!=0 && keep)
 		{
-			accepted++;
-			if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
-			{	//add to QES graph
-				acceptedNCES++;
-				hist1->Fill( fillval );
-			//	cout << "NCQES," << FOName->GetString() << "," << EventID << endl;
+			if(TrueParticle->PDG == 2212)
+			{//then its a proton - yay!
+				hist1->Fill(fillval);
 			}
-			else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
-			{	//RES is noise
-				acceptedNoise++;
-				hist2->Fill( fillval );
-			//	cout << "RES," << FOName->GetString() << "," << EventID << endl;
+			else if(TrueParticle->PDG == 13)
+			{// pi+
+				hist2->Fill(fillval);
 			}
-			else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
-			{	//DIS is noise
-				acceptedNoise++;
-				hist3->Fill( fillval );
-			//	cout << "DIS," << FOName->GetString() << "," << EventID << endl;
+			else if(TrueParticle->PDG == -13)
+			{// mu+
+				hist3->Fill(fillval);
 			}
-			else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
-			{	//CCQES is noise
-				acceptedNoise++;
-				hist4->Fill( fillval );
-			//	cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
+			else if(TrueParticle->PDG == 211)
+			{//mu-
+				hist4->Fill(fillval);
 			}
 			else
-			{	//other stuff is noise
-				acceptedNoise++;
-				hist5->Fill( fillval );
-			//	cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
+			{//other
+				hist5->Fill(fillval);
 			}
 		}
+
+//this is for reaction type, commented out as I want particle type
+	//	if(keep)
+	//	{
+	//		accepted++;
+	//		if(TrueParticle->Vertex.ReactionCode.find("Weak[NC],QES;",0)!=-1)
+	//		{	//add to QES graph
+	//			acceptedNCES++;
+	//			hist1->Fill( fillval );
+	//		//	cout << "NCQES," << FOName->GetString() << "," << EventID << endl;
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",RES;",0)!=-1)
+	//		{	//RES is noise
+	//			acceptedNoise++;
+	//			hist2->Fill( fillval );
+	//		//	cout << "RES," << FOName->GetString() << "," << EventID << endl;
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find(",DIS;",0)!=-1)
+	//		{	//DIS is noise
+	//			acceptedNoise++;
+	//			hist3->Fill( fillval );
+	//		//	cout << "DIS," << FOName->GetString() << "," << EventID << endl;
+	//		}
+	//		else if(TrueParticle->Vertex.ReactionCode.find("Weak[CC],QES;",0)!=-1)
+	//		{	//CCQES is noise
+	//			acceptedNoise++;
+	//			hist4->Fill( fillval );
+	//		//	cout << "CCQES," << FOName->GetString() << "," << EventID << endl;
+	//		}
+	//		else
+	//		{	//other stuff is noise
+	//			acceptedNoise++;
+	//			hist5->Fill( fillval );
+	//		//	cout << "OTHER," << FOName->GetString() << "," << EventID << endl;
+	//		}
+	//	}
 	} // End loop over events
 
 
@@ -241,11 +230,18 @@ int main(int argc, char** argv)
 	hs.Add(hist3);
 	hs.Add(hist4);
 	hs.Add(hist5);
-	//hs.Add(hist6);
-	//hs.Add(hist7);
-	//hs.Add(hist8);
 	//draw stacked hist
 	hs.Draw();
+	hs.GetXaxis()->SetTitle("Muon Pull");
+	hs.GetYaxis()->SetTitle("Counts");
+	
+	TLegend *leg = new TLegend(0.1, 0.7, 0.5, 0.9);
+	leg->AddEntry(hist1, "Proton", "f"); 
+	leg->AddEntry(hist2, "#mu^{+}", "f"); 
+	leg->AddEntry(hist3, "#mu^{-}", "f"); 
+	leg->AddEntry(hist4, "#pi^{+}", "f"); 
+	leg->AddEntry(hist5, "other", "f"); 
+	leg->Draw();
 
 	//display the canvas!
 	App->Run();

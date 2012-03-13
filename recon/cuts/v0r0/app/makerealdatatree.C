@@ -227,7 +227,7 @@ int main(int argc, char** argv)
 
 		for (int j=0; j<NPIDs; j++){	//loop once to check number of PIDs in each bunch in a spill
 			gTrack = (ND::TGlobalReconModule::TGlobalPID*)globalPIDs->At(j);
-			int bunch = inTimeBunch(&gTrack->FrontPosition,timeRegime,300.);
+			int bunch = inTimeBunch(&gTrack->FrontPosition,timeRegime,291.);
 			if(bunch != -1)
 				bunches[bunch]++;
 		}
@@ -239,7 +239,7 @@ int main(int argc, char** argv)
 			NTOT++;		//one more total event
 			TLorentzVector vec = gTrack->FrontPosition;
 			FrontMomentum = gTrack->FrontMomentum;
-			int bunch = inTimeBunch(&vec,timeRegime, 300.);
+			int bunch = inTimeBunch(&vec,timeRegime, 291.);
 			//NEW! - cut if detector was bad!
 			if(nd280DQFlag!=0)
 			{

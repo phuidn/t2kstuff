@@ -20,7 +20,7 @@
 int inFGD1( TLorentzVector *FrontPosition )
 {
 
-	if(ABS(FrontPosition->X())<832.2 && ABS(FrontPosition->Y()-55)<832.2 && (FrontPosition->Z()>123.45&&FrontPosition->Z()<446.95))
+	if(ABS(FrontPosition->X())<832.2 && ABS((FrontPosition->Y()-55))<832.2 && (FrontPosition->Z()>123.45&&FrontPosition->Z()<446.95))
 			return 1;
 	else
 			return 0;
@@ -29,7 +29,7 @@ int inFGD1( TLorentzVector *FrontPosition )
 int inFGD2( TLorentzVector *FrontPosition )
 {
 
-	if(ABS(FrontPosition->X())<832.2 && ABS(FrontPosition->Y()-55)<832.2 && (FrontPosition->Z()>1481.45&&FrontPosition->Z()<1807.95) )
+	if(ABS(FrontPosition->X())<832.2 && ABS((FrontPosition->Y()-55))<832.2 && (FrontPosition->Z()>1481.45&&FrontPosition->Z()<1807.95) )
 			return 1;
 	else
 			return 0;
