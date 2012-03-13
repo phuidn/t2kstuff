@@ -1,0 +1,488 @@
+% *** Initializing ND::TOARuntimeParameters
+Got input file(s).
+got inputs
+declared things
+branched tree
+Total of 2392526 entries
+Looping over 2392526 events
+0.417968percent complete
+fPOT = 2.22596e+17
+0.835937percent complete
+fPOT = 4.21337e+17
+1.2539percent complete
+fPOT = 6.37076e+17
+1.67187percent complete
+fPOT = 8.62836e+17
+2.08984percent complete
+fPOT = 1.09088e+18
+2.50781percent complete
+fPOT = 1.31916e+18
+2.92578percent complete
+fPOT = 1.54604e+18
+3.34375percent complete
+fPOT = 1.77105e+18
+3.76171percent complete
+fPOT = 1.99613e+18
+4.17968percent complete
+fPOT = 2.203e+18
+4.59765percent complete
+fPOT = 2.40531e+18
+5.01562percent complete
+fPOT = 2.7012e+18
+5.43359percent complete
+fPOT = 2.99773e+18
+5.85156percent complete
+fPOT = 3.25715e+18
+6.26952percent complete
+fPOT = 3.54022e+18
+6.68749percent complete
+fPOT = 3.809e+18
+7.10546percent complete
+fPOT = 4.10411e+18
+7.52343percent complete
+fPOT = 4.38868e+18
+7.9414percent complete
+fPOT = 4.6371e+18
+8.35937percent complete
+fPOT = 4.81415e+18
+8.77733percent complete
+fPOT = 5.0076e+18
+9.1953percent complete
+fPOT = 5.24025e+18
+9.61327percent complete
+fPOT = 5.51512e+18
+10.0312percent complete
+fPOT = 5.88183e+18
+10.4492percent complete
+fPOT = 6.24696e+18
+10.8672percent complete
+fPOT = 6.57782e+18
+11.2851percent complete
+fPOT = 6.95535e+18
+11.7031percent complete
+fPOT = 7.39414e+18
+12.1211percent complete
+fPOT = 7.83234e+18
+12.539percent complete
+fPOT = 8.23695e+18
+12.957percent complete
+fPOT = 8.67736e+18
+13.375percent complete
+fPOT = 9.032e+18
+13.793percent complete
+fPOT = 9.41379e+18
+14.2109percent complete
+fPOT = 9.74386e+18
+14.6289percent complete
+fPOT = 1.00702e+19
+15.0469percent complete
+fPOT = 1.04931e+19
+15.4648percent complete
+fPOT = 1.08697e+19
+15.8828percent complete
+fPOT = 1.12174e+19
+16.3008percent complete
+fPOT = 1.16173e+19
+16.7187percent complete
+fPOT = 1.20289e+19
+17.1367percent complete
+fPOT = 1.24925e+19
+17.5547percent complete
+fPOT = 1.2875e+19
+17.9726percent complete
+fPOT = 1.31691e+19
+18.3906percent complete
+fPOT = 1.34432e+19
+18.8086percent complete
+fPOT = 1.36175e+19
+19.2265percent complete
+fPOT = 1.38994e+19
+19.6445percent complete
+fPOT = 1.42213e+19
+20.0625percent complete
+fPOT = 1.45543e+19
+20.4804percent complete
+fPOT = 1.49299e+19
+20.8984percent complete
+fPOT = 1.52514e+19
+21.3164percent complete
+fPOT = 1.55762e+19
+21.7344percent complete
+fPOT = 1.58992e+19
+22.1523percent complete
+fPOT = 1.62201e+19
+22.5703percent complete
+fPOT = 1.65423e+19
+22.9883percent complete
+fPOT = 1.68598e+19
+23.4062percent complete
+fPOT = 1.71777e+19
+23.8242percent complete
+fPOT = 1.74959e+19
+24.2422percent complete
+fPOT = 1.7815e+19
+24.6601percent complete
+fPOT = 1.81355e+19
+25.0781percent complete
+fPOT = 1.8454e+19
+25.4961percent complete
+fPOT = 1.87976e+19
+25.914percent complete
+fPOT = 1.91518e+19
+26.332percent complete
+fPOT = 1.94887e+19
+26.75percent complete
+fPOT = 1.98031e+19
+27.1679percent complete
+fPOT = 2.01189e+19
+27.5859percent complete
+fPOT = 2.04361e+19
+28.0039percent complete
+fPOT = 2.07514e+19
+28.4218percent complete
+fPOT = 2.1065e+19
+28.8398percent complete
+fPOT = 2.13518e+19
+29.2578percent complete
+fPOT = 2.16706e+19
+29.6757percent complete
+fPOT = 2.20014e+19
+30.0937percent complete
+fPOT = 2.24075e+19
+30.5117percent complete
+fPOT = 2.28397e+19
+30.9297percent complete
+fPOT = 2.31607e+19
+31.3476percent complete
+fPOT = 2.34463e+19
+31.7656percent complete
+fPOT = 2.38046e+19
+32.1836percent complete
+fPOT = 2.41735e+19
+32.6015percent complete
+fPOT = 2.4598e+19
+33.0195percent complete
+fPOT = 2.49556e+19
+33.4375percent complete
+fPOT = 2.53237e+19
+33.8554percent complete
+fPOT = 2.57047e+19
+34.2734percent complete
+fPOT = 2.60582e+19
+34.6914percent complete
+fPOT = 2.64015e+19
+35.1093percent complete
+fPOT = 2.67701e+19
+35.5273percent complete
+fPOT = 2.70217e+19
+35.9453percent complete
+fPOT = 2.73968e+19
+36.3632percent complete
+fPOT = 2.77792e+19
+36.7812percent complete
+fPOT = 2.81509e+19
+37.1992percent complete
+fPOT = 2.85318e+19
+37.6171percent complete
+fPOT = 2.89078e+19
+38.0351percent complete
+fPOT = 2.92506e+19
+38.4531percent complete
+fPOT = 2.96168e+19
+38.8711percent complete
+fPOT = 2.99908e+19
+39.289percent complete
+fPOT = 3.03616e+19
+39.707percent complete
+fPOT = 3.07435e+19
+40.125percent complete
+fPOT = 3.11832e+19
+40.5429percent complete
+fPOT = 3.16549e+19
+40.9609percent complete
+fPOT = 3.21436e+19
+41.3789percent complete
+fPOT = 3.27393e+19
+41.7968percent complete
+fPOT = 3.33334e+19
+42.2148percent complete
+fPOT = 3.3931e+19
+42.6328percent complete
+fPOT = 3.45184e+19
+43.0507percent complete
+fPOT = 3.51117e+19
+43.4687percent complete
+fPOT = 3.57003e+19
+43.8867percent complete
+fPOT = 3.62766e+19
+44.3046percent complete
+fPOT = 3.69054e+19
+44.7226percent complete
+fPOT = 3.7528e+19
+45.1406percent complete
+fPOT = 3.816e+19
+45.5585percent complete
+fPOT = 3.87925e+19
+45.9765percent complete
+fPOT = 3.94224e+19
+46.3945percent complete
+fPOT = 4.00516e+19
+46.8124percent complete
+fPOT = 4.06806e+19
+47.2304percent complete
+fPOT = 4.13524e+19
+47.6484percent complete
+fPOT = 4.2039e+19
+48.0664percent complete
+fPOT = 4.27283e+19
+48.4843percent complete
+fPOT = 4.3408e+19
+48.9023percent complete
+fPOT = 4.40944e+19
+49.3203percent complete
+fPOT = 4.47824e+19
+49.7382percent complete
+fPOT = 4.54967e+19
+50.1562percent complete
+fPOT = 4.62429e+19
+50.5742percent complete
+fPOT = 4.69888e+19
+50.9921percent complete
+fPOT = 4.77349e+19
+51.4101percent complete
+fPOT = 4.84572e+19
+51.8281percent complete
+fPOT = 4.9159e+19
+52.246percent complete
+fPOT = 4.98875e+19
+52.664percent complete
+fPOT = 5.0628e+19
+53.082percent complete
+fPOT = 5.13751e+19
+53.4999percent complete
+fPOT = 5.21176e+19
+53.9179percent complete
+fPOT = 5.28662e+19
+54.3359percent complete
+fPOT = 5.36152e+19
+54.7538percent complete
+fPOT = 5.43613e+19
+55.1718percent complete
+fPOT = 5.51065e+19
+55.5898percent complete
+fPOT = 5.5849e+19
+56.0078percent complete
+fPOT = 5.65903e+19
+56.4257percent complete
+fPOT = 5.73356e+19
+56.8437percent complete
+fPOT = 5.80814e+19
+57.2617percent complete
+fPOT = 5.88249e+19
+57.6796percent complete
+fPOT = 5.9569e+19
+58.0976percent complete
+fPOT = 6.03091e+19
+58.5156percent complete
+fPOT = 6.10539e+19
+58.9335percent complete
+fPOT = 6.17935e+19
+59.3515percent complete
+fPOT = 6.25328e+19
+59.7695percent complete
+fPOT = 6.32718e+19
+60.1874percent complete
+fPOT = 6.40102e+19
+60.6054percent complete
+fPOT = 6.47473e+19
+61.0234percent complete
+fPOT = 6.54851e+19
+61.4413percent complete
+fPOT = 6.62242e+19
+61.8593percent complete
+fPOT = 6.69638e+19
+62.2773percent complete
+fPOT = 6.77031e+19
+62.6952percent complete
+fPOT = 6.844e+19
+63.1132percent complete
+fPOT = 6.91791e+19
+63.5312percent complete
+fPOT = 6.97503e+19
+63.9491percent complete
+fPOT = 7.02949e+19
+64.3671percent complete
+fPOT = 7.08037e+19
+64.7851percent complete
+fPOT = 7.14906e+19
+65.2031percent complete
+fPOT = 7.21807e+19
+65.621percent complete
+fPOT = 7.28677e+19
+66.039percent complete
+fPOT = 7.35531e+19
+66.457percent complete
+fPOT = 7.42375e+19
+66.8749percent complete
+fPOT = 7.49225e+19
+67.2929percent complete
+fPOT = 7.56058e+19
+67.7109percent complete
+fPOT = 7.62885e+19
+68.1288percent complete
+fPOT = 7.69734e+19
+68.5468percent complete
+fPOT = 7.76577e+19
+68.9648percent complete
+fPOT = 7.834e+19
+69.3827percent complete
+fPOT = 7.90076e+19
+69.8007percent complete
+fPOT = 7.96588e+19
+70.2187percent complete
+fPOT = 8.03493e+19
+70.6366percent complete
+fPOT = 8.10416e+19
+71.0546percent complete
+fPOT = 8.17358e+19
+71.4726percent complete
+fPOT = 8.24244e+19
+71.8905percent complete
+fPOT = 8.31201e+19
+72.3085percent complete
+fPOT = 8.38161e+19
+72.7265percent complete
+fPOT = 8.45084e+19
+73.1445percent complete
+fPOT = 8.52637e+19
+73.5624percent complete
+fPOT = 8.6044e+19
+73.9804percent complete
+fPOT = 8.68564e+19
+74.3984percent complete
+fPOT = 8.76695e+19
+74.8163percent complete
+fPOT = 8.84829e+19
+75.2343percent complete
+fPOT = 8.92972e+19
+75.6523percent complete
+fPOT = 9.01091e+19
+76.0702percent complete
+fPOT = 9.09255e+19
+76.4882percent complete
+fPOT = 9.17398e+19
+76.9062percent complete
+fPOT = 9.25531e+19
+77.3241percent complete
+fPOT = 9.33423e+19
+77.7421percent complete
+fPOT = 9.41411e+19
+78.1601percent complete
+fPOT = 9.49035e+19
+78.578percent complete
+fPOT = 9.57086e+19
+78.996percent complete
+fPOT = 9.65252e+19
+79.414percent complete
+fPOT = 9.73405e+19
+79.8319percent complete
+fPOT = 9.81536e+19
+80.2499percent complete
+fPOT = 9.88967e+19
+80.6679percent complete
+fPOT = 9.97142e+19
+81.0858percent complete
+fPOT = 1.00522e+20
+81.5038percent complete
+fPOT = 1.01336e+20
+81.9218percent complete
+fPOT = 1.02191e+20
+82.3398percent complete
+fPOT = 1.0307e+20
+82.7577percent complete
+fPOT = 1.03943e+20
+83.1757percent complete
+fPOT = 1.04827e+20
+83.5937percent complete
+fPOT = 1.05691e+20
+84.0116percent complete
+fPOT = 1.06562e+20
+84.4296percent complete
+fPOT = 1.07442e+20
+84.8476percent complete
+fPOT = 1.08321e+20
+85.2655percent complete
+fPOT = 1.09204e+20
+85.6835percent complete
+fPOT = 1.10084e+20
+86.1015percent complete
+fPOT = 1.10965e+20
+86.5194percent complete
+fPOT = 1.11759e+20
+86.9374percent complete
+fPOT = 1.1249e+20
+87.3554percent complete
+fPOT = 1.13225e+20
+87.7733percent complete
+fPOT = 1.13962e+20
+88.1913percent complete
+fPOT = 1.14695e+20
+88.6093percent complete
+fPOT = 1.15324e+20
+89.0272percent complete
+fPOT = 1.16173e+20
+89.4452percent complete
+fPOT = 1.1703e+20
+89.8632percent complete
+fPOT = 1.17893e+20
+90.2812percent complete
+fPOT = 1.18759e+20
+90.6991percent complete
+fPOT = 1.19626e+20
+91.1171percent complete
+fPOT = 1.20494e+20
+91.5351percent complete
+fPOT = 1.21365e+20
+91.953percent complete
+fPOT = 1.22161e+20
+92.371percent complete
+fPOT = 1.22795e+20
+92.789percent complete
+fPOT = 1.2343e+20
+93.2069percent complete
+fPOT = 1.24064e+20
+93.6249percent complete
+fPOT = 1.24703e+20
+94.0429percent complete
+fPOT = 1.25393e+20
+94.4608percent complete
+fPOT = 1.26207e+20
+94.8788percent complete
+fPOT = 1.27041e+20
+95.2968percent complete
+fPOT = 1.27884e+20
+95.7147percent complete
+fPOT = 1.28756e+20
+96.1327percent complete
+fPOT = 1.29637e+20
+96.5507percent complete
+fPOT = 1.30516e+20
+96.9686percent complete
+fPOT = 1.31409e+20
+97.3866percent complete
+fPOT = 1.32193e+20
+97.8046percent complete
+fPOT = 1.33092e+20
+98.2225percent complete
+fPOT = 1.3399e+20
+98.6405percent complete
+fPOT = 1.3489e+20
+99.0585percent complete
+fPOT = 1.35792e+20
+99.4765percent complete
+fPOT = 1.36693e+20
+99.8944percent complete
+fPOT = 1.37596e+20
+filled tree
+NTree = 8821
+final fPOT = 1.37825e+20

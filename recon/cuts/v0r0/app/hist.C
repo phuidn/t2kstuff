@@ -17,6 +17,7 @@
 #include <TFile.h>
 #include <TChain.h>
 #include <TClonesArray.h>
+#include <TLegend.h>
 #include <TTree.h>
 #include <TApplication.h>
 #include <TH2D.h>
@@ -242,7 +243,6 @@ int main(int argc, char** argv)
 	leg->AddEntry(hist4, "#pi^{+}", "f"); 
 	leg->AddEntry(hist5, "other", "f"); 
 	leg->Draw();
-
 	//display the canvas!
 	App->Run();
 

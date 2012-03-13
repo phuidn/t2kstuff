@@ -60,6 +60,8 @@ int main(int argc, char** argv)
 	UInt_t NTOT(0);
 	TObjString *FOName(0);
 	Int_t EventID(0);
+	UInt_t NNCESatb(0);
+	UInt_t NTOTatb(0);
 
 	//we dont need these at the moment
 	Int_t NTPCs;
@@ -93,6 +95,8 @@ int main(int argc, char** argv)
 	//cout to debug - Tree->NNCES doesnt work properly: return value is NOT 0 !
 	tree->SetBranchAddress("NNCES", &NNCES);
 	tree->SetBranchAddress("NTPCs", &NTPCs);	//it doesn't like these, it might be best to add in individual components of
+	tree->SetBranchAddress("NNCESatb",&NNCESatb);
+	tree->SetBranchAddress("NTOTatb",&NTOTatb);
 	tree->SetBranchAddress("NFGDs", &NFGDs);	//them that we want rather than the whole things.
 	tree->SetBranchAddress("NECALs", &NECALs);
 	tree->SetBranchAddress("NP0Ds", &NP0Ds);
@@ -194,7 +198,9 @@ int main(int argc, char** argv)
 //			}		
 		//after cuts applied, keep will be = 1 if it is to be kept	
 	} // End loop over events
-	printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
+	//printf("initially: eff = %6.5f, pur = %6.5f\n", (double)initialNCES/(double)NNCES, (double)initialNCES/(double)NTOT);
+	cout<<"After FGD cuts: eff="<<(double)NNCES/(double)NNCES<<"  pur="<<(double)NNCES/(double)NTOT<<endl;
+	cout<<"After in beam time cut: eff="<<(double)NNCESatb/(double)NNCES<<"  pur="<<(double)NNCESatb/(double)NTOTatb<<endl;
 	for (int n(0); n < NCuts; n++){
 		double eff = (double)NCEScount[n]/(double)NNCES, pur = (double)NCEScount[n]/(double)totCount[n];
 		printf("%12s:     eff = %6.5f, pur = %6.5f, e*p = %6.5f\n",cuts[n]->name.c_str(),eff, pur, eff*pur);
