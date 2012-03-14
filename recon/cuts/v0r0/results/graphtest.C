@@ -9,6 +9,7 @@
 #include <TGraph.h>
 #include <TApplication.h>
 #include <math.h>
+#include <TLegend.h>
 
 TCanvas * makegraph()
 {
@@ -54,24 +55,51 @@ TCanvas * makegraph()
 	double bnlxer[7] = {0.05,0.05,0.05,0.05,0.05,0.05,0.05};
 	double bnlyer[7] = {0.12,0.09,0.09,0.08,0.08,0.08,0.08};
 	TGraphErrors *bnlgr = new TGraphErrors(7,bnlqsq,bnlcsc,bnlxer,bnlyer);
+
+	//Multigraph? maybE?
+	TMultiGraph *mg = new TMultiGraph();
 	
+	//Draw our data
+	//Systematix
 //	gr->Draw("AP");
 	gr->SetFillColor(2);
     gr->SetFillStyle(3001);
-	gr->GetXaxis()->SetTitle("Q^{2}");
-	gr->GetYaxis()->SetTitle("#frac{d#sigma}{dQ^{2}}");
-    gr->Draw("a2");
+	gr->GetXaxis()->SetTitle("Q^{2} / GeV^{2} ");
+	gr->GetYaxis()->SetTitle("#frac{d#sigma}{dQ^{2}} 10^{-39} cm^{2}GeV^{-2} ");
+//    gr->Draw("a2");
 //   gr->Draw("p");
 
+	//statistical errs too!
 	TGraphErrors *gstaterr = new TGraphErrors(5,qsq,crosssection,xer,staterr);
-	gstaterr->SetFillColor(4);
-	gstaterr->SetFillStyle(3001);
-	gstaterr->Draw("p");
+//	gstaterr->SetFillColor(4);
+//	gstaterr->SetFillStyle(3001);
+//	gstaterr->Draw("p");
 
+	//overlay minib0One
 	mingr->SetFillColor(kBlue);
 	mingr->SetMarkerStyle(20);
-	mingr->SetFillStyle(3001);
-	mingr->Draw("samea3");
+	mingr->SetFillStyle(3004);
+//	mingr->Draw("samea3");
+//	mingr->Draw("same");
+
+	//dont forget about good ol' BNL
+	bnlgr->SetFillColor(kGreen);
+	bnlgr->SetMarkerColor(50);
+	bnlgr->SetFillStyle(3002);
+
+	//MULTIGRAPH, ASSEMBLE!
+	mg->Add(gr,"a2");
+	mg->Add(gstaterr,"p");
+	mg->Add(mingr,"3");
+	mg->Add(bnlgr,"3");
+	mg->Draw();
+	
+	TLegend *leg = new TLegend(0.7,0.9,0.9,0.7);
+	leg->AddEntry(gr, "Systematic Errors","f");
+	leg->AddEntry(gstaterr, "Statistical Errors","lep");
+	leg->AddEntry(mingr, "Miniboone","f");
+	leg->AddEntry(bnlgr, "BNL","f");
+	leg->Draw();
 	
 //	bnlgr->SetMarkerColor(kRed);
 //	bnlgr->SetMarkerStyle(20);
